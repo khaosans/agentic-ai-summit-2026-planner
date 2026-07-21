@@ -519,30 +519,54 @@
     .promo-bar {
       background: var(--cal-gold-bright);
       text-align: center;
-      padding: 0.55rem 0.75rem;
-      margin: 0 -1rem 0.75rem;
-      font-size: 0.8rem;
+      padding: 0.5rem 0.75rem;
+      margin: 0 -1rem 0.65rem;
+      font-size: 0.78rem;
       font-weight: 600;
+      line-height: 1.3;
     }
     .promo-bar a { color: var(--berkeley-blue); text-decoration: none; }
-    .brand-logo { height: 36px; width: auto; display: block; margin-bottom: 0.45rem; }
-    .hero-banner {
+
+    .brand-logo {
+      height: 40px;
+      width: auto;
+      max-width: min(220px, 58vw);
+      display: block;
+      margin-bottom: 0.35rem;
+      object-fit: contain;
+    }
+    .hero-banner-wrap {
       width: calc(100% + 2rem);
       margin: 0 -1rem 0.75rem;
-      display: block;
-      max-height: 120px;
-      object-fit: cover;
-      object-position: center;
+      background: var(--berkeley-blue);
       border-bottom: 1px solid var(--border-soft);
+      line-height: 0;
     }
-    .brand h1 { color: var(--berkeley-blue); }
+    .hero-banner {
+      width: 100%;
+      height: auto;
+      display: block;
+      aspect-ratio: 1400 / 711;
+      object-fit: cover;
+      object-position: center 42%;
+    }
+
+    .brand h1 { color: var(--berkeley-blue); font-weight: 700; }
     .brand-link {
       background: var(--berkeley-blue) !important;
       color: #fff !important;
       border-color: var(--berkeley-blue) !important;
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
     }
     .tab.active { color: var(--berkeley-blue); }
     .tab.active::after { background: var(--cal-gold); }
+    .track-chip {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+    }
     .track-chip.active {
       background: rgba(0,50,98,0.08);
       border-color: var(--berkeley-blue);
@@ -553,41 +577,128 @@
       border-color: rgba(203,148,69,0.35);
     }
     .banner strong { color: var(--berkeley-blue); }
+    .day-btn { min-height: 44px; }
     .day-btn.active { color: var(--berkeley-blue); }
     .session.lock { border-color: rgba(203,148,69,0.55); }
-    .sponsor-tier { margin-bottom: 1rem; }
+    .session summary { min-height: 52px; }
+
+    .sponsor-tier { margin-bottom: 1.1rem; }
     .sponsor-tier-label {
-      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--cal-gold); text-align: center; margin: 0 0 0.55rem;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--cal-gold); text-align: center; margin: 0 0 0.6rem;
     }
     .sponsor-logos {
-      display: flex; flex-wrap: wrap; gap: 0.55rem; justify-content: center;
-      padding: 0.75rem; background: #fff; border: 1px solid var(--border);
-      border-radius: var(--radius); margin-bottom: 0.35rem;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.55rem;
+      padding: 0.85rem;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 0.35rem;
     }
     .sponsor-logos a {
       display: flex; align-items: center; justify-content: center;
-      background: #fff; border: 1px solid var(--border-soft);
-      border-radius: 10px; padding: 0.45rem 0.55rem;
-      width: 132px; height: 56px; text-decoration: none;
+      background: #fff;
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      padding: 0.7rem 0.75rem;
+      min-height: 78px;
+      text-decoration: none;
+      color: var(--berkeley-blue);
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-align: center;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
-    .sponsor-logos.platinum a { width: 150px; height: 64px; }
-    .sponsor-logos.gold a { width: 140px; height: 58px; }
-    .sponsor-logos.silver a, .sponsor-logos.bronze a, .sponsor-logos.vc a { width: 120px; height: 50px; }
+    .sponsor-logos a:hover, .sponsor-logos a:focus-visible {
+      border-color: rgba(203,148,69,0.55);
+      box-shadow: 0 0 0 2px rgba(203,148,69,0.18);
+      outline: none;
+    }
+    .sponsor-logos.platinum a { min-height: 88px; }
+    .sponsor-logos.gold a { min-height: 82px; }
     .sponsor-logos img {
-      max-width: 100%; max-height: 100%; object-fit: contain; filter: none;
+      width: 100%;
+      max-width: 150px;
+      max-height: 52px;
+      height: auto;
+      object-fit: contain;
+      display: block;
     }
+    .sponsor-logos.platinum img { max-width: 170px; max-height: 58px; }
+    .sponsor-logos .logo-fallback {
+      display: none;
+      padding: 0.2rem;
+      line-height: 1.25;
+    }
+    .sponsor-logos a.is-fallback .logo-fallback { display: block; }
+    .sponsor-logos a.is-fallback img { display: none; }
+
     .disclaimer {
       font-size: 0.72rem; color: var(--faint); line-height: 1.45; margin-top: 0.75rem;
     }
     .topbar {
-      background: rgba(245,247,250,0.92) !important;
+      background: rgba(245,247,250,0.94) !important;
     }
     .bottom-nav {
-      background: rgba(245,247,250,0.94) !important;
+      background: rgba(245,247,250,0.96) !important;
+    }
+    .bottom-nav button {
+      min-height: 48px;
+      font-size: 0.6rem;
+    }
+    .bottom-nav button.active {
+      color: var(--berkeley-blue);
+      background: #fff;
+      box-shadow: inset 0 0 0 1px rgba(0,50,98,0.12);
     }
     .ghost, .track-chip, .day-switch, .glance, .session, .card, .building-item, .map-frame, .map-static {
       box-shadow: 0 1px 2px rgba(0,50,98,0.04);
+    }
+
+    /* Mobile-first: free screen space; bottom nav is primary */
+    @media (max-width: 719px) {
+      .topbar {
+        position: static;
+        padding-top: calc(0.5rem + var(--safe-top));
+      }
+      .tabs { display: none; }
+      .brand-row { margin-bottom: 0.55rem; align-items: center; }
+      .brand h1 { font-size: 1.02rem; }
+      .brand p { font-size: 0.72rem; }
+      .brand-logo { height: 34px; margin-bottom: 0.25rem; }
+      .hero-banner-wrap { margin-bottom: 0.55rem; }
+      .promo-bar { font-size: 0.72rem; padding: 0.45rem 0.65rem; margin-bottom: 0.55rem; }
+      .main { padding-top: 0.75rem; }
+      .stage-grid { grid-template-columns: 1fr; }
+      .sponsor-logos.platinum,
+      .sponsor-logos.gold {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (min-width: 480px) {
+      .sponsor-logos {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .sponsor-logos.platinum {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    @media (min-width: 720px) {
+      .bottom-nav { display: none; }
+      .app { padding-bottom: 1.5rem; }
+      .sponsor-logos {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+      .sponsor-logos.platinum {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .sponsor-logos a { min-height: 86px; }
+      .sponsor-logos.platinum a { min-height: 96px; }
+      .sponsor-logos img { max-width: 160px; max-height: 56px; }
+      .sponsor-logos.platinum img { max-width: 190px; max-height: 64px; }
+      .hero-banner-wrap { border-radius: 0 0 12px 12px; overflow: hidden; width: 100%; margin-left: 0; margin-right: 0; }
     }
   </style>
 </head>
@@ -599,13 +710,32 @@
       </div>
       <div class="brand-row">
         <div class="brand">
-          <img class="brand-logo" src="https://rdi.berkeley.edu/assets/images/rdi_logo_horizontal_720.png" alt="Berkeley RDI" height="40" />
+          <img
+            class="brand-logo"
+            src="assets/rdi-logo.png"
+            alt="Berkeley RDI"
+            width="220"
+            height="40"
+            decoding="async"
+            data-fallback="https://rdi.berkeley.edu/assets/images/rdi_logo_horizontal_720.png"
+            onerror="if(this.dataset.cdn){this.src=this.dataset.cdn;this.removeAttribute('data-cdn');return;} if(this.dataset.fallback){this.src=this.dataset.fallback;this.removeAttribute('data-fallback');}" />
           <h1>Agentic AI Summit 2026</h1>
           <p>Hosted by Berkeley RDI · UC Berkeley · Aug 1–2</p>
         </div>
-        <a class="brand-link" href="https://rdi.berkeley.edu/events/agentic-ai-summit-2026" target="_blank" rel="noopener">Official site ↗</a>
+        <a class="brand-link" href="https://rdi.berkeley.edu/events/agentic-ai-summit-2026" target="_blank" rel="noopener">Official ↗</a>
       </div>
-      <img class="hero-banner" src="https://rdi.berkeley.edu/assets/images/agentic-ai-summit-2026-banner.png" alt="Agentic AI Summit 2026" />
+      <div class="hero-banner-wrap">
+        <img
+          class="hero-banner"
+          src="assets/banner.jpg"
+          alt="Agentic AI Summit 2026 — Berkeley RDI"
+          width="1400"
+          height="711"
+          decoding="async"
+          fetchpriority="high"
+          data-fallback="https://rdi.berkeley.edu/assets/images/agentic-ai-summit-2026-banner.png"
+          onerror="if(this.dataset.cdn){this.src=this.dataset.cdn;this.removeAttribute('data-cdn');return;} if(this.dataset.fallback){this.src=this.dataset.fallback;this.removeAttribute('data-fallback');}" />
+      </div>
       <div class="track-scroll" id="track-grid" role="tablist" aria-label="Tracks"></div>
       <div class="tabs" role="tablist" aria-label="Sections">
         <button type="button" class="tab active" data-panel="schedule">Schedule</button>
@@ -710,13 +840,13 @@
       <section class="panel" id="panel-sponsors" role="tabpanel">
         <div class="card">
           <h3>Our Sponsors</h3>
-          <p>The Agentic AI Summit 2026 is made possible by the generous support of these sponsors. Logos link to the official event site assets from Berkeley RDI.</p>
+          <p>Official summit sponsors. Tap a logo to visit their site. Logos match the Berkeley RDI event page.</p>
         </div>
         <div id="sponsors-root"></div>
         <div class="card">
           <h3>Community Partners</h3>
           <div class="sponsor-logos" id="partners-root"></div>
-          <p class="note-inline">More sponsors may be announced on the <a href="https://rdi.berkeley.edu/events/agentic-ai-summit-2026" target="_blank" rel="noopener">official summit page</a>.</p>
+          <p class="note-inline">Source of truth: <a href="https://rdi.berkeley.edu/events/agentic-ai-summit-2026" target="_blank" rel="noopener">official summit sponsors</a>.</p>
         </div>
         <p class="disclaimer">Unofficial companion track planner for attendees. Branding and sponsor marks © respective owners / Berkeley RDI. Not an official Berkeley RDI product.</p>
       </section>
@@ -1464,6 +1594,7 @@
     document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("active", p.id === "panel-" + name));
     document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.dataset.panel === name));
     document.querySelectorAll(".bottom-nav button").forEach((b) => b.classList.toggle("active", b.dataset.panel === name));
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function showDay(day) {
@@ -1503,12 +1634,29 @@
   }
 
 
-  const SPONSOR_BASE = "https://rdi.berkeley.edu/assets/images/";
+  const REPO_ASSET_CDN = "https://raw.githubusercontent.com/khaosans/agentic-ai-summit-2026-planner/main/";
+  const SPONSOR_LOCAL = "assets/sponsors/";
+  const SPONSOR_REMOTE = "https://rdi.berkeley.edu/assets/images/sponsors/";
+  const PARTNER_LOCAL = "assets/partners/";
+  const PARTNER_REMOTE = "https://rdi.berkeley.edu/assets/images/partners/";
+
+  // htmlpreview can't resolve relative assets — point brand images at raw GitHub first
+  (function wireCdnFallbacks() {
+    const needsCdn = /htmlpreview|raw\.githack|cdn\.jsdelivr/.test(location.hostname) ||
+      (location.hostname === "gist.github.com");
+    document.querySelectorAll(".brand-logo, .hero-banner").forEach((img) => {
+      const rel = img.getAttribute("src");
+      if (!rel || !rel.startsWith("assets/")) return;
+      img.dataset.cdn = REPO_ASSET_CDN + rel;
+      if (needsCdn) img.src = img.dataset.cdn;
+    });
+  })();
+
   const SPONSORS = {
     Platinum: [
       ["daytona.svg", "Daytona", "https://www.daytona.io/"],
-      ["ema.png", "Ema", "https://www.ema.co/"],
-      ["fetcherr.png", "Fetcherr", "https://fetcherr.com/"],
+      ["ema.png", "Ema", "https://www.ema.ai/"],
+      ["fetcherr.png", "Fetcherr", "https://www.fetcherr.io/"],
       ["lambda.png", "Lambda", "https://lambda.ai/"],
       ["replit.png", "Replit", "https://replit.com/"]
     ],
@@ -1516,23 +1664,23 @@
       ["amd.png", "AMD", "https://www.amd.com/"],
       ["circle.png", "Circle", "https://www.circle.com/"],
       ["databricks.png", "Databricks", "https://www.databricks.com/"],
-      ["partners/digitalocean.png", "DigitalOcean", "https://www.digitalocean.com/"],
-      ["novara.png", "Novara", "https://rdi.berkeley.edu/events/agentic-ai-summit-2026"],
+      ["digitalocean.png", "DigitalOcean", "https://www.digitalocean.com/", "partner"],
+      ["novara.png", "Novara", "https://www.novara.tech/"],
       ["postman.png", "Postman", "https://www.postman.com/"],
       ["pytorch.png", "PyTorch", "https://pytorch.org/"],
       ["snorkel.png", "Snorkel AI", "https://snorkel.ai/"],
-      ["suse.png", "SUSE", "https://www.suse.com/"],
+      ["suse.png", "SUSE", "https://www.suse.com/products/ai/"],
       ["temporal.png", "Temporal", "https://temporal.io/"]
     ],
     Silver: [
-      ["partners/alice.png", "Alice", "https://rdi.berkeley.edu/events/agentic-ai-summit-2026"],
+      ["alice.png", "Alice", "https://alice.io/", "partner"],
       ["lobehub.png", "LobeHub", "https://lobehub.com/"],
       ["ludo-robotics.png", "Ludo Robotics", "https://rdi.berkeley.edu/events/agentic-ai-summit-2026"],
       ["mckinsey.png", "McKinsey", "https://www.mckinsey.com/"],
-      ["partners/nutanix.png", "Nutanix", "https://www.nutanix.com/"],
+      ["nutanix.png", "Nutanix", "https://www.nutanix.com/", "partner"],
       ["outsystems.png", "OutSystems", "https://www.outsystems.com/"],
       ["samsung-next.png", "Samsung Next", "https://www.samsungnext.com/"],
-      ["partners/vessl.png", "VESSL", "https://www.vessl.ai/"],
+      ["vessl.png", "VESSL", "https://vessl.ai/", "partner"],
       ["vijil.png", "vijil", "https://www.vijil.ai/"]
     ],
     Bronze: [
@@ -1550,29 +1698,45 @@
     ]
   };
   const PARTNERS = [
-    ["partners/citris.png", "CITRIS", "https://citris-uc.org/"],
-    ["partners/simons.png", "Simons Institute", "https://simons.berkeley.edu/"],
-    ["partners/cdss.png", "UC Berkeley CDSS", "https://cdss.berkeley.edu/"],
-    ["partners/haas.png", "Berkeley Haas", "https://haas.berkeley.edu/"],
-    ["partners/engineering.webp", "UC Berkeley Engineering", "https://engineering.berkeley.edu/"],
-    ["partners/sutardja.png", "Sutardja Center", "https://scet.berkeley.edu/"]
+    ["citris.png", "CITRIS", "https://citris-uc.org/"],
+    ["simons.png", "Simons Institute", "https://simons.berkeley.edu/"],
+    ["cdss.png", "UC Berkeley CDSS", "https://cdss.berkeley.edu/"],
+    ["haas.png", "Berkeley Haas", "https://haas.berkeley.edu/"],
+    ["engineering.webp", "UC Berkeley Engineering", "https://engineering.berkeley.edu/"],
+    ["sutardja.png", "Sutardja Center", "https://scet.berkeley.edu/"]
   ];
+
+  function logoCard(src, name, href, kind) {
+    const local = kind === "partner" ? PARTNER_LOCAL : SPONSOR_LOCAL;
+    const remote = kind === "partner" ? PARTNER_REMOTE : SPONSOR_REMOTE;
+    const safe = esc(name);
+    const cdn = REPO_ASSET_CDN + local + src;
+    return `<a href="${href}" target="_blank" rel="noopener" title="${safe}">
+      <img src="${local}${src}" alt="${safe}" loading="lazy" decoding="async"
+        data-cdn="${cdn}" data-remote="${remote}${src}"
+        onerror="if(this.dataset.cdn&&this.src!==this.dataset.cdn){const u=this.dataset.cdn;delete this.dataset.cdn;this.src=u;return;} if(this.dataset.remote&&this.src!==this.dataset.remote){const u=this.dataset.remote;delete this.dataset.remote;this.src=u;return;} this.closest('a').classList.add('is-fallback');" />
+      <span class="logo-fallback">${safe}</span>
+    </a>`;
+  }
 
   function renderSponsorTier() {
     const root = document.getElementById("sponsors-root");
     if (!root) return;
     const tierClass = { Platinum: "platinum", Gold: "gold", Silver: "silver", Bronze: "bronze", "VC Partners": "vc" };
+    const needsCdn = /htmlpreview|raw\.githack|cdn\.jsdelivr/.test(location.hostname);
     root.innerHTML = Object.keys(SPONSORS).map((tier) => {
-      const logos = SPONSORS[tier].map(([src, name, href]) =>
-        `<a href="${href}" target="_blank" rel="noopener" title="${esc(name)}"><img src="${SPONSOR_BASE}${src}" alt="${esc(name)}" loading="lazy" /></a>`
-      ).join("");
+      const logos = SPONSORS[tier].map((row) => logoCard(row[0], row[1], row[2], row[3] || "sponsor")).join("");
       return `<div class="sponsor-tier"><div class="sponsor-tier-label">${esc(tier)}</div><div class="sponsor-logos ${tierClass[tier] || ""}">${logos}</div></div>`;
     }).join("");
+    if (needsCdn) {
+      root.querySelectorAll("img[data-cdn]").forEach((img) => { img.src = img.dataset.cdn; });
+    }
     const partners = document.getElementById("partners-root");
     if (partners) {
-      partners.innerHTML = PARTNERS.map(([src, name, href]) =>
-        `<a href="${href}" target="_blank" rel="noopener" title="${esc(name)}"><img src="${SPONSOR_BASE}${src}" alt="${esc(name)}" loading="lazy" /></a>`
-      ).join("");
+      partners.innerHTML = PARTNERS.map((row) => logoCard(row[0], row[1], row[2], "partner")).join("");
+      if (needsCdn) {
+        partners.querySelectorAll("img[data-cdn]").forEach((img) => { img.src = img.dataset.cdn; });
+      }
     }
   }
 
