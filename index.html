@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#0b0e14" />
+  <meta name="color-scheme" content="dark" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <title>Agentic AI Summit 2026</title>
+  <style>
+    :root {
+      --bg: #080a0f;
+      --bg-elev: #10141c;
+      --bg-card: #151a24;
+      --border: #2a3142;
+      --border-soft: #1e2430;
+      --text: #f2f5fb;
+      --muted: #8b96ab;
+      --faint: #667084;
+      --accent: #6eb0e0;
+      --accent-2: #8b7cf7;
+      --accent-soft: rgba(110, 176, 224, 0.12);
+      --lock: #f0c14d;
+      --lock-soft: rgba(240, 193, 77, 0.12);
+      --ok: #5dcf8a;
+      --ok-soft: rgba(93, 207, 138, 0.12);
+      --warn: #e8897a;
+      --warn-soft: rgba(232, 137, 122, 0.12);
+      --fin: #6fd4c0;
+      --plenary: #c4a5e8;
+      --atlas: #7ec8e8;
+      --nexus: #e8b87a;
+      --compass: #8ad4a8;
+      --radius: 18px;
+      --radius-sm: 12px;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+      --max: 720px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+      font-size: 15px;
+      min-height: 100dvh;
+    }
+    .app {
+      max-width: var(--max);
+      margin: 0 auto;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: calc(4.25rem + var(--safe-bottom));
+    }
+
+    /* Top chrome */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      padding: calc(0.65rem + var(--safe-top)) 1rem 0;
+      background: color-mix(in srgb, var(--bg) 86%, transparent);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .brand-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+    .brand h1 {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+    }
+    .brand p {
+      margin: 0.2rem 0 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+    .brand-link {
+      flex-shrink: 0;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+      padding: 0.4rem 0.65rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--bg-elev);
+    }
+
+    .track-scroll {
+      display: flex;
+      gap: 0.4rem;
+      overflow-x: auto;
+      padding-bottom: 0.75rem;
+      margin: 0 -1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      scrollbar-width: none;
+    }
+    .track-scroll::-webkit-scrollbar { display: none; }
+    .track-chip {
+      flex: 0 0 auto;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.45rem 0.85rem;
+      border-radius: 999px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .track-chip.active {
+      color: var(--text);
+      border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+      background: var(--accent-soft);
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.25rem;
+      padding-bottom: 0.55rem;
+    }
+    .tab {
+      border: 0;
+      background: transparent;
+      color: var(--faint);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.55rem 0.25rem;
+      border-radius: 10px;
+      cursor: pointer;
+      position: relative;
+    }
+    .tab.active { color: var(--text); background: var(--bg-elev); }
+    .tab.active::after {
+      content: "";
+      position: absolute;
+      left: 18%;
+      right: 18%;
+      bottom: 0;
+      height: 2px;
+      border-radius: 2px;
+      background: var(--accent);
+    }
+
+    .main { padding: 1rem 1rem 1.5rem; flex: 1; }
+    .panel { display: none; animation: fade 0.2s ease; }
+    .panel.active { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+    .banner {
+      padding: 0.85rem 1rem;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--accent-soft), rgba(139,124,247,0.1));
+      border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border));
+      margin-bottom: 1rem;
+    }
+    .banner strong { color: var(--accent); }
+    .banner p { margin: 0.25rem 0 0; color: var(--muted); font-size: 0.84rem; }
+
+    .day-switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.4rem;
+      margin-bottom: 0.85rem;
+      padding: 0.3rem;
+      background: var(--bg-elev);
+      border-radius: 14px;
+      border: 1px solid var(--border-soft);
+    }
+    .day-btn {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-family: inherit;
+      font-weight: 800;
+      font-size: 0.88rem;
+      padding: 0.65rem;
+      border-radius: 11px;
+      cursor: pointer;
+    }
+    .day-btn.active {
+      background: var(--bg-card);
+      color: var(--text);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .toolbar h2 {
+      margin: 0;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--faint);
+      font-weight: 800;
+    }
+    .toolbar-actions { display: flex; gap: 0.35rem; }
+    .ghost {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.4rem 0.65rem;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .glance {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-bottom: 1rem;
+      padding: 0.75rem;
+      background: var(--bg-elev);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius);
+    }
+    .glance-item {
+      display: grid;
+      grid-template-columns: 3.6rem 1fr;
+      gap: 0.55rem;
+      align-items: start;
+      padding: 0.35rem 0.15rem;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .glance-item:last-child { border-bottom: 0; }
+    .glance-item .t {
+      font-weight: 800;
+      font-size: 0.75rem;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+      padding-top: 0.1rem;
+    }
+    .glance-item .g { font-size: 0.84rem; font-weight: 600; }
+    .glance-item .g small { display: block; color: var(--muted); font-weight: 500; margin-top: 0.1rem; font-size: 0.75rem; }
+
+    .session {
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      margin-bottom: 0.55rem;
+      overflow: hidden;
+    }
+    .session.lock { border-color: color-mix(in srgb, var(--lock) 40%, var(--border)); }
+    .session.optional-session { border-style: dashed; }
+    .session summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 0.85rem 1rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.5rem;
+      align-items: start;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .session summary::-webkit-details-marker { display: none; }
+    .session-summary-main { min-width: 0; }
+    .session-badges { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.4rem; }
+    .badge {
+      display: inline-flex;
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.18rem 0.45rem;
+      border-radius: 6px;
+    }
+    .badge.where-plenary { background: rgba(196,165,232,0.15); color: var(--plenary); }
+    .badge.where-atlas { background: rgba(126,200,232,0.15); color: var(--atlas); }
+    .badge.where-nexus { background: rgba(232,184,122,0.15); color: var(--nexus); }
+    .badge.where-compass { background: rgba(138,212,168,0.15); color: var(--compass); }
+    .badge.where-campus { background: var(--accent-soft); color: var(--accent); }
+    .badge.lock { background: var(--lock-soft); color: var(--lock); }
+    .badge.network { background: var(--ok-soft); color: var(--ok); }
+    .badge.optional { background: var(--warn-soft); color: var(--warn); }
+    .badge.headliner { background: rgba(240,193,77,0.18); color: var(--lock); }
+    .badge.core { background: var(--accent-soft); color: var(--accent); }
+    .time {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      margin-bottom: 0.15rem;
+    }
+    .session-title {
+      margin: 0;
+      font-size: 0.98rem;
+      font-weight: 750;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+    .chev {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--bg-elev);
+      border: 1px solid var(--border-soft);
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      transition: transform 0.15s ease;
+      margin-top: 0.15rem;
+    }
+    .session[open] .chev { transform: rotate(180deg); color: var(--accent); }
+    .session-body {
+      padding: 0 1rem 1rem;
+      border-top: 1px solid var(--border-soft);
+    }
+    .session-topic {
+      margin: 0.75rem 0 0.65rem;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+    .field-label {
+      font-size: 0.65rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin: 0.85rem 0 0.4rem;
+    }
+    .speakers { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.45rem; }
+    .speakers li {
+      padding: 0.55rem 0.65rem;
+      background: var(--bg-elev);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-sm);
+    }
+    .speakers .name { font-weight: 700; font-size: 0.88rem; display: block; }
+    .speakers .role { font-size: 0.76rem; color: var(--muted); display: block; }
+    .speakers .talk { font-size: 0.76rem; color: var(--fin); font-style: italic; display: block; margin-top: 0.15rem; }
+    .action {
+      margin-top: 0.75rem;
+      padding: 0.65rem 0.75rem;
+      background: var(--ok-soft);
+      border: 1px solid color-mix(in srgb, var(--ok) 22%, transparent);
+      border-radius: var(--radius-sm);
+      font-size: 0.84rem;
+    }
+    .action strong { color: var(--ok); }
+    .note-inline {
+      margin-top: 0.65rem;
+      font-size: 0.8rem;
+      color: var(--faint);
+      padding: 0.55rem 0.65rem;
+      background: var(--bg-elev);
+      border-radius: var(--radius-sm);
+      border: 1px dashed var(--border);
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .card h3 {
+      margin: 0 0 0.55rem;
+      font-size: 0.95rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .card p, .card li { color: var(--muted); font-size: 0.88rem; }
+    .card ul { margin: 0.4rem 0 0; padding-left: 1.1rem; }
+    .card li { margin-bottom: 0.35rem; }
+
+    .map-frame {
+      width: 100%; height: 280px; border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden; background: var(--bg-elev); margin-bottom: 0.75rem;
+      position: relative;
+      z-index: 1;
+    }
+    .map-frame #campus-map { width: 100%; height: 100%; }
+    .building-list { display: flex; flex-direction: column; gap: 0.45rem; margin-bottom: 0.85rem; }
+    .building-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 0.65rem;
+      align-items: center;
+      padding: 0.7rem 0.8rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+    .building-item .dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+    .building-item .dot.primary { background: var(--lock); box-shadow: 0 0 0 3px var(--lock-soft); }
+    .building-item .bn { font-weight: 800; font-size: 0.88rem; }
+    .building-item .bd { font-size: 0.75rem; color: var(--muted); margin-top: 0.1rem; }
+    .building-item a {
+      font-size: 0.72rem; font-weight: 700; color: var(--accent); text-decoration: none;
+      white-space: nowrap;
+    }
+    .leaflet-container { font: inherit; background: var(--bg-elev); }
+    .leaflet-popup-content-wrapper {
+      background: var(--bg-card); color: var(--text); border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+    .leaflet-popup-tip { background: var(--bg-card); }
+    .leaflet-popup-content { margin: 0.65rem 0.85rem; font-size: 0.84rem; }
+    .leaflet-popup-content strong { display: block; margin-bottom: 0.2rem; }
+    .map-links { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.85rem; }
+    .map-links a {
+      font-size: 0.72rem; font-weight: 700; padding: 0.4rem 0.65rem;
+      border-radius: 999px; background: var(--bg-elev); border: 1px solid var(--border);
+      color: var(--accent); text-decoration: none;
+    }
+    .stage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 0.85rem; }
+    .stage-card {
+      padding: 0.75rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    }
+    .stage-card .sn { font-weight: 800; font-size: 0.88rem; margin-bottom: 0.2rem; }
+    .stage-card .sd { font-size: 0.75rem; color: var(--muted); line-height: 1.35; }
+    .sn.plenary { color: var(--plenary); }
+    .sn.atlas { color: var(--atlas); }
+    .sn.nexus { color: var(--nexus); }
+    .sn.compass { color: var(--compass); }
+    .your-stops { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0.85rem; }
+    .your-stops .stop {
+      padding: 0.65rem 0.75rem; background: var(--bg-elev); border: 1px solid var(--border-soft);
+      border-radius: var(--radius-sm); border-left: 3px solid var(--accent); font-size: 0.84rem;
+    }
+    .your-stops .stop.plenary { border-left-color: var(--plenary); }
+    .your-stops .stop.atlas { border-left-color: var(--atlas); }
+    .your-stops .stop.nexus { border-left-color: var(--nexus); }
+    .your-stops .stop.compass { border-left-color: var(--compass); }
+    .your-stops .stop strong { display: block; font-size: 0.8rem; margin-bottom: 0.15rem; }
+    .your-stops .stop span { color: var(--muted); font-size: 0.78rem; line-height: 1.35; }
+    .venue-form { display: flex; flex-direction: column; gap: 0.5rem; }
+    .venue-row { display: grid; grid-template-columns: 5.5rem 1fr; gap: 0.5rem; align-items: center; }
+    .venue-row label { font-size: 0.7rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
+    .venue-row label.plenary { color: var(--plenary); }
+    .venue-row label.atlas { color: var(--atlas); }
+    .venue-row label.nexus { color: var(--nexus); }
+    .venue-row label.compass { color: var(--compass); }
+    .venue-row label.campus { color: var(--accent); }
+    .venue-row input {
+      width: 100%; padding: 0.55rem 0.65rem; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--bg-elev); color: var(--text);
+      font-size: 0.85rem; font-family: inherit;
+    }
+
+    table.dense { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    table.dense th, table.dense td {
+      text-align: left; padding: 0.55rem 0.25rem; border-bottom: 1px solid var(--border-soft); vertical-align: top;
+    }
+    table.dense th { color: var(--faint); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 800; }
+    table.dense .name { font-weight: 700; color: var(--text); }
+
+    .bottom-nav {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+      display: flex; justify-content: center;
+      padding: 0.45rem 0.75rem calc(0.45rem + var(--safe-bottom));
+      background: color-mix(in srgb, var(--bg) 90%, transparent);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border-soft);
+    }
+    .bottom-nav .inner { display: flex; width: 100%; max-width: var(--max); gap: 0.25rem; }
+    .bottom-nav button {
+      flex: 1; border: 0; background: transparent; color: var(--faint);
+      font-family: inherit; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.02em;
+      text-transform: uppercase; padding: 0.4rem 0.15rem; border-radius: 12px; cursor: pointer;
+    }
+    .bottom-nav button.active, .bottom-nav button:hover { color: var(--text); background: var(--bg-card); }
+    .bottom-nav button span { display: block; font-size: 1.05rem; margin-bottom: 0.05rem; line-height: 1; }
+
+    footer {
+      margin-top: 1.25rem; padding-top: 0.85rem; border-top: 1px solid var(--border-soft);
+      color: var(--faint); font-size: 0.74rem; line-height: 1.5;
+    }
+    footer a { color: var(--accent); }
+
+    @media (min-width: 720px) {
+      .app { border-left: 1px solid var(--border-soft); border-right: 1px solid var(--border-soft); }
+      .brand h1 { font-size: 1.35rem; }
+    }
+    @media print {
+      .topbar, .bottom-nav, .toolbar-actions, .day-switch { display: none !important; }
+      .panel { display: block !important; }
+      .session { break-inside: avoid; }
+      .session-body { display: block !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand-row">
+        <div class="brand">
+          <h1>Agentic AI Summit 2026</h1>
+          <p>UC Berkeley · Aug 1–2 · Track planner</p>
+        </div>
+        <a class="brand-link" href="https://rdi.berkeley.edu/events/agentic-ai-summit-2026" target="_blank" rel="noopener">Agenda ↗</a>
+      </div>
+      <div class="track-scroll" id="track-grid" role="tablist" aria-label="Tracks"></div>
+      <div class="tabs" role="tablist" aria-label="Sections">
+        <button type="button" class="tab active" data-panel="schedule">Schedule</button>
+        <button type="button" class="tab" data-panel="map">Map</button>
+        <button type="button" class="tab" data-panel="network">Network</button>
+        <button type="button" class="tab" data-panel="guide">Guide</button>
+      </div>
+    </header>
+
+    <main class="main">
+      <div class="banner" id="active-banner"></div>
+
+      <section class="panel active" id="panel-schedule" role="tabpanel">
+        <div class="day-switch">
+          <button type="button" class="day-btn active" data-day="sat">Saturday</button>
+          <button type="button" class="day-btn" data-day="sun">Sunday</button>
+        </div>
+
+        <div id="day-sat">
+          <div class="toolbar">
+            <h2>At a glance</h2>
+            <div class="toolbar-actions">
+              <button type="button" class="ghost" data-expand="sat">Expand all</button>
+              <button type="button" class="ghost" data-collapse="sat">Collapse</button>
+            </div>
+          </div>
+          <div class="glance" id="sat-glance"></div>
+          <div class="toolbar"><h2>Sessions</h2><p class="day-sub" id="sat-sub" style="margin:0;font-size:0.78rem;color:var(--muted)"></p></div>
+          <div id="sat-sessions"></div>
+        </div>
+
+        <div id="day-sun" hidden>
+          <div class="toolbar">
+            <h2>At a glance</h2>
+            <div class="toolbar-actions">
+              <button type="button" class="ghost" data-expand="sun">Expand all</button>
+              <button type="button" class="ghost" data-collapse="sun">Collapse</button>
+            </div>
+          </div>
+          <div class="glance" id="sun-glance"></div>
+          <div class="toolbar"><h2>Sessions</h2><p class="day-sub" id="sun-sub" style="margin:0;font-size:0.78rem;color:var(--muted)"></p></div>
+          <div id="sun-sessions"></div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-map" role="tabpanel">
+        <div class="card">
+          <h3>Primary campus buildings</h3>
+          <p>Marked below are the main UC Berkeley venues used for large multi-hall events. The summit runs across <strong>four stages</strong> (Plenary · Atlas · Nexus · Compass); official stage→building assignments are released at registration / on-site signage. Use these landmarks to orient and walk between halls.</p>
+        </div>
+        <div class="map-frame">
+          <div id="campus-map" role="img" aria-label="UC Berkeley campus with primary event buildings marked"></div>
+        </div>
+        <div class="map-links">
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=UC+Berkeley+campus" target="_blank" rel="noopener">Google Maps campus ↗</a>
+          <a href="https://www.berkeley.edu/map/" target="_blank" rel="noopener">Berkeley map ↗</a>
+          <a href="https://www.berkeley.edu/wp-content/uploads/2025/06/campus-map-20250609.pdf" target="_blank" rel="noopener">Official PDF ↗</a>
+        </div>
+
+        <h2 style="font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--faint);font-weight:800;margin:0 0 0.55rem">Marked buildings</h2>
+        <div class="building-list" id="building-list"></div>
+
+        <div class="stage-grid">
+          <div class="stage-card"><div class="sn plenary">Plenary</div><div class="sd">Main stage — headliners &amp; flagship panels. Building TBA at check-in.</div></div>
+          <div class="stage-card"><div class="sn atlas">Atlas</div><div class="sd">Research, workshops, evals. Building TBA at check-in.</div></div>
+          <div class="stage-card"><div class="sn nexus">Nexus</div><div class="sd">Science, coding, quant, security. Building TBA at check-in.</div></div>
+          <div class="stage-card"><div class="sn compass">Compass</div><div class="sd">Systems, platforms, tooling. Building TBA at check-in.</div></div>
+        </div>
+
+        <h2 style="font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--faint);font-weight:800;margin:0 0 0.55rem">Track walking path (by stage)</h2>
+        <div class="your-stops" id="path-stops"></div>
+      </section>
+
+      <section class="panel" id="panel-network" role="tabpanel">
+        <div class="card" id="network-card"></div>
+        <div class="card">
+          <h3>Shared playbook</h3>
+          <ul>
+            <li>Arrive ~8:30 both days for hallway conversations.</li>
+            <li>Leave panels 1–2 minutes early to catch speakers at the exit.</li>
+            <li>Photo + short post after headliners is fine — skip long handshake queues.</li>
+            <li>Log name / org / ask the same night.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-guide" role="tabpanel">
+        <div class="card">
+          <h3>How to use this planner</h3>
+          <ul>
+            <li>Choose a <strong>track</strong> at the top to generate Saturday/Sunday plans.</li>
+            <li>Use <strong>Schedule</strong> for the timeline. Sessions are collapsed by default — tap to expand speakers and notes.</li>
+            <li><strong>Optional</strong> sessions are dashed; <strong>locks</strong> are highlighted.</li>
+            <li><strong>Map</strong> shows primary campus buildings marked — match Plenary/Atlas/Nexus/Compass on-site.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Shared principles</h3>
+          <ul>
+            <li>Access over fame: workshops and peers beat celebrity swarms.</li>
+            <li>Headliner locks across tracks: Ng × Lin (Sat 5:00) and Karpathy when scheduled.</li>
+            <li>Invite-only dinners are not scheduled here — use official receptions unless separately invited.</li>
+            <li>Plan by stage name until buildings are published.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Headliner locks</h3>
+          <table class="dense">
+            <thead><tr><th>Who</th><th>When</th><th>Where</th></tr></thead>
+            <tbody>
+              <tr><td class="name">Andrew Ng × Alfred Lin</td><td>Sat 5:00 PM</td><td>Plenary</td></tr>
+              <tr><td class="name">Andrej Karpathy</td><td>Time TBA</td><td>Likely Plenary</td></tr>
+            </tbody>
+          </table>
+          <p class="note-inline">Also high-profile if free: DeSantis Sat 9:30 · Casado Sat 10:45 · Zaremba Sat ~2:05 · Ghodsi Sun 11:05.</p>
+        </div>
+        <footer>
+          Built from the
+          <a href="https://rdi.berkeley.edu/events/agentic-ai-summit-2026" target="_blank" rel="noopener">Berkeley RDI Agentic AI Summit 2026 program</a>.
+          End times inferred from the next published block. Agenda may change.
+        </footer>
+      </section>
+    </main>
+  </div>
+
+  <nav class="bottom-nav" aria-label="Primary">
+    <div class="inner">
+      <button type="button" class="active" data-panel="schedule"><span>▤</span>Schedule</button>
+      <button type="button" data-panel="map"><span>⌖</span>Map</button>
+      <button type="button" data-panel="network"><span>●</span>Network</button>
+      <button type="button" data-panel="guide"><span>ⓘ</span>Guide</button>
+    </div>
+  </nav>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>
+(function () {
+
+  const S = {
+    earlySat: {
+      id: "earlySat", optional: false, lock: false, stage: "campus",
+      time: "~8:30 AM", duration: "before first session",
+      badges: ["where-campus", "network"], badgeLabels: ["Campus", "Network window"],
+      title: "Arrive early — badge & open networking",
+      topic: "Thinnest crowds of the day. Check in, map the four stages, and talk before sessions fill.",
+      groups: [{
+        label: "Priorities",
+        speakers: [
+          { name: "Badge + stage map", role: "Find Plenary · Atlas · Nexus · Compass" },
+          { name: "Coffee / hallway loops", role: "Aim for several real conversations before midday" },
+          { name: "Optional Plenary openings", role: "9:15 remarks · 9:30 DeSantis infra · 10:45 Casado fireside — sit any, skip any" }
+        ]
+      }],
+      action: "Use early time for people access. Celebrity seats for Ng are claimed later (~4:30), not at 8:30."
+    },
+    openingsSat: {
+      id: "openingsSat", optional: true, lock: false, stage: "plenary",
+      time: "9:15 – ~11:05 AM", duration: "optional picks",
+      badges: ["where-plenary", "optional", "headliner"], badgeLabels: ["Plenary", "Optional", "Openings"],
+      title: "Optional: Saturday openings",
+      topic: "Infra keynote + a16z/DeepMind fireside. Worth sitting if already early — not required.",
+      groups: [
+        {
+          label: "9:15 — Opening remarks",
+          speakers: [
+            { name: "Rich Lyons", role: "Chancellor, UC Berkeley" },
+            { name: "Dawn Song", role: "Professor, UC Berkeley · Co-Director, Berkeley RDI" }
+          ]
+        },
+        {
+          label: "9:30 — Agentic AI Infrastructure & Platform",
+          speakers: [
+            { name: "Peter DeSantis", role: "SVP, Foundational AI Models, Custom Silicon, Quantum Computing · Amazon", talk: "Opening keynote · 9:30" },
+            { name: "Saurabh Tiwary", role: "VP & GM, Google Cloud AI", talk: "Featured · 9:50" },
+            { name: "Jonathan Cohen", role: "VP of Applied Research, Nvidia", talk: "Featured · 9:50" },
+            { name: "Chuan Li", role: "Chief Scientific Officer, Lambda", talk: "Featured · 9:50" }
+          ]
+        },
+        {
+          label: "Panel · 10:25",
+          speakers: [
+            { name: "Peter DeSantis", role: "Panelist · Amazon" },
+            { name: "Saurabh Tiwary", role: "Panelist · Google Cloud AI" },
+            { name: "Jonathan Cohen", role: "Panelist · Nvidia" },
+            { name: "Chuan Li", role: "Panelist · Lambda" },
+            { name: "Todd Graham", role: "Moderator · Managing Partner, M12" }
+          ]
+        },
+        {
+          label: "10:45 — Fireside",
+          speakers: [
+            { name: "Martin Casado", role: "General Partner, a16z" },
+            { name: "Jasjeet Sekhon", role: "Chief Strategy Officer, Google DeepMind" }
+          ]
+        }
+      ],
+      action: "Suggested sits: DeSantis (9:30) and/or Casado × Sekhon (10:45). Step out at breaks to network.",
+      note: "Circle wallet workshop on Compass 10:45 conflicts with Casado — track-dependent option."
+    },
+    software: {
+      id: "software", optional: false, lock: false, stage: "plenary",
+      time: "11:10 AM", duration: "talks → panel 11:55 · lunch 12:20",
+      badges: ["where-plenary", "core", "headliner"], badgeLabels: ["Plenary", "Core", "Main stage"],
+      title: "Future of Software Development",
+      topic: "Humans steer, agents execute — OpenClaw, harness engineering, Replit, Perplexity Comet.",
+      groups: [
+        {
+          label: "Featured talks · 11:10",
+          speakers: [
+            { name: "Peter Steinberger", role: "Creator of OpenClaw · OpenAI" },
+            { name: "Ryan Lopopolo", role: "Principal Engineer, Agentic Google Cloud Platform · formerly led Dark Factory at OpenAI", talk: "Harness Engineering: How to Build Software When Humans Steer and Agents Execute" },
+            { name: "Michele Catasta", role: "President, Replit" },
+            { name: "Alex Graveley", role: "Director, Comet · Perplexity AI" }
+          ]
+        },
+        {
+          label: "Panel · 11:55",
+          speakers: [
+            { name: "Peter Steinberger", role: "Panelist" },
+            { name: "Ryan Lopopolo", role: "Panelist" },
+            { name: "Michele Catasta", role: "Panelist" },
+            { name: "Alex Graveley", role: "Panelist" },
+            { name: "Anjney Midha", role: "Moderator · Founder, AMP PBC" }
+          ]
+        }
+      ],
+      action: "Leave panel 1–2 min early → catch Lopopolo / Graveley / Catasta at stage exit."
+    },
+    circle: {
+      id: "circle", optional: true, lock: false, stage: "compass",
+      time: "10:45 AM", duration: "until ~11:45",
+      badges: ["where-compass", "optional", "network"], badgeLabels: ["Compass", "Optional", "Workshop"],
+      title: "Workshop: Why Your AI Agent Needs a Wallet",
+      topic: "Agentic commerce on Arc with USDC and nanopayments — Circle.",
+      groups: [{
+        label: "Speakers",
+        speakers: [{ name: "Harshal Bhangale", role: "Staff Software Engineer, Circle" }]
+      }],
+      action: "High-access workshop. Conflicts with Casado fireside and overlaps Software start — only if payments rails are a priority."
+    },
+    daytona: {
+      id: "daytona", optional: true, lock: false, stage: "atlas",
+      time: "11:05 AM", duration: "until lunch 12:05",
+      badges: ["where-atlas", "optional", "network"], badgeLabels: ["Atlas", "Optional", "Workshop"],
+      title: "Workshop: Turning Chatbots into Agents (Daytona)",
+      topic: "What modern RL looks like when moving from chatbots to agents.",
+      groups: [{
+        label: "Speakers",
+        speakers: [
+          { name: "Lovre Pesut", role: "AI Engineer, Daytona" },
+          { name: "Muhammad Hashmi", role: "DevRel, Daytona" }
+        ]
+      }],
+      action: "Conflicts with Plenary Software 11:10 — pick one.",
+      note: "Prefer Software for breadth unless this workshop is the top priority."
+    },
+    fetcherr: {
+      id: "fetcherr", optional: false, lock: false, stage: "nexus",
+      time: "1:50 PM", duration: "until ~2:50",
+      badges: ["where-nexus", "core", "network"], badgeLabels: ["Nexus", "Core", "Workshop"],
+      title: "Workshop: Quantitative Decision Agents (Fetcherr)",
+      topic: "Market models as foundation for quantitative decision agents.",
+      groups: [{
+        label: "Speakers",
+        speakers: [
+          { name: "Uri Yerushalmi", role: "Chief AI Officer, Fetcherr", talk: "Market Models: The Missing Foundation for Quantitative Decision Agents" },
+          { name: "Hadar Sharvit", role: "Director of Deep Learning, Fetcherr", talk: "Architecting Quantitative Decision Agents" }
+        ]
+      }],
+      action: "Stay after for intros; continue on Nexus for Secure AI if on the fintech / enterprise path."
+    },
+    temporal: {
+      id: "temporal", optional: false, lock: false, stage: "compass",
+      time: "2:00 PM", duration: "until ~3:00",
+      badges: ["where-compass", "core", "network"], badgeLabels: ["Compass", "Core", "Workshop"],
+      title: "Workshop: Build AI Agents That Survive Failure (Temporal)",
+      topic: "Reliability patterns for agents in production.",
+      groups: [{
+        label: "Speakers",
+        speakers: [{ name: "Nikolay Advolodkin", role: "Senior Staff Developer Advocate, Temporal" }]
+      }],
+      action: "High-access production workshop — stay after."
+    },
+    lambda: {
+      id: "lambda", optional: true, lock: false, stage: "atlas",
+      time: "2:00 PM", duration: "until ~3:00",
+      badges: ["where-atlas", "optional", "network"], badgeLabels: ["Atlas", "Optional", "Workshop"],
+      title: "Workshop: Open-Source Agent Investigations (Lambda)",
+      topic: "Security arena, distilled traces, and auto-optimization.",
+      groups: [{
+        label: "Speakers",
+        speakers: [
+          { name: "Devina Jain", role: "Research Engineer, Lambda" },
+          { name: "Zach Mueller", role: "Head of Developer Relations, Lambda" },
+          { name: "Chuan Li", role: "Chief Science Officer, Lambda" }
+        ]
+      }],
+      action: "Conflicts with Temporal at 2:00 — pick one workshop."
+    },
+    replit: {
+      id: "replit", optional: true, lock: false, stage: "atlas",
+      time: "3:00 PM", duration: "until ~4:00",
+      badges: ["where-atlas", "optional", "network"], badgeLabels: ["Atlas", "Optional", "Workshop"],
+      title: "Workshop: Building Agentic Apps End-to-End (Replit)",
+      topic: "Hands-on agent app building with Replit Agent.",
+      groups: [{
+        label: "Speakers",
+        speakers: [{ name: "Brandon Middleton", role: "Head of Education, Replit" }]
+      }],
+      action: "Can follow Lambda if you took that 2:00 workshop."
+    },
+    secure: {
+      id: "secure", optional: false, lock: false, stage: "nexus",
+      time: "3:25 PM", duration: "until ~4:20 · then move for 4:30 Plenary if needed",
+      badges: ["where-nexus", "core"], badgeLabels: ["Nexus", "Core"],
+      title: "Secure Agentic AI",
+      topic: "Runtime trust, rogue agents, safety — observability is not governance.",
+      groups: [{
+        label: "Speakers (complete)",
+        speakers: [
+          { name: "Jon-Rav Shende", role: "CTO, Thales Group", talk: "Observability Is Not Governance: Building a Runtime Trust Plane for Agentic AI" },
+          { name: "Bo Li", role: "Co-Founder and CEO, Virtue AI · UIUC" },
+          { name: "Eric Wallace", role: "Researcher, OpenAI" },
+          { name: "Itsik Mantin", role: "Head of AI Security Research, Intuit", talk: "When Good Agents Go Rogue" },
+          { name: "John A. McDermid", role: "Director, Centre for Assuring Autonomy, University of York", talk: "Safety and Security of Agentic AI" },
+          { name: "Geng Sng", role: "Co-founder and CTO, Cogent Security", talk: "Security in the Age of Mythos-Class AI" },
+          { name: "Mohamed Nabeel", role: "Senior Principal Researcher, Palo Alto Networks", talk: "Ghost in the Web Store: Preempting LLM-Hallucinated Browser Extension Supply Chain Attacks" },
+          { name: "Vaishnavi Gudur", role: "Senior AI Security Engineer, Microsoft" }
+        ]
+      }],
+      action: "Approachable operators vs. main-stage celebs. Leave in time for Capital Markets / Ng if those are locks."
+    },
+    markets: {
+      id: "markets", optional: false, lock: false, stage: "plenary",
+      time: "4:30 PM", duration: "until ~5:00 · stay seated for Ng",
+      badges: ["where-plenary", "core", "headliner"], badgeLabels: ["Plenary", "Core", "Main stage"],
+      title: "Panel: Agentic AI in Capital Markets",
+      topic: "How trading firms and funds apply agentic AI.",
+      groups: [
+        {
+          label: "Panelists",
+          speakers: [
+            { name: "Jeff Wecker", role: "CTO, Two Sigma" },
+            { name: "Jen Allum", role: "SVP, Co-Head of GenAI, The D. E. Shaw Group" },
+            { name: "Ali Nazari", role: "Head of Deep Learning Research, Susquehanna International Group" },
+            { name: "Li Deng", role: "Chief AI Officer, Vatic Investments · Former Chief AI Officer, Citadel" }
+          ]
+        },
+        {
+          label: "Moderator",
+          speakers: [{ name: "Bradley Olson", role: "Technology Editor, Wall Street Journal" }]
+        }
+      ],
+      action: "Stay put — Ng fireside follows immediately. Recover panelists at 5:30 reception."
+    },
+    ng: {
+      id: "ng", optional: false, lock: true, stage: "plenary",
+      time: "5:00 PM", duration: "until ~5:30 reception",
+      badges: ["where-plenary", "lock", "headliner"], badgeLabels: ["Plenary", "Lock", "Headliner"],
+      title: "Fireside: Andrew Ng × Alfred Lin",
+      topic: "Shared headliner across tracks. Watch, photo, leave — do not join the handshake swarm.",
+      groups: [{
+        label: "Speakers",
+        speakers: [
+          { name: "Andrew Ng", role: "Founder, DeepLearning.AI" },
+          { name: "Alfred Lin", role: "General Partner, Sequoia Capital" }
+        ]
+      }],
+      action: "Aisle seat. Publish a quick post on the walk out, then use reception for Tier A/B conversations."
+    },
+    receptionSat: {
+      id: "receptionSat", optional: false, lock: false, stage: "campus",
+      time: "5:30 PM+", duration: "official reception & posters",
+      badges: ["where-campus", "network"], badgeLabels: ["Campus", "Network"],
+      title: "Reception & poster presentations",
+      topic: "Official networking. Invite-only dinners are not part of this planner.",
+      groups: [],
+      action: "Follow the track’s networking list — mix stage speakers and poster authors."
+    },
+    earlySun: {
+      id: "earlySun", optional: false, lock: false, stage: "campus",
+      time: "~8:30–9:30 AM", duration: "before Enterprise / first session",
+      badges: ["where-campus", "network"], badgeLabels: ["Campus", "Network window"],
+      title: "Arrive early — day-2 networking",
+      topic: "Close loops from Saturday and meet new people before Plenary fills.",
+      groups: [{
+        label: "Priorities",
+        speakers: [
+          { name: "Follow-ups first", role: "Reconnect with people met Saturday" },
+          { name: "A few new adjacent chats", role: "Keep breadth — not only one vertical" },
+          { name: "Optional opening remarks", role: "Jennifer Chayes · Dawn Song · 9:30" }
+        ]
+      }],
+      action: "Quality over badge-collecting. Be seated (or ready) for the first core session."
+    },
+    enterprise: {
+      id: "enterprise", optional: false, lock: false, stage: "plenary",
+      time: "9:40 AM", duration: "talks → panel 10:35 · fireside 11:05",
+      badges: ["where-plenary", "core"], badgeLabels: ["Plenary", "Core"],
+      title: "Enterprise AI",
+      topic: "How large organizations adopt and run agents.",
+      groups: [
+        {
+          label: "Featured talks · 9:40",
+          speakers: [
+            { name: "Rao Surapaneni", role: "VP/GM AI Search & Specialized AI, Google Cloud" },
+            { name: "Adarsh Hiremath", role: "Co-CEO, Mercor" },
+            { name: "Duncan Lennox", role: "Chief Product & Technology Officer, HubSpot" },
+            { name: "Anahita Tafvizi", role: "Chief Data & AI Officer, Snowflake", talk: "Building the Agentic Enterprise: From Anticipation to Execution" }
+          ]
+        },
+        {
+          label: "Panel · 10:35",
+          speakers: [
+            { name: "Rao Surapaneni", role: "Panelist · Google Cloud" },
+            { name: "Adarsh Hiremath", role: "Panelist · Mercor" },
+            { name: "Duncan Lennox", role: "Panelist · HubSpot" },
+            { name: "Anahita Tafvizi", role: "Panelist · Snowflake" },
+            { name: "Surojit Chatterjee", role: "Panelist · Founder/CEO, Ema" },
+            { name: "Aaron Jacobson", role: "Moderator · GP, NEA" }
+          ]
+        }
+      ],
+      action: "Strong for enterprise and founder tracks; soft for pure research."
+    },
+    ghodsi: {
+      id: "ghodsi", optional: true, lock: false, stage: "plenary",
+      time: "11:05 AM", duration: "until lunch 11:30",
+      badges: ["where-plenary", "optional", "headliner"], badgeLabels: ["Plenary", "Optional", "Headliner"],
+      title: "Fireside: Ali Ghodsi × Andy Konwinski",
+      topic: "Databricks / data-platform lens. Skip if Karpathy lands in this slot.",
+      groups: [{
+        label: "Speakers",
+        speakers: [
+          { name: "Ali Ghodsi", role: "Co-Founder/CEO, Databricks" },
+          { name: "Andy Konwinski", role: "Co-Founder, Databricks · Perplexity · Laude Ventures" }
+        ]
+      }],
+      action: "Watch only — no swarm."
+    },
+    evals: {
+      id: "evals", optional: false, lock: false, stage: "atlas",
+      time: "1:00 PM", duration: "until ~1:45",
+      badges: ["where-atlas", "core"], badgeLabels: ["Atlas", "Core"],
+      title: "Agent Evaluation & Benchmarks",
+      topic: "How to test agents before production — causal evals, enterprise readiness, specs & trajectories.",
+      groups: [{
+        label: "Speakers",
+        speakers: [
+          { name: "Anastasios N. Angelopoulos", role: "Co-Founder/CEO, LLMArena", talk: "Agent Arena: Causal Evaluations of Agents in the Real World" },
+          { name: "Michal Shmueli-Scheuer", role: "Distinguished Engineer, AI Benchmarking & Evaluation, IBM Research", talk: "Ready for General Agents? Let’s Test It." },
+          { name: "Priya Ponnapalli", role: "SVP of Engineering, Enterprise AI, Scale AI", talk: "Building Reliable Agents: An Evals-First Approach" },
+          { name: "Srijith Rajamohan", role: "Head of AI Research, Redis", talk: "Spec-Driven Agents: Hierarchical Specs, Tooling, and Trajectory-Based Evaluation" }
+        ]
+      }],
+      action: "Cross-industry production language. Leave in time for afternoon Plenary locks."
+    },
+    finance: {
+      id: "finance", optional: false, lock: false, stage: "plenary",
+      time: "2:40 PM", duration: "talks → panel 3:20 → Spotlight 3:45",
+      badges: ["where-plenary", "core", "headliner"], badgeLabels: ["Plenary", "Core", "Main stage"],
+      title: "Agentic AI in Finance & Legal",
+      topic: "Banks, payments, and legal AI operators.",
+      groups: [
+        {
+          label: "Featured talks · 2:40",
+          speakers: [
+            { name: "Milind Naphade", role: "SVP, AI Foundations, Capital One" },
+            { name: "Nikhil Chandhok", role: "Chief Product & Technology Officer, Circle" },
+            { name: "Gabe Pereyra", role: "Co-Founder/President, Harvey AI", talk: "Agentic AI in Finance & Legal" },
+            { name: "Faraz Shafiq", role: "Head of AI, Wells Fargo" }
+          ]
+        },
+        {
+          label: "Panel · 3:20",
+          speakers: [
+            { name: "Nikhil Chandhok", role: "Panelist · Circle" },
+            { name: "Gabe Pereyra", role: "Panelist · Harvey AI" },
+            { name: "Faraz Shafiq", role: "Panelist · Wells Fargo" },
+            { name: "Sri Pangulur", role: "Moderator · Partner, Mayfield Fund" }
+          ]
+        }
+      ],
+      action: "Stay through panel into Spotlight. Naphade is on talks but not the published panelist line — catch at reception.",
+      note: "If Karpathy conflicts, prefer Karpathy live and recover finance speakers at 5:00 reception."
+    },
+    platforms: {
+      id: "platforms", optional: true, lock: false, stage: "plenary",
+      time: "2:05 PM", duration: "talk + panel ~2:10",
+      badges: ["where-plenary", "optional"], badgeLabels: ["Plenary", "Optional"],
+      title: "Agentic AI Developer Platforms",
+      topic: "Open stacks and platform builders.",
+      groups: [
+        {
+          label: "Featured · 2:05",
+          speakers: [
+            { name: "Matt White", role: "Global CTO of AI, Linux Foundation · CTO, PyTorch Foundation", talk: "Composable Intelligence: The Open Alternative to Vertical AI Stacks" }
+          ]
+        },
+        {
+          label: "Panel · 2:10",
+          speakers: [
+            { name: "Matt White", role: "Panelist · Linux Foundation" },
+            { name: "Dima Dmytro Dzhulgakov", role: "Co-Founder/CTO, Fireworks AI" },
+            { name: "Ivan Burazin", role: "Co-Founder/CEO, Daytona" },
+            { name: "Megan Morrone", role: "Moderator · Editor of Technology, Axios" }
+          ]
+        }
+      ],
+      action: "Good builder/founder stop before Spotlight. Conflicts with starting Finance at 2:40 if you stay long."
+    },
+    spotlight: {
+      id: "spotlight", optional: false, lock: false, stage: "plenary",
+      time: "3:45 PM", duration: "until reception 5:00",
+      badges: ["where-plenary", "network", "core"], badgeLabels: ["Plenary", "Network", "Core"],
+      title: "Startup Spotlight",
+      topic: "Startup pitches to the room. Strong peer-networking block across tracks.",
+      groups: [],
+      action: "Talk to pitching teams and scouts. Include at least some startups outside a single vertical."
+    },
+    ema: {
+      id: "ema", optional: true, lock: false, stage: "atlas",
+      time: "11:20 AM", duration: "until ~12:20",
+      badges: ["where-atlas", "optional", "network"], badgeLabels: ["Atlas", "Optional", "Workshop"],
+      title: "Workshop: From Assistants to AI Employees (Ema)",
+      topic: "Designing agents that own a role, not a task.",
+      groups: [{
+        label: "Speakers",
+        speakers: [
+          { name: "Anushka Pathak", role: "Product Manager, Ema" },
+          { name: "Soham Shah", role: "ML Engineer, Ema" },
+          { name: "Eric Victorson", role: "Software Engineer, Ema" }
+        ]
+      }],
+      action: "Conflicts with lingering at Ghodsi — choose based on track."
+    },
+    karpathy: {
+      id: "karpathy", optional: false, lock: true, stage: "plenary",
+      time: "Time TBA", duration: "recheck agenda · overrides that hour",
+      badges: ["lock", "headliner"], badgeLabels: ["Lock", "Headliner"],
+      title: "Andrej Karpathy",
+      topic: "Featured on promo lists; not yet on the timed official grid. When posted, that hour becomes a lock.",
+      groups: [{
+        label: "Speaker",
+        speakers: [{ name: "Andrej Karpathy", role: "Co-Founder, OpenAI · Founder, Eureka Labs" }]
+      }],
+      action: "Watch + photo + leave. Recover displaced session speakers at the next reception."
+    },
+    receptionSun: {
+      id: "receptionSun", optional: false, lock: false, stage: "campus",
+      time: "5:00 PM+", duration: "official reception & posters",
+      badges: ["where-campus", "network"], badgeLabels: ["Campus", "Network"],
+      title: "Reception & poster presentations",
+      topic: "Close loops from Finance, Spotlight, evals, and workshops.",
+      groups: [],
+      action: "Prioritize anyone missed after afternoon Plenary blocks."
+    }
+  };
+
+  const TRACKS = {
+    builder: {
+      id: "builder",
+      name: "Builder",
+      blurb: "Harnesses, workshops, production agents",
+      satSub: "Early network → Software → reliability workshop → Ng → reception",
+      sunSub: "Early network → optional Ghodsi → evals → platforms → Spotlight",
+      satGlance: [
+        ["8:30", "Campus · Arrive early", "Badge · coffee · network"],
+        ["9:15+", "Plenary openings (opt)", "DeSantis · Casado — pick any"],
+        ["11:10", "Plenary · Software", "Harness / coding agents"],
+        ["2:00", "Compass · Temporal", "Agents that survive failure"],
+        ["5:00", "Plenary · Ng × Lin ★", "Headliner lock"],
+        ["5:30", "Reception", "Workshop + software people"]
+      ],
+      sunGlance: [
+        ["8:30", "Campus · Arrive early", "Follow-ups + new chats"],
+        ["11:05", "Ghodsi (opt)", "Platform headliner"],
+        ["1:00", "Atlas · Evals", "Production readiness"],
+        ["2:05", "Plenary · Platforms (opt)", "LF / Fireworks / Daytona"],
+        ["3:45", "Spotlight", "Peer founders"],
+        ["TBA", "Karpathy ★", "Overrides when posted"]
+      ],
+      sat: ["earlySat", "openingsSat", "software", "temporal", "lambda", "replit", "ng", "receptionSat"],
+      sun: ["earlySun", "ghodsi", "evals", "platforms", "spotlight", "karpathy", "receptionSun"],
+      path: [
+        { cls: "campus", t: "Both mornings ~8:30", d: "Campus networking before sessions" },
+        { cls: "plenary", t: "Sat Plenary", d: "Software 11:10 · Ng 5:00" },
+        { cls: "compass", t: "Sat Compass", d: "Temporal 2:00 (Lambda/Replit optional)" },
+        { cls: "atlas", t: "Sun Atlas", d: "Evals 1:00" },
+        { cls: "plenary", t: "Sun Plenary", d: "Platforms (opt) · Spotlight 3:45" }
+      ],
+      networkHtml: `
+        <p><strong style="color:var(--ok)">Tier A</strong> — Daytona/Temporal/Lambda/Replit workshop leads · Software exit grabs (Lopopolo, Graveley, Catasta) · Spotlight builders · poster authors</p>
+        <p style="margin-top:0.75rem"><strong style="color:var(--accent)">Tier B</strong> — Matt White · Fireworks · panel moderators · evals speakers</p>
+        <p style="margin-top:0.75rem"><strong style="color:var(--warn)">Tier C</strong> — Ng, Karpathy, Casado, Ghodsi — watch + photo only</p>
+        <p class="note-inline">Open with a concrete stack question (harness, evals, failure modes) — not a generic compliment.</p>`
+    },
+    fintech: {
+      id: "fintech",
+      name: "Fintech",
+      blurb: "Markets, finance orgs, quant + trust",
+      satSub: "Early network → Software (broad) → Fetcherr → Secure → Markets → Ng",
+      sunSub: "Early network → Enterprise (soft) → evals → Finance & Legal → Spotlight",
+      satGlance: [
+        ["8:30", "Campus · Arrive early", "Network window"],
+        ["9:15+", "Openings (opt)", "Infra / Casado"],
+        ["11:10", "Plenary · Software", "Adjacent breadth"],
+        ["1:50", "Nexus · Fetcherr", "Quant decision agents"],
+        ["3:25", "Nexus · Secure AI", "Trust / governance"],
+        ["4:30", "Plenary · Capital Markets", "Two Sigma · DE Shaw · SIG · Vatic"],
+        ["5:00", "Ng × Lin ★", "Headliner lock"]
+      ],
+      sunGlance: [
+        ["8:30", "Campus · Arrive early", "Follow-ups"],
+        ["9:40", "Enterprise (soft)", "Org adoption patterns"],
+        ["1:00", "Atlas · Evals", "Exam before production"],
+        ["2:40", "Finance & Legal", "Capital One · Circle · Harvey · Wells"],
+        ["3:45", "Spotlight", "Peers + scouts"],
+        ["TBA", "Karpathy ★", "Overrides when posted"]
+      ],
+      sat: ["earlySat", "openingsSat", "software", "circle", "fetcherr", "secure", "markets", "ng", "receptionSat"],
+      sun: ["earlySun", "enterprise", "ghodsi", "evals", "finance", "spotlight", "karpathy", "receptionSun"],
+      path: [
+        { cls: "campus", t: "Both mornings ~8:30", d: "Campus networking" },
+        { cls: "plenary", t: "Sat Plenary", d: "Software · Markets 4:30 · Ng 5:00" },
+        { cls: "nexus", t: "Sat Nexus", d: "Fetcherr 1:50 · Secure 3:25" },
+        { cls: "atlas", t: "Sun Atlas", d: "Evals 1:00" },
+        { cls: "plenary", t: "Sun Plenary", d: "Enterprise soft · Finance 2:40 · Spotlight" }
+      ],
+      networkHtml: `
+        <p><strong style="color:var(--ok)">Tier A</strong> — Fetcherr leads · Secure AI operators (Intuit, PANW, Thales, MSFT) · Spotlight peers · posters</p>
+        <p style="margin-top:0.75rem"><strong style="color:var(--accent)">Tier B</strong> — Capital Markets panelists · Finance & Legal speakers · Sri Pangulur · evals leads · Software exit grabs for breadth</p>
+        <p style="margin-top:0.75rem"><strong style="color:var(--warn)">Tier C</strong> — Ng, Karpathy, Lin, Casado, Ghodsi — watch + photo only</p>
+        <p class="note-inline">Keep breadth: don’t only cluster with trading-firm conversations at reception.</p>`
+    },
+    founder: {
+      id: "founder",
+      name: "Founder",
+      blurb: "Distribution, capital signals, Spotlight",
+      satSub: "Early network → Software → workshops → Markets or Secure → Ng → reception",
+      sunSub: "Enterprise + NEA mod → evals → Finance or Platforms → Spotlight (anchor)",
+      satGlance: [
+        ["8:30", "Campus · Arrive early", "Warm intros"],
+        ["11:10", "Software", "Product / agent narrative"],
+        ["2:00", "Temporal or Lambda", "Production credibility"],
+        ["3:25+", "Secure or seat early", "Trust story or Ng seat"],
+        ["4:30", "Capital Markets (opt)", "If fintech thesis"],
+        ["5:00", "Ng × Lin ★", "Listen for thesis · no swarm"]
+      ],
+      sunGlance: [
+        ["8:30", "Arrive early", "Follow-ups"],
+        ["9:40", "Enterprise", "Buyers + NEA moderator"],
+        ["1:00", "Evals", "Credibility language"],
+        ["2:05/2:40", "Platforms or Finance", "Pick for thesis"],
+        ["3:45", "Spotlight ★", "Main networking floor"],
+        ["TBA", "Karpathy ★", "Lock when posted"]
+      ],
+      sat: ["earlySat", "openingsSat", "software", "temporal", "secure", "markets", "ng", "receptionSat"],
+      sun: ["earlySun", "enterprise", "ghodsi", "evals", "platforms", "finance", "spotlight", "karpathy", "receptionSun"],
+      path: [
+        { cls: "campus", t: "Mornings + receptions", d: "Highest-odds founder conversations" },
+        { cls: "plenary", t: "Sat–Sun Plenary", d: "Software · Ng · Enterprise · Spotlight" },
+        { cls: "compass", t: "Sat workshop", d: "Temporal (or Lambda on Atlas)" },
+        { cls: "plenary", t: "Sun 3:45", d: "Startup Spotlight is the anchor" }
+      ],
+      networkHtml: `
+        <p><strong style="color:var(--ok)">Tier A</strong> — Spotlight founders · workshop leads · poster authors · reception tables you host</p>
+        <p style="margin-top:0.75rem"><strong style="color:var(--accent)">Tier B</strong> — Panel moderators (M12, NEA, Mayfield, Midha) · operator panelists · evals/platform founders</p>
+        <p style="margin-top:0.75rem"><strong style="color:var(--warn)">Tier C</strong> — Ng, Lin, Casado, Ghodsi — content + leverage in later DMs, not handshake KPI</p>
+        <p class="note-inline">Prepare a 15-second ask (design partner, hire, seed). Message moderators before the event when possible.</p>`
+    },
+    enterprise: {
+      id: "enterprise",
+      name: "Enterprise",
+      blurb: "Adoption, evals, security, platforms",
+      satSub: "Early network → openings/Software → Temporal → Secure → Ng",
+      sunSub: "Enterprise Plenary → Ema workshop (opt) → evals → Spotlight",
+      satGlance: [
+        ["8:30", "Arrive early", "Network"],
+        ["9:15+", "Openings (opt)", "Infra context"],
+        ["11:10", "Software", "How agents ship"],
+        ["2:00", "Temporal", "Reliability"],
+        ["3:25", "Secure AI", "Governance"],
+        ["5:00", "Ng × Lin ★", "Headliner"]
+      ],
+      sunGlance: [
+        ["8:30", "Arrive early", "Follow-ups"],
+        ["9:40", "Enterprise ★", "Core block"],
+        ["11:20", "Ema workshop (opt)", "AI employees"],
+        ["1:00", "Evals ★", "Exam before deploy"],
+        ["3:45", "Spotlight", "Vendors + peers"],
+        ["TBA", "Karpathy ★", "Lock when posted"]
+      ],
+      sat: ["earlySat", "openingsSat", "software", "temporal", "secure", "ng", "receptionSat"],
+      sun: ["earlySun", "enterprise", "ghodsi", "ema", "evals", "spotlight", "karpathy", "receptionSun"],
+      path: [
+        { cls: "campus", t: "Mornings", d: "Network before rooms fill" },
+        { cls: "plenary", t: "Sat–Sun Plenary", d: "Software · Ng · Enterprise" },
+        { cls: "compass", t: "Sat Temporal", d: "Failure-tolerant agents" },
+        { cls: "nexus", t: "Sat Secure", d: "Trust plane" },
+        { cls: "atlas", t: "Sun Evals (+ Ema opt)", d: "Production readiness" }
+      ],
+      networkHtml: `
+        <p><strong style="color:var(--ok)">Tier A</strong> — Temporal · Ema workshop ICs · Secure AI practitioners · evals speakers · posters</p>
+        <p style="margin-top:0.75rem"><strong style="color:var(--accent)">Tier B</strong> — Enterprise panel (Snowflake, HubSpot, Google Cloud, Mercor, Ema) · Aaron Jacobson · Software builders for tooling</p>
+        <p style="margin-top:0.75rem"><strong style="color:var(--warn)">Tier C</strong> — Ng, Karpathy, Ghodsi — watch only</p>
+        <p class="note-inline">Lead with governance, evals, and rollout constraints — not demo enthusiasm.</p>`
+    },
+    research: {
+      id: "research",
+      name: "Research",
+      blurb: "Openings, foundations-adjacent, evals, security",
+      satSub: "Openings → Software or workshops → Secure → Ng",
+      sunSub: "Optional Ghodsi → Evals → Spotlight · watch Frontier if energy allows",
+      satGlance: [
+        ["8:30", "Arrive early", "Network + posters"],
+        ["9:15", "Openings", "Infra + Casado"],
+        ["11:10", "Software or Daytona", "Pick breadth vs workshop"],
+        ["2:00", "Lambda (opt)", "Open-source agents"],
+        ["3:25", "Secure AI", "Safety research + industry"],
+        ["5:00", "Ng × Lin ★", "Headliner"]
+      ],
+      sunGlance: [
+        ["8:30", "Arrive early", "Academic / lab chats"],
+        ["11:05", "Ghodsi (opt)", "Systems celebrity"],
+        ["1:00", "Evals ★", "Benchmark science"],
+        ["3:45", "Spotlight", "Research startups"],
+        ["TBA", "Karpathy ★", "Lock when posted"]
+      ],
+      sat: ["earlySat", "openingsSat", "software", "daytona", "lambda", "secure", "ng", "receptionSat"],
+      sun: ["earlySun", "ghodsi", "evals", "spotlight", "karpathy", "receptionSun"],
+      path: [
+        { cls: "campus", t: "Mornings + posters", d: "High-access research conversations" },
+        { cls: "plenary", t: "Sat openings + Software/Ng", d: "Infra context + headliners" },
+        { cls: "atlas", t: "Workshops / Sun evals", d: "Daytona/Lambda opt · Evals core" },
+        { cls: "nexus", t: "Sat Secure", d: "Safety & security talks" }
+      ],
+      networkHtml: `
+        <p><strong style="color:var(--ok)">Tier A</strong> — Workshop researchers · evals authors · Secure AI speakers · poster presenters</p>
+        <p style="margin-top:0.75rem"><strong style="color:var(--accent)">Tier B</strong> — Software practitioners for applied transfer · Spotlight research startups</p>
+        <p style="margin-top:0.75rem"><strong style="color:var(--warn)">Tier C</strong> — Ng, Karpathy, Casado, DeSantis — content locks</p>
+        <p class="note-inline">Ask what failed in their evals or security assumptions — better conversations than “loved the talk.”</p>`
+    }
+  };
+
+  const TRACK_ORDER = ["builder", "fintech", "founder", "enterprise", "research"];
+  const STORAGE_TRACK = "aas2026-track";
+
+  const BUILDINGS = [
+    { name: "Haas Pavilion", kind: "primary", desc: "Large arena — common for high-capacity keynotes", lat: 37.86935, lng: -122.26225, q: "Haas+Pavilion+UC+Berkeley" },
+    { name: "Zellerbach Hall", kind: "primary", desc: "Major auditorium next to Haas Pavilion", lat: 37.86895, lng: -122.26065, q: "Zellerbach+Hall+UC+Berkeley" },
+    { name: "Wheeler Auditorium", kind: "primary", desc: "Central campus lecture hall (Wheeler Hall)", lat: 37.87125, lng: -122.25915, q: "Wheeler+Auditorium+UC+Berkeley" },
+    { name: "Pauley Ballroom", kind: "primary", desc: "MLK Student Union — large flexible hall", lat: 37.86915, lng: -122.25945, q: "Pauley+Ballroom+UC+Berkeley" },
+    { name: "Sproul Plaza", kind: "hub", desc: "Main pedestrian hub / wayfinding landmark", lat: 37.86965, lng: -122.25955, q: "Sproul+Plaza+UC+Berkeley" },
+    { name: "Sibley Auditorium", kind: "hall", desc: "Bechtel Engineering Center auditorium", lat: 37.87385, lng: -122.25845, q: "Sibley+Auditorium+UC+Berkeley" },
+    { name: "Banatao Auditorium", kind: "hall", desc: "Sutardja Dai Hall — tech/engineering events", lat: 37.87495, lng: -122.25835, q: "Banatao+Auditorium+Sutardja+Dai+Hall" },
+    { name: "Cheit Hall (Haas)", kind: "hall", desc: "Haas School of Business classrooms / overflow", lat: 37.87155, lng: -122.25355, q: "Cheit+Hall+Haas+School+UC+Berkeley" }
+  ];
+
+  let campusMap = null;
+  let mapReady = false;
+
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function renderSession(sess) {
+    const cls = ["session"];
+    if (sess.lock) cls.push("lock");
+    if (sess.optional) cls.push("optional-session");
+    let html = `<details class="${cls.join(" ")}"><summary>`;
+    html += `<div class="session-summary-main"><div class="session-badges">`;
+    sess.badges.forEach((b, i) => {
+      html += `<span class="badge ${b}">${esc(sess.badgeLabels[i] || b)}</span>`;
+    });
+    html += `</div><div class="time">${esc(sess.time)} · ${esc(sess.duration)}</div>`;
+    html += `<h4 class="session-title">${esc(sess.title)}</h4></div>`;
+    html += `<span class="chev" aria-hidden="true">▾</span></summary><div class="session-body">`;
+    html += `<p class="session-topic">${esc(sess.topic)}</p>`;
+    (sess.groups || []).forEach((g, idx) => {
+      html += `<p class="field-label"${idx === 0 ? ' style="margin-top:0"' : ""}>${esc(g.label)}</p><ul class="speakers">`;
+      g.speakers.forEach((sp) => {
+        html += `<li><span class="name">${esc(sp.name)}</span><span class="role">${esc(sp.role)}</span>`;
+        if (sp.talk) html += `<span class="talk">${esc(sp.talk)}</span>`;
+        html += `</li>`;
+      });
+      html += `</ul>`;
+    });
+    if (sess.action) html += `<div class="action"><strong>Do:</strong> ${esc(sess.action)}</div>`;
+    if (sess.note) html += `<p class="note-inline">${esc(sess.note)}</p>`;
+    html += `</div></details>`;
+    return html;
+  }
+
+  function renderGlance(rows) {
+    return rows.map(([t, g, small]) =>
+      `<div class="glance-item"><div class="t">${esc(t)}</div><div class="g">${esc(g)}<small>${esc(small)}</small></div></div>`
+    ).join("");
+  }
+
+  function setTrack(id) {
+    const track = TRACKS[id];
+    if (!track) return;
+    localStorage.setItem(STORAGE_TRACK, id);
+    document.querySelectorAll(".track-chip").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.track === id);
+    });
+    document.getElementById("active-banner").innerHTML =
+      `<strong>${esc(track.name)} track</strong><p>${esc(track.blurb)}. Optional sessions are dashed — expand any card for full speakers.</p>`;
+    document.getElementById("sat-sub").textContent = track.satSub;
+    document.getElementById("sun-sub").textContent = track.sunSub;
+    document.getElementById("sat-glance").innerHTML = renderGlance(track.satGlance);
+    document.getElementById("sun-glance").innerHTML = renderGlance(track.sunGlance);
+    document.getElementById("sat-sessions").innerHTML = track.sat.map((sid) => renderSession(S[sid])).join("");
+    document.getElementById("sun-sessions").innerHTML = track.sun.map((sid) => renderSession(S[sid])).join("");
+    document.getElementById("network-card").innerHTML = `<h3 style="margin:0 0 0.55rem;font-size:0.95rem;font-weight:800;color:var(--text)">Networking · ${esc(track.name)}</h3>` + track.networkHtml;
+    document.getElementById("path-stops").innerHTML = track.path.map((p) =>
+      `<div class="stop ${p.cls}"><strong>${esc(p.t)}</strong><span>${esc(p.d)}</span></div>`
+    ).join("");
+  }
+
+  function showPanel(name) {
+    document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("active", p.id === "panel-" + name));
+    document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.dataset.panel === name));
+    document.querySelectorAll(".bottom-nav button").forEach((b) => b.classList.toggle("active", b.dataset.panel === name));
+    if (name === "map") {
+      initMap();
+      setTimeout(function () { if (campusMap) campusMap.invalidateSize(); }, 80);
+    }
+  }
+
+  function showDay(day) {
+    document.getElementById("day-sat").hidden = day !== "sat";
+    document.getElementById("day-sun").hidden = day !== "sun";
+    document.querySelectorAll(".day-btn").forEach((b) => b.classList.toggle("active", b.dataset.day === day));
+  }
+
+  function setOpenAll(day, open) {
+    document.querySelectorAll("#" + day + "-sessions details.session").forEach((d) => { d.open = open; });
+  }
+
+  function initBuildingsList() {
+    const list = document.getElementById("building-list");
+    list.innerHTML = BUILDINGS.map((b) => {
+      const primary = b.kind === "primary";
+      return `<div class="building-item">
+        <span class="dot${primary ? " primary" : ""}" aria-hidden="true"></span>
+        <div><div class="bn">${esc(b.name)}${primary ? " · primary" : ""}</div><div class="bd">${esc(b.desc)}</div></div>
+        <a href="https://www.google.com/maps/search/?api=1&query=${b.q}" target="_blank" rel="noopener">Navigate ↗</a>
+      </div>`;
+    }).join("");
+  }
+
+  function initMap() {
+    if (mapReady || typeof L === "undefined") return;
+    mapReady = true;
+    campusMap = L.map("campus-map", { scrollWheelZoom: false }).setView([37.8715, -122.2600], 15);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "&copy; OpenStreetMap"
+    }).addTo(campusMap);
+
+    const bounds = [];
+    BUILDINGS.forEach((b) => {
+      const isPrimary = b.kind === "primary";
+      const marker = L.circleMarker([b.lat, b.lng], {
+        radius: isPrimary ? 9 : 7,
+        color: isPrimary ? "#f0c14d" : "#6eb0e0",
+        weight: 2,
+        fillColor: isPrimary ? "#f0c14d" : "#6eb0e0",
+        fillOpacity: 0.85
+      }).addTo(campusMap);
+      marker.bindPopup(`<strong>${esc(b.name)}</strong>${esc(b.desc)}<br><a href="https://www.google.com/maps/search/?api=1&query=${b.q}" target="_blank" rel="noopener">Open in Google Maps</a>`);
+      bounds.push([b.lat, b.lng]);
+    });
+    if (bounds.length) campusMap.fitBounds(bounds, { padding: [28, 28] });
+  }
+
+  function initTracks() {
+    const grid = document.getElementById("track-grid");
+    grid.innerHTML = TRACK_ORDER.map((id) => {
+      const t = TRACKS[id];
+      return `<button type="button" class="track-chip" data-track="${id}">${esc(t.name)}</button>`;
+    }).join("");
+    grid.addEventListener("click", (e) => {
+      const btn = e.target.closest(".track-chip");
+      if (btn) setTrack(btn.dataset.track);
+    });
+    const initial = localStorage.getItem(STORAGE_TRACK) || "builder";
+    setTrack(TRACKS[initial] ? initial : "builder");
+  }
+
+  function initChrome() {
+    document.querySelectorAll(".tab, .bottom-nav button").forEach((el) => {
+      el.addEventListener("click", () => showPanel(el.dataset.panel));
+    });
+    document.querySelectorAll(".day-btn").forEach((btn) => {
+      btn.addEventListener("click", () => showDay(btn.dataset.day));
+    });
+    document.querySelectorAll("[data-expand]").forEach((btn) => {
+      btn.addEventListener("click", () => setOpenAll(btn.dataset.expand, true));
+    });
+    document.querySelectorAll("[data-collapse]").forEach((btn) => {
+      btn.addEventListener("click", () => setOpenAll(btn.dataset.collapse, false));
+    });
+  }
+
+  initTracks();
+  initBuildingsList();
+  initChrome();
+})();
+  </script>
+</body>
+</html>
