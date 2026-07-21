@@ -422,6 +422,56 @@
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     .badge.conflict { background: var(--warn-soft); color: var(--warn); }
     .badge.saved { background: rgba(0,50,98,0.1); color: var(--berkeley-blue); }
+
+    .tabs { grid-template-columns: repeat(6, 1fr); }
+    .tab { font-size: 0.68rem; padding: 0.5rem 0.15rem; }
+    .field {
+      display: flex; flex-direction: column; gap: 0.25rem; margin-bottom: 0.55rem;
+    }
+    .field label {
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--faint);
+    }
+    .field input, .field textarea, .field select {
+      width: 100%; font-family: inherit; font-size: 0.9rem;
+      padding: 0.65rem 0.75rem; border-radius: 12px;
+      border: 1px solid var(--border); background: #fff; color: var(--text);
+    }
+    .field textarea { min-height: 72px; resize: vertical; line-height: 1.4; }
+    .peer-list { display: flex; flex-direction: column; gap: 0.45rem; margin-top: 0.55rem; }
+    .peer-item {
+      padding: 0.7rem 0.8rem; border: 1px solid var(--border-soft);
+      border-radius: 12px; background: var(--bg-elev);
+    }
+    .peer-item strong { display: block; font-size: 0.88rem; color: var(--text); margin-bottom: 0.15rem; }
+    .peer-item span { font-size: 0.78rem; color: var(--muted); line-height: 1.35; }
+    .window-list { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.55rem; }
+    .window-item {
+      display: grid; grid-template-columns: 4.2rem 1fr; gap: 0.55rem;
+      padding: 0.65rem 0.7rem; border-radius: 12px;
+      border: 1px solid var(--border-soft); background: #fff;
+    }
+    .window-item .wt { font-weight: 800; font-size: 0.75rem; color: var(--berkeley-blue); }
+    .window-item .wd { font-size: 0.82rem; color: var(--text); font-weight: 600; }
+    .window-item .wd small { display: block; font-weight: 500; color: var(--muted); margin-top: 0.15rem; font-size: 0.75rem; }
+    .contact-list { display: flex; flex-direction: column; gap: 0.45rem; margin-top: 0.65rem; }
+    .contact-card {
+      padding: 0.75rem 0.8rem; border: 1px solid var(--border);
+      border-radius: 12px; background: #fff; position: relative;
+    }
+    .contact-card .cn { font-weight: 750; font-size: 0.92rem; }
+    .contact-card .co { font-size: 0.78rem; color: var(--muted); margin-top: 0.1rem; }
+    .contact-card .cnote { font-size: 0.82rem; margin-top: 0.4rem; color: var(--text); line-height: 1.35; }
+    .contact-card .cfollow {
+      margin-top: 0.45rem; font-size: 0.72rem; font-weight: 700;
+      color: var(--cal-gold); text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .contact-card .del {
+      position: absolute; top: 0.55rem; right: 0.55rem;
+      border: 0; background: transparent; color: var(--faint);
+      font-size: 1.1rem; cursor: pointer; line-height: 1; padding: 0.25rem;
+    }
+    .form-row-actions { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.25rem; }
     .session-badges { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.4rem; }
     .badge {
       display: inline-flex;
@@ -926,6 +976,7 @@
       <div class="tabs" role="tablist" aria-label="Sections">
         <button type="button" class="tab active" data-panel="schedule">Schedule</button>
         <button type="button" class="tab" data-panel="mine">My Plan</button>
+        <button type="button" class="tab" data-panel="network">Network</button>
         <button type="button" class="tab" data-panel="map">Map</button>
         <button type="button" class="tab" data-panel="sponsors">Sponsors</button>
         <button type="button" class="tab" data-panel="guide">Guide</button>
@@ -990,7 +1041,70 @@
         </div>
         <div id="mine-sat"></div>
         <div id="mine-sun" hidden></div>
-        <div class="card" id="network-card" style="margin-top:1rem"></div>
+      </section>
+
+      <section class="panel" id="panel-network" role="tabpanel">
+        <div class="card">
+          <h3>Network like an operator</h3>
+          <p>Skip celebrity queues. Use this tab to clarify your ask, find <strong>peers</strong>, catch high-odds meetup windows, and log people before you forget.</p>
+        </div>
+
+        <div class="card">
+          <h3>Your 15-second pitch</h3>
+          <p>What you do + what you want this weekend. Saved on this device.</p>
+          <div class="field" style="margin-top:0.65rem">
+            <label for="pitch-input">Pitch</label>
+            <textarea id="pitch-input" placeholder="e.g. I build agent workflows for fintech ops — looking for design partners who own evals / compliance."></textarea>
+          </div>
+          <div class="form-row-actions">
+            <button type="button" class="btn-soft primary" id="save-pitch" style="background:var(--berkeley-blue);color:#fff;border-color:var(--berkeley-blue)">Save pitch</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 id="peer-title">Who to find</h3>
+          <p id="peer-blurb">Peer targets for your track — not stage celebrities.</p>
+          <div class="peer-list" id="peer-list"></div>
+        </div>
+
+        <div class="card">
+          <h3>Best windows to meet people</h3>
+          <p>Where conversations actually happen. Headliner seats are for listening — network around them.</p>
+          <div class="window-list" id="meetup-windows"></div>
+        </div>
+
+        <div class="card">
+          <h3>People log</h3>
+          <p>Capture name · org · note before reception ends. Export isn’t needed — copy from here later.</p>
+          <form id="contact-form" autocomplete="off">
+            <div class="field">
+              <label for="c-name">Name</label>
+              <input id="c-name" name="name" required placeholder="Alex Kim" />
+            </div>
+            <div class="field">
+              <label for="c-org">Org / role</label>
+              <input id="c-org" name="org" placeholder="Acme · Staff eng" />
+            </div>
+            <div class="field">
+              <label for="c-note">Note / ask</label>
+              <textarea id="c-note" name="note" placeholder="Met at Temporal workshop — follow up on eval harness"></textarea>
+            </div>
+            <div class="field">
+              <label for="c-follow">Follow-up</label>
+              <select id="c-follow" name="follow">
+                <option value="this-week">This week</option>
+                <option value="intro">Needs intro</option>
+                <option value="coffee">Coffee / call</option>
+                <option value="later">Later / weak tie</option>
+              </select>
+            </div>
+            <div class="form-row-actions">
+              <button type="submit" class="btn-soft primary" style="background:var(--berkeley-blue);color:#fff;border-color:var(--berkeley-blue)">Add person</button>
+              <button type="button" class="btn-soft danger" id="clear-contacts">Clear log</button>
+            </div>
+          </form>
+          <div class="contact-list" id="contact-list"></div>
+        </div>
       </section>
 
       <section class="panel" id="panel-map" role="tabpanel">
@@ -1054,18 +1168,9 @@
           <ul>
             <li>Pick a <strong>track</strong> for a suggested plan, or tap <strong>Browse all</strong> to see every session.</li>
             <li>Tap <strong>+</strong> on any session to add it to <strong>My Plan</strong> (saved on this device).</li>
-            <li>Use <strong>Add current track</strong> on My Plan to seed your agenda in one tap, then customize.</li>
+            <li>Use <strong>Network</strong> for your pitch, peer targets, meetup windows, and a people log — not celebrity queues.</li>
             <li><strong>Optional</strong> sessions are dashed; <strong>locks</strong> are gold-highlighted headliners.</li>
             <li><strong>Map</strong> shows primary campus buildings — match Plenary/Atlas/Nexus/Compass on-site.</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>Networking playbook</h3>
-          <ul>
-            <li>Arrive ~8:30 both days for hallway conversations.</li>
-            <li>Leave panels 1–2 minutes early to catch speakers at the exit.</li>
-            <li>Photo + short post after headliners is fine — skip long handshake queues.</li>
-            <li>Log name / org / ask the same night.</li>
           </ul>
         </div>
         <div class="card">
@@ -1110,6 +1215,7 @@
     <div class="inner">
       <button type="button" class="active" data-panel="schedule"><span>▤</span>Schedule</button>
       <button type="button" data-panel="mine"><span>★</span>My Plan</button>
+      <button type="button" data-panel="network"><span>●</span>Network</button>
       <button type="button" data-panel="map"><span>⌖</span>Map</button>
       <button type="button" data-panel="sponsors"><span>◇</span>Sponsors</button>
       <button type="button" data-panel="guide"><span>ⓘ</span>Guide</button>
@@ -1572,11 +1678,13 @@
         { cls: "atlas", t: "Sun Atlas", d: "Evals 1:00" },
         { cls: "plenary", t: "Sun Plenary", d: "Platforms (opt) · Spotlight 3:45" }
       ],
-      networkHtml: `
-        <p><strong style="color:var(--ok)">Tier A</strong> — Daytona/Temporal/Lambda/Replit workshop leads · Software exit grabs (Lopopolo, Graveley, Catasta) · Spotlight builders · poster authors</p>
-        <p style="margin-top:0.75rem"><strong style="color:var(--accent)">Tier B</strong> — Matt White · Fireworks · panel moderators · evals speakers</p>
-        <p style="margin-top:0.75rem"><strong style="color:var(--warn)">Tier C</strong> — Ng, Karpathy, Casado, Ghodsi — watch + photo only</p>
-        <p class="note-inline">Open with a concrete stack question (harness, evals, failure modes) — not a generic compliment.</p>`
+      peersBlurb: "People shipping agents — workshop neighbors beat keynote queues.",
+      peers: [
+        { who: "Workshop table neighbors", where: "Atlas / Compass workshops", why: "Same failure modes; easy stack swaps" },
+        { who: "Poster authors & demo folks", where: "Reception / poster areas", why: "Builders who want feedback, not fans" },
+        { who: "Spotlight / early startup ICs", where: "Sun Spotlight + hallways", why: "Peer founders and founding eng" },
+        { who: "Sponsor booth engineers", where: "Sponsor areas between blocks", why: "Practitioners > BD theater" }
+      ]
     },
     fintech: {
       id: "fintech",
@@ -1610,11 +1718,13 @@
         { cls: "atlas", t: "Sun Atlas", d: "Evals 1:00" },
         { cls: "plenary", t: "Sun Plenary", d: "Enterprise soft · Finance 2:40 · Spotlight" }
       ],
-      networkHtml: `
-        <p><strong style="color:var(--ok)">Tier A</strong> — Fetcherr leads · Secure AI operators (Intuit, PANW, Thales, MSFT) · Spotlight peers · posters</p>
-        <p style="margin-top:0.75rem"><strong style="color:var(--accent)">Tier B</strong> — Capital Markets panelists · Finance & Legal speakers · Sri Pangulur · evals leads · Software exit grabs for breadth</p>
-        <p style="margin-top:0.75rem"><strong style="color:var(--warn)">Tier C</strong> — Ng, Karpathy, Lin, Casado, Ghodsi — watch + photo only</p>
-        <p class="note-inline">Keep breadth: don’t only cluster with trading-firm conversations at reception.</p>`
+      peersBlurb: "Operators in markets, risk, and trust — mix quant with compliance peers.",
+      peers: [
+        { who: "Fintech / trading eng & PMs", where: "Nexus blocks + Capital Markets exit", why: "Shared production constraints" },
+        { who: "Risk, compliance, secure-AI ICs", where: "Secure AI / Finance & Legal exits", why: "Governance buyers and builders" },
+        { who: "Payments / infra startups", where: "Reception + Spotlight", why: "Design partners beyond pure trading" },
+        { who: "Sponsor solutions eng (Circle, etc.)", where: "Sponsor floor between sessions", why: "Real integration paths" }
+      ]
     },
     founder: {
       id: "founder",
@@ -1646,11 +1756,13 @@
         { cls: "compass", t: "Sat workshop", d: "Temporal (or Lambda on Atlas)" },
         { cls: "plenary", t: "Sun 3:45", d: "Startup Spotlight is the anchor" }
       ],
-      networkHtml: `
-        <p><strong style="color:var(--ok)">Tier A</strong> — Spotlight founders · workshop leads · poster authors · reception tables you host</p>
-        <p style="margin-top:0.75rem"><strong style="color:var(--accent)">Tier B</strong> — Panel moderators (M12, NEA, Mayfield, Midha) · operator panelists · evals/platform founders</p>
-        <p style="margin-top:0.75rem"><strong style="color:var(--warn)">Tier C</strong> — Ng, Lin, Casado, Ghodsi — content + leverage in later DMs, not handshake KPI</p>
-        <p class="note-inline">Prepare a 15-second ask (design partner, hire, seed). Message moderators before the event when possible.</p>`
+      peersBlurb: "Founders, operators, and scouts — optimize for intros and design partners.",
+      peers: [
+        { who: "Spotlight / seed-stage founders", where: "Sun Spotlight + Saturday reception", why: "Peer dealflow and war stories" },
+        { who: "Operator-founders in workshops", where: "Temporal / Secure / Evals rooms", why: " cred + potential customers" },
+        { who: "Angels / scouts hanging in hallways", where: "Early mornings + reception edges", why: "Quieter than celebrity scrums" },
+        { who: "Hiring managers at sponsor booths", where: "Sponsor areas", why: "Talent and distribution intros" }
+      ]
     },
     enterprise: {
       id: "enterprise",
@@ -1683,11 +1795,13 @@
         { cls: "nexus", t: "Sat Secure", d: "Trust plane" },
         { cls: "atlas", t: "Sun Evals (+ Ema opt)", d: "Production readiness" }
       ],
-      networkHtml: `
-        <p><strong style="color:var(--ok)">Tier A</strong> — Temporal · Ema workshop ICs · Secure AI practitioners · evals speakers · posters</p>
-        <p style="margin-top:0.75rem"><strong style="color:var(--accent)">Tier B</strong> — Enterprise panel (Snowflake, HubSpot, Google Cloud, Mercor, Ema) · Aaron Jacobson · Software builders for tooling</p>
-        <p style="margin-top:0.75rem"><strong style="color:var(--warn)">Tier C</strong> — Ng, Karpathy, Ghodsi — watch only</p>
-        <p class="note-inline">Lead with governance, evals, and rollout constraints — not demo enthusiasm.</p>`
+      peersBlurb: "People who ship agents inside real orgs — evals, security, rollout.",
+      peers: [
+        { who: "Platform / IT owners at enterprises", where: "Enterprise Plenary exit + reception", why: "Budget + rollout peers" },
+        { who: "Evals / QA for LLM apps", where: "Atlas evals block", why: "Shared exam-before-prod language" },
+        { who: "Security & governance leads", where: "Secure AI session edges", why: "Trust plane counterparts" },
+        { who: "Vendor ICs (not only AEs)", where: "Workshops + booths", why: "Implementation truth" }
+      ]
     },
     research: {
       id: "research",
@@ -1718,11 +1832,13 @@
         { cls: "atlas", t: "Workshops / Sun evals", d: "Daytona/Lambda opt · Evals core" },
         { cls: "nexus", t: "Sat Secure", d: "Safety & security talks" }
       ],
-      networkHtml: `
-        <p><strong style="color:var(--ok)">Tier A</strong> — Workshop researchers · evals authors · Secure AI speakers · poster presenters</p>
-        <p style="margin-top:0.75rem"><strong style="color:var(--accent)">Tier B</strong> — Software practitioners for applied transfer · Spotlight research startups</p>
-        <p style="margin-top:0.75rem"><strong style="color:var(--warn)">Tier C</strong> — Ng, Karpathy, Casado, DeSantis — content locks</p>
-        <p class="note-inline">Ask what failed in their evals or security assumptions — better conversations than “loved the talk.”</p>`
+      peersBlurb: "Lab peers, eval authors, and research startups — trade methods, not autographs.",
+      peers: [
+        { who: "Poster presenters & workshop researchers", where: "Posters + Atlas workshops", why: "Highest-access technical chats" },
+        { who: "Evals / benchmarks practitioners", where: "Sun Atlas evals", why: "Method swaps > compliments" },
+        { who: "Safety / secure-AI researchers", where: "Secure AI edges", why: "Shared failure assumptions" },
+        { who: "Research-minded startup founders", where: "Spotlight + reception", why: "Applied research transfer" }
+      ]
     }
   };
 
@@ -1730,6 +1846,17 @@
   const STORAGE_TRACK = "aas2026-track";
   const STORAGE_AGENDA = "aas2026-agenda-v1";
   const STORAGE_VIEW = "aas2026-sched-view";
+  const STORAGE_PITCH = "aas2026-pitch";
+  const STORAGE_CONTACTS = "aas2026-contacts-v1";
+
+  const MEETUP_WINDOWS = [
+    { t: "8:30", d: "Both mornings", s: "Badge lines, coffee, stage-finding — thinnest crowds of the day" },
+    { t: "Breaks", d: "Between Plenary blocks", s: "Hallways outside the main stage · leave 1–2 min early" },
+    { t: "Workshops", d: "Atlas / Compass / Nexus", s: "Table neighbors > stage exits after hands-on blocks" },
+    { t: "5:30", d: "Saturday reception", s: "Best density for peer intros — host a small circle if you can" },
+    { t: "Posters", d: "Poster / demo areas", s: "Authors want feedback; bring one specific question" },
+    { t: "Sun PM", d: "Spotlight + wrap", s: "Founders and ICs still open before people bolt for flights" }
+  ];
 
   // day + sort key (HHMM) for catalog / conflicts
   const META = {
@@ -1944,13 +2071,12 @@
     const n = loadAgenda().length;
     document.getElementById("active-banner").innerHTML =
       `<strong>${esc(track.name)} track</strong><p>${esc(track.blurb)}. Tap <strong>+</strong> to save sessions to My Plan${n ? ` · ${n} saved` : ""}. Optional sessions are dashed.</p>`;
-    document.getElementById("network-card").innerHTML =
-      `<h3 style="margin:0 0 0.55rem;font-size:0.95rem;font-weight:800;color:var(--text)">Networking · ${esc(track.name)}</h3>` + track.networkHtml;
     document.getElementById("path-stops").innerHTML = track.path.map((p) =>
       `<div class="stop ${p.cls}"><strong>${esc(p.t)}</strong><span>${esc(p.d)}</span></div>`
     ).join("");
     renderScheduleDays();
     renderMine();
+    renderNetwork();
   }
 
   function setSchedView(view) {
@@ -1967,6 +2093,7 @@
     document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.dataset.panel === name));
     document.querySelectorAll(".bottom-nav button").forEach((b) => b.classList.toggle("active", b.dataset.panel === name));
     if (name === "mine") renderMine();
+    if (name === "network") renderNetwork();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -1984,6 +2111,115 @@
 
   function setOpenAll(day, open) {
     document.querySelectorAll("#" + day + "-sessions details.session").forEach((d) => { d.open = open; });
+  }
+
+  function loadContacts() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(STORAGE_CONTACTS) || "[]");
+      return Array.isArray(raw) ? raw : [];
+    } catch (e) {
+      return [];
+    }
+  }
+  function saveContacts(list) {
+    localStorage.setItem(STORAGE_CONTACTS, JSON.stringify(list));
+  }
+  function followLabel(v) {
+    return ({ "this-week": "Follow up this week", intro: "Needs intro", coffee: "Coffee / call", later: "Later / weak tie" })[v] || v;
+  }
+
+  function renderContacts() {
+    const list = document.getElementById("contact-list");
+    if (!list) return;
+    const contacts = loadContacts();
+    if (!contacts.length) {
+      list.innerHTML = `<div class="empty-mine" style="margin-top:0.5rem">No people logged yet — add someone after your next hallway chat.</div>`;
+      return;
+    }
+    list.innerHTML = contacts.map((c, idx) => `
+      <div class="contact-card">
+        <button type="button" class="del" data-del-contact="${idx}" aria-label="Remove">×</button>
+        <div class="cn">${esc(c.name)}</div>
+        ${c.org ? `<div class="co">${esc(c.org)}</div>` : ""}
+        ${c.note ? `<div class="cnote">${esc(c.note)}</div>` : ""}
+        <div class="cfollow">${esc(followLabel(c.follow))}</div>
+      </div>
+    `).join("");
+  }
+
+  function renderNetwork() {
+    const track = TRACKS[currentTrackId];
+    if (!track) return;
+    const title = document.getElementById("peer-title");
+    const blurb = document.getElementById("peer-blurb");
+    const peers = document.getElementById("peer-list");
+    const windows = document.getElementById("meetup-windows");
+    if (title) title.textContent = `Who to find · ${track.name}`;
+    if (blurb) blurb.textContent = track.peersBlurb || "Peer targets for your track — not stage celebrities.";
+    if (peers) {
+      peers.innerHTML = (track.peers || []).map((p) =>
+        `<div class="peer-item"><strong>${esc(p.who)}</strong><span>${esc(p.where)} · ${esc(p.why)}</span></div>`
+      ).join("");
+    }
+    if (windows) {
+      windows.innerHTML = MEETUP_WINDOWS.map((w) =>
+        `<div class="window-item"><div class="wt">${esc(w.t)}</div><div class="wd">${esc(w.d)}<small>${esc(w.s)}</small></div></div>`
+      ).join("");
+    }
+    const pitch = document.getElementById("pitch-input");
+    if (pitch && !pitch.dataset.hydrated) {
+      pitch.value = localStorage.getItem(STORAGE_PITCH) || "";
+      pitch.dataset.hydrated = "1";
+    }
+    renderContacts();
+  }
+
+  function initNetwork() {
+    const pitchBtn = document.getElementById("save-pitch");
+    const pitch = document.getElementById("pitch-input");
+    if (pitchBtn && pitch) {
+      pitchBtn.addEventListener("click", () => {
+        localStorage.setItem(STORAGE_PITCH, pitch.value.trim());
+        toast("Pitch saved");
+      });
+    }
+    const form = document.getElementById("contact-form");
+    if (form) {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = document.getElementById("c-name").value.trim();
+        if (!name) return;
+        const contacts = loadContacts();
+        contacts.unshift({
+          name,
+          org: document.getElementById("c-org").value.trim(),
+          note: document.getElementById("c-note").value.trim(),
+          follow: document.getElementById("c-follow").value,
+          at: Date.now()
+        });
+        saveContacts(contacts);
+        form.reset();
+        toast("Person added");
+        renderContacts();
+      });
+    }
+    document.getElementById("clear-contacts")?.addEventListener("click", () => {
+      if (!loadContacts().length) return;
+      if (!confirm("Clear your entire people log?")) return;
+      saveContacts([]);
+      toast("People log cleared");
+      renderContacts();
+    });
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-del-contact]");
+      if (!btn) return;
+      const idx = Number(btn.dataset.delContact);
+      const contacts = loadContacts();
+      contacts.splice(idx, 1);
+      saveContacts(contacts);
+      renderContacts();
+      toast("Removed");
+    });
   }
 
   function initBuildingsList() {
@@ -2213,6 +2449,7 @@
   initBuildingsList();
   renderSponsorTier();
   initChrome();
+  initNetwork();
   showMineDay("sat");
 })();
   </script>
