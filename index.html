@@ -4,38 +4,46 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="theme-color" content="#0b0e14" />
+  <meta name="theme-color" content="#003262" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <meta name="color-scheme" content="dark" />
   <title>Agentic AI Summit 2026</title>
   <style>
     :root {
-      --bg: #080a0f;
-      --bg-elev: #10141c;
-      --bg-card: #151a24;
-      --border: #2a3142;
-      --border-soft: #1e2430;
-      --text: #f2f5fb;
-      --muted: #8b96ab;
-      --faint: #667084;
-      --accent: #6eb0e0;
-      --accent-2: #8b7cf7;
-      --accent-soft: rgba(110, 176, 224, 0.12);
-      --lock: #f0c14d;
-      --lock-soft: rgba(240, 193, 77, 0.12);
-      --ok: #5dcf8a;
-      --ok-soft: rgba(93, 207, 138, 0.12);
-      --warn: #e8897a;
-      --warn-soft: rgba(232, 137, 122, 0.12);
-      --fin: #6fd4c0;
-      --plenary: #c4a5e8;
-      --atlas: #7ec8e8;
-      --nexus: #e8b87a;
-      --compass: #8ad4a8;
-      --radius: 18px;
+      --berkeley-blue: #003262;
+      --berkeley-blue-deep: #00264d;
+      --cal-gold: #CB9445;
+      --cal-gold-bright: #FDB515;
+      --cal-gold-soft: #dcbf72;
+      --bg: #f5f7fa;
+      --bg-elev: #ffffff;
+      --bg-card: #ffffff;
+      --border: #d7dce2;
+      --border-soft: #e6e9ee;
+      --text: #1c2530;
+      --muted: #5b6470;
+      --faint: #8a93a0;
+      --accent: #003262;
+      --accent-2: #CB9445;
+      --accent-soft: rgba(0, 50, 98, 0.08);
+      --lock: #CB9445;
+      --lock-soft: rgba(203, 148, 69, 0.16);
+      --ok: #0d7a4f;
+      --ok-soft: rgba(13, 122, 79, 0.1);
+      --warn: #b45309;
+      --warn-soft: rgba(180, 83, 9, 0.12);
+      --fin: #0b6e4f;
+      --plenary: #003262;
+      --atlas: #1a73e8;
+      --nexus: #c026a8;
+      --compass: #0d7a4f;
+      --radius: 16px;
       --radius-sm: 12px;
       --safe-bottom: env(safe-area-inset-bottom, 0px);
       --safe-top: env(safe-area-inset-top, 0px);
-      --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+      --font: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
       --max: 720px;
     }
     * { box-sizing: border-box; }
@@ -132,7 +140,7 @@
 
     .tabs {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, 1fr);
       gap: 0.25rem;
       padding-bottom: 0.55rem;
     }
@@ -507,23 +515,103 @@
       .session { break-inside: avoid; }
       .session-body { display: block !important; }
     }
+
+    .promo-bar {
+      background: var(--cal-gold-bright);
+      text-align: center;
+      padding: 0.55rem 0.75rem;
+      margin: 0 -1rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .promo-bar a { color: var(--berkeley-blue); text-decoration: none; }
+    .brand-logo { height: 36px; width: auto; display: block; margin-bottom: 0.45rem; }
+    .hero-banner {
+      width: calc(100% + 2rem);
+      margin: 0 -1rem 0.75rem;
+      display: block;
+      max-height: 120px;
+      object-fit: cover;
+      object-position: center;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .brand h1 { color: var(--berkeley-blue); }
+    .brand-link {
+      background: var(--berkeley-blue) !important;
+      color: #fff !important;
+      border-color: var(--berkeley-blue) !important;
+    }
+    .tab.active { color: var(--berkeley-blue); }
+    .tab.active::after { background: var(--cal-gold); }
+    .track-chip.active {
+      background: rgba(0,50,98,0.08);
+      border-color: var(--berkeley-blue);
+      color: var(--berkeley-blue);
+    }
+    .banner {
+      background: linear-gradient(135deg, rgba(0,50,98,0.06), rgba(203,148,69,0.12));
+      border-color: rgba(203,148,69,0.35);
+    }
+    .banner strong { color: var(--berkeley-blue); }
+    .day-btn.active { color: var(--berkeley-blue); }
+    .session.lock { border-color: rgba(203,148,69,0.55); }
+    .sponsor-tier { margin-bottom: 1rem; }
+    .sponsor-tier-label {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--cal-gold); text-align: center; margin: 0 0 0.55rem;
+    }
+    .sponsor-logos {
+      display: flex; flex-wrap: wrap; gap: 0.55rem; justify-content: center;
+      padding: 0.75rem; background: #fff; border: 1px solid var(--border);
+      border-radius: var(--radius); margin-bottom: 0.35rem;
+    }
+    .sponsor-logos a {
+      display: flex; align-items: center; justify-content: center;
+      background: #fff; border: 1px solid var(--border-soft);
+      border-radius: 10px; padding: 0.45rem 0.55rem;
+      width: 132px; height: 56px; text-decoration: none;
+    }
+    .sponsor-logos.platinum a { width: 150px; height: 64px; }
+    .sponsor-logos.gold a { width: 140px; height: 58px; }
+    .sponsor-logos.silver a, .sponsor-logos.bronze a, .sponsor-logos.vc a { width: 120px; height: 50px; }
+    .sponsor-logos img {
+      max-width: 100%; max-height: 100%; object-fit: contain; filter: none;
+    }
+    .disclaimer {
+      font-size: 0.72rem; color: var(--faint); line-height: 1.45; margin-top: 0.75rem;
+    }
+    .topbar {
+      background: rgba(245,247,250,0.92) !important;
+    }
+    .bottom-nav {
+      background: rgba(245,247,250,0.94) !important;
+    }
+    .ghost, .track-chip, .day-switch, .glance, .session, .card, .building-item, .map-frame, .map-static {
+      box-shadow: 0 1px 2px rgba(0,50,98,0.04);
+    }
   </style>
 </head>
 <body>
   <div class="app">
     <header class="topbar">
+      <div class="promo-bar">
+        <a href="https://luma.com/livestream-agenticaisummit" target="_blank" rel="noopener">Watch Live: Agentic AI Summit 2026 — RSVP Now</a>
+      </div>
       <div class="brand-row">
         <div class="brand">
+          <img class="brand-logo" src="https://rdi.berkeley.edu/assets/images/rdi_logo_horizontal_720.png" alt="Berkeley RDI" height="40" />
           <h1>Agentic AI Summit 2026</h1>
-          <p>UC Berkeley · Aug 1–2 · Track planner</p>
+          <p>Hosted by Berkeley RDI · UC Berkeley · Aug 1–2</p>
         </div>
-        <a class="brand-link" href="https://rdi.berkeley.edu/events/agentic-ai-summit-2026" target="_blank" rel="noopener">Agenda ↗</a>
+        <a class="brand-link" href="https://rdi.berkeley.edu/events/agentic-ai-summit-2026" target="_blank" rel="noopener">Official site ↗</a>
       </div>
+      <img class="hero-banner" src="https://rdi.berkeley.edu/assets/images/agentic-ai-summit-2026-banner.png" alt="Agentic AI Summit 2026" />
       <div class="track-scroll" id="track-grid" role="tablist" aria-label="Tracks"></div>
       <div class="tabs" role="tablist" aria-label="Sections">
         <button type="button" class="tab active" data-panel="schedule">Schedule</button>
         <button type="button" class="tab" data-panel="map">Map</button>
         <button type="button" class="tab" data-panel="network">Network</button>
+        <button type="button" class="tab" data-panel="sponsors">Sponsors</button>
         <button type="button" class="tab" data-panel="guide">Guide</button>
       </div>
     </header>
@@ -618,6 +706,21 @@
         </div>
       </section>
 
+      
+      <section class="panel" id="panel-sponsors" role="tabpanel">
+        <div class="card">
+          <h3>Our Sponsors</h3>
+          <p>The Agentic AI Summit 2026 is made possible by the generous support of these sponsors. Logos link to the official event site assets from Berkeley RDI.</p>
+        </div>
+        <div id="sponsors-root"></div>
+        <div class="card">
+          <h3>Community Partners</h3>
+          <div class="sponsor-logos" id="partners-root"></div>
+          <p class="note-inline">More sponsors may be announced on the <a href="https://rdi.berkeley.edu/events/agentic-ai-summit-2026" target="_blank" rel="noopener">official summit page</a>.</p>
+        </div>
+        <p class="disclaimer">Unofficial companion track planner for attendees. Branding and sponsor marks © respective owners / Berkeley RDI. Not an official Berkeley RDI product.</p>
+      </section>
+
       <section class="panel" id="panel-guide" role="tabpanel">
         <div class="card">
           <h3>How to use this planner</h3>
@@ -635,6 +738,7 @@
             <li>Headliner locks across tracks: Ng × Lin (Sat 5:00) and Karpathy when scheduled.</li>
             <li>Invite-only dinners are not scheduled here — use official receptions unless separately invited.</li>
             <li>Plan by stage name until buildings are published.</li>
+            <li>This is an <strong>unofficial</strong> attendee companion using Berkeley RDI public branding and sponsor marks for recognition.</li>
           </ul>
         </div>
         <div class="card">
@@ -662,6 +766,7 @@
       <button type="button" class="active" data-panel="schedule"><span>▤</span>Schedule</button>
       <button type="button" data-panel="map"><span>⌖</span>Map</button>
       <button type="button" data-panel="network"><span>●</span>Network</button>
+      <button type="button" data-panel="sponsors"><span>◇</span>Sponsors</button>
       <button type="button" data-panel="guide"><span>ⓘ</span>Guide</button>
     </div>
   </nav>
@@ -1397,6 +1502,80 @@
     }
   }
 
+
+  const SPONSOR_BASE = "https://rdi.berkeley.edu/assets/images/";
+  const SPONSORS = {
+    Platinum: [
+      ["daytona.svg", "Daytona", "https://www.daytona.io/"],
+      ["ema.png", "Ema", "https://www.ema.co/"],
+      ["fetcherr.png", "Fetcherr", "https://fetcherr.com/"],
+      ["lambda.png", "Lambda", "https://lambda.ai/"],
+      ["replit.png", "Replit", "https://replit.com/"]
+    ],
+    Gold: [
+      ["amd.png", "AMD", "https://www.amd.com/"],
+      ["circle.png", "Circle", "https://www.circle.com/"],
+      ["databricks.png", "Databricks", "https://www.databricks.com/"],
+      ["partners/digitalocean.png", "DigitalOcean", "https://www.digitalocean.com/"],
+      ["novara.png", "Novara", "https://rdi.berkeley.edu/events/agentic-ai-summit-2026"],
+      ["postman.png", "Postman", "https://www.postman.com/"],
+      ["pytorch.png", "PyTorch", "https://pytorch.org/"],
+      ["snorkel.png", "Snorkel AI", "https://snorkel.ai/"],
+      ["suse.png", "SUSE", "https://www.suse.com/"],
+      ["temporal.png", "Temporal", "https://temporal.io/"]
+    ],
+    Silver: [
+      ["partners/alice.png", "Alice", "https://rdi.berkeley.edu/events/agentic-ai-summit-2026"],
+      ["lobehub.png", "LobeHub", "https://lobehub.com/"],
+      ["ludo-robotics.png", "Ludo Robotics", "https://rdi.berkeley.edu/events/agentic-ai-summit-2026"],
+      ["mckinsey.png", "McKinsey", "https://www.mckinsey.com/"],
+      ["partners/nutanix.png", "Nutanix", "https://www.nutanix.com/"],
+      ["outsystems.png", "OutSystems", "https://www.outsystems.com/"],
+      ["samsung-next.png", "Samsung Next", "https://www.samsungnext.com/"],
+      ["partners/vessl.png", "VESSL", "https://www.vessl.ai/"],
+      ["vijil.png", "vijil", "https://www.vijil.ai/"]
+    ],
+    Bronze: [
+      ["elastic.png", "Elastic", "https://www.elastic.co/"],
+      ["kite.svg", "Kite", "https://rdi.berkeley.edu/events/agentic-ai-summit-2026"],
+      ["neo4j.png", "Neo4j", "https://neo4j.com/"],
+      ["novita.svg", "Novita", "https://rdi.berkeley.edu/events/agentic-ai-summit-2026"],
+      ["pioneer.png", "Pioneer", "https://rdi.berkeley.edu/events/agentic-ai-summit-2026"],
+      ["valency.png", "Valency", "https://rdi.berkeley.edu/events/agentic-ai-summit-2026"]
+    ],
+    "VC Partners": [
+      ["lightspeed.png", "Lightspeed", "https://lsvp.com/"],
+      ["mayfield.webp", "Mayfield", "https://www.mayfield.com/"],
+      ["nea.webp", "NEA", "https://www.nea.com/"]
+    ]
+  };
+  const PARTNERS = [
+    ["partners/citris.png", "CITRIS", "https://citris-uc.org/"],
+    ["partners/simons.png", "Simons Institute", "https://simons.berkeley.edu/"],
+    ["partners/cdss.png", "UC Berkeley CDSS", "https://cdss.berkeley.edu/"],
+    ["partners/haas.png", "Berkeley Haas", "https://haas.berkeley.edu/"],
+    ["partners/engineering.webp", "UC Berkeley Engineering", "https://engineering.berkeley.edu/"],
+    ["partners/sutardja.png", "Sutardja Center", "https://scet.berkeley.edu/"]
+  ];
+
+  function renderSponsorTier() {
+    const root = document.getElementById("sponsors-root");
+    if (!root) return;
+    const tierClass = { Platinum: "platinum", Gold: "gold", Silver: "silver", Bronze: "bronze", "VC Partners": "vc" };
+    root.innerHTML = Object.keys(SPONSORS).map((tier) => {
+      const logos = SPONSORS[tier].map(([src, name, href]) =>
+        `<a href="${href}" target="_blank" rel="noopener" title="${esc(name)}"><img src="${SPONSOR_BASE}${src}" alt="${esc(name)}" loading="lazy" /></a>`
+      ).join("");
+      return `<div class="sponsor-tier"><div class="sponsor-tier-label">${esc(tier)}</div><div class="sponsor-logos ${tierClass[tier] || ""}">${logos}</div></div>`;
+    }).join("");
+    const partners = document.getElementById("partners-root");
+    if (partners) {
+      partners.innerHTML = PARTNERS.map(([src, name, href]) =>
+        `<a href="${href}" target="_blank" rel="noopener" title="${esc(name)}"><img src="${SPONSOR_BASE}${src}" alt="${esc(name)}" loading="lazy" /></a>`
+      ).join("");
+    }
+  }
+
   function initTracks() {
     const grid = document.getElementById("track-grid");
     grid.innerHTML = TRACK_ORDER.map((id) => {
@@ -1428,6 +1607,7 @@
 
   initTracks();
   initBuildingsList();
+  renderSponsorTier();
   initChrome();
 })();
   </script>
