@@ -836,8 +836,8 @@
       background: #fff;
       border: 1px solid var(--border-soft);
       border-radius: 12px;
-      padding: 0.7rem 0.75rem;
-      min-height: 78px;
+      padding: 0.85rem 0.9rem;
+      min-height: 88px;
       text-decoration: none;
       color: var(--berkeley-blue);
       font-size: 0.78rem;
@@ -850,17 +850,21 @@
       box-shadow: 0 0 0 2px rgba(203,148,69,0.18);
       outline: none;
     }
-    .sponsor-logos.platinum a { min-height: 88px; }
-    .sponsor-logos.gold a { min-height: 82px; }
+    .sponsor-logos.platinum a { min-height: 96px; }
+    .sponsor-logos.gold a { min-height: 90px; }
     .sponsor-logos img {
-      width: 100%;
-      max-width: 150px;
-      max-height: 52px;
+      width: auto;
       height: auto;
+      max-width: 100%;
+      max-height: 56px;
       object-fit: contain;
       display: block;
+      background: transparent;
     }
-    .sponsor-logos.platinum img { max-width: 170px; max-height: 58px; }
+    .sponsor-logos.platinum img { max-height: 64px; }
+    .sponsor-logos a.is-fallback {
+      background: #f5f7fa;
+    }
     .sponsor-logos .logo-fallback {
       display: none;
       padding: 0.2rem;
@@ -2094,6 +2098,7 @@
     document.querySelectorAll(".bottom-nav button").forEach((b) => b.classList.toggle("active", b.dataset.panel === name));
     if (name === "mine") renderMine();
     if (name === "network") renderNetwork();
+    if (name === "sponsors") ensureSponsorImages();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -2250,10 +2255,7 @@
 
 
   const REPO_ASSET_CDN = "https://raw.githubusercontent.com/khaosans/agentic-ai-summit-2026-planner/main/";
-  const SPONSOR_LOCAL = "assets/sponsors/";
-  const SPONSOR_REMOTE = "https://rdi.berkeley.edu/assets/images/sponsors/";
-  const PARTNER_LOCAL = "assets/partners/";
-  const PARTNER_REMOTE = "https://rdi.berkeley.edu/assets/images/partners/";
+  const RDI_IMG = "https://rdi.berkeley.edu/assets/images/";
 
   // htmlpreview can't resolve relative assets — point brand images at raw GitHub first
   (function wireCdnFallbacks() {
@@ -2269,67 +2271,68 @@
 
   const SPONSORS = {
     Platinum: [
-      ["daytona.svg", "Daytona", "https://www.daytona.io/"],
-      ["ema.png", "Ema", "https://www.ema.ai/"],
-      ["fetcherr.png", "Fetcherr", "https://www.fetcherr.io/"],
-      ["lambda.png", "Lambda", "https://lambda.ai/"],
-      ["replit.png", "Replit", "https://replit.com/"]
+      ["sponsors/daytona.svg", "Daytona", "https://www.daytona.io/"],
+      ["sponsors/ema.png", "Ema", "https://www.ema.ai/"],
+      ["sponsors/fetcherr.png", "Fetcherr", "https://www.fetcherr.io/"],
+      ["sponsors/lambda.png", "Lambda", "https://lambda.ai/"],
+      ["sponsors/replit.png", "Replit", "https://replit.com/"]
     ],
     Gold: [
-      ["amd.png", "AMD", "https://www.amd.com/"],
-      ["circle.png", "Circle", "https://www.circle.com/"],
-      ["databricks.png", "Databricks", "https://www.databricks.com/"],
-      ["digitalocean.png", "DigitalOcean", "https://www.digitalocean.com/", "partner"],
-      ["novara.png", "Novara", "https://www.novara.tech/"],
-      ["postman.png", "Postman", "https://www.postman.com/"],
-      ["pytorch.png", "PyTorch", "https://pytorch.org/"],
-      ["snorkel.png", "Snorkel AI", "https://snorkel.ai/"],
-      ["suse.png", "SUSE", "https://www.suse.com/products/ai/"],
-      ["temporal.png", "Temporal", "https://temporal.io/"]
+      ["sponsors/amd.png", "AMD", "https://www.amd.com/"],
+      ["sponsors/circle.png", "Circle", "https://www.circle.com/"],
+      ["sponsors/databricks.png", "Databricks", "https://www.databricks.com/"],
+      ["partners/digitalocean.png", "DigitalOcean", "https://www.digitalocean.com/"],
+      ["sponsors/novara.png", "Novara", "https://www.novara.tech/"],
+      ["sponsors/postman.png", "Postman", "https://www.postman.com/"],
+      ["sponsors/pytorch.png", "PyTorch", "https://pytorch.org/"],
+      ["sponsors/snorkel.png", "Snorkel AI", "https://snorkel.ai/"],
+      ["sponsors/suse.png", "SUSE", "https://www.suse.com/products/ai/"],
+      ["sponsors/temporal.png", "Temporal", "https://temporal.io/"]
     ],
     Silver: [
-      ["alice.png", "Alice", "https://alice.io/", "partner"],
-      ["lobehub.png", "LobeHub", "https://lobehub.com/"],
-      ["ludo-robotics.png", "Ludo Robotics", "https://rdi.berkeley.edu/events/agentic-ai-summit-2026"],
-      ["mckinsey.png", "McKinsey", "https://www.mckinsey.com/"],
-      ["nutanix.png", "Nutanix", "https://www.nutanix.com/", "partner"],
-      ["outsystems.png", "OutSystems", "https://www.outsystems.com/"],
-      ["samsung-next.png", "Samsung Next", "https://www.samsungnext.com/"],
-      ["vessl.png", "VESSL", "https://vessl.ai/", "partner"],
-      ["vijil.png", "vijil", "https://www.vijil.ai/"]
+      ["partners/alice.png", "Alice", "https://alice.io/"],
+      ["sponsors/lobehub.png", "LobeHub", "https://lobehub.com/"],
+      ["sponsors/ludo-robotics.png", "Ludo Robotics", "https://rdi.berkeley.edu/events/agentic-ai-summit-2026"],
+      ["sponsors/mckinsey.png", "McKinsey", "https://www.mckinsey.com/"],
+      ["partners/nutanix.png", "Nutanix", "https://www.nutanix.com/"],
+      ["sponsors/outsystems.png", "OutSystems", "https://www.outsystems.com/"],
+      ["sponsors/samsung-next.png", "Samsung Next", "https://www.samsungnext.com/"],
+      ["partners/vessl.png", "VESSL", "https://vessl.ai/"],
+      ["sponsors/vijil.png", "vijil", "https://www.vijil.ai/"]
     ],
     Bronze: [
-      ["elastic.png", "Elastic", "https://www.elastic.co/"],
-      ["kite.svg", "Kite", "https://rdi.berkeley.edu/events/agentic-ai-summit-2026"],
-      ["neo4j.png", "Neo4j", "https://neo4j.com/"],
-      ["novita.svg", "Novita", "https://rdi.berkeley.edu/events/agentic-ai-summit-2026"],
-      ["pioneer.png", "Pioneer", "https://rdi.berkeley.edu/events/agentic-ai-summit-2026"],
-      ["valency.png", "Valency", "https://rdi.berkeley.edu/events/agentic-ai-summit-2026"]
+      ["sponsors/elastic.png", "Elastic", "https://www.elastic.co/"],
+      ["sponsors/kite.svg", "Kite", "https://rdi.berkeley.edu/events/agentic-ai-summit-2026"],
+      ["sponsors/neo4j.png", "Neo4j", "https://neo4j.com/"],
+      ["sponsors/novita.svg", "Novita", "https://rdi.berkeley.edu/events/agentic-ai-summit-2026"],
+      ["sponsors/pioneer.png", "Pioneer", "https://rdi.berkeley.edu/events/agentic-ai-summit-2026"],
+      ["sponsors/valency.png", "Valency", "https://rdi.berkeley.edu/events/agentic-ai-summit-2026"]
     ],
     "VC Partners": [
-      ["lightspeed.png", "Lightspeed", "https://lsvp.com/"],
-      ["mayfield.webp", "Mayfield", "https://www.mayfield.com/"],
-      ["nea.webp", "NEA", "https://www.nea.com/"]
+      ["sponsors/lightspeed.png", "Lightspeed", "https://lsvp.com/"],
+      ["sponsors/mayfield.webp", "Mayfield", "https://www.mayfield.com/"],
+      ["sponsors/nea.webp", "NEA", "https://www.nea.com/"]
     ]
   };
   const PARTNERS = [
-    ["citris.png", "CITRIS", "https://citris-uc.org/"],
-    ["simons.png", "Simons Institute", "https://simons.berkeley.edu/"],
-    ["cdss.png", "UC Berkeley CDSS", "https://cdss.berkeley.edu/"],
-    ["haas.png", "Berkeley Haas", "https://haas.berkeley.edu/"],
-    ["engineering.webp", "UC Berkeley Engineering", "https://engineering.berkeley.edu/"],
-    ["sutardja.png", "Sutardja Center", "https://scet.berkeley.edu/"]
+    ["partners/citris.png", "CITRIS", "https://citris-uc.org/"],
+    ["partners/simons.png", "Simons Institute", "https://simons.berkeley.edu/"],
+    ["partners/cdss.png", "UC Berkeley CDSS", "https://cdss.berkeley.edu/"],
+    ["partners/haas.png", "Berkeley Haas", "https://haas.berkeley.edu/"],
+    ["partners/engineering.webp", "UC Berkeley Engineering", "https://engineering.berkeley.edu/"],
+    ["partners/sutardja.png", "Sutardja Center", "https://scet.berkeley.edu/"]
   ];
 
-  function logoCard(src, name, href, kind) {
-    const local = kind === "partner" ? PARTNER_LOCAL : SPONSOR_LOCAL;
-    const remote = kind === "partner" ? PARTNER_REMOTE : SPONSOR_REMOTE;
+  function logoCard(path, name, href) {
     const safe = esc(name);
-    const cdn = REPO_ASSET_CDN + local + src;
+    // Absolute RDI URL first — works in htmlpreview/gist/Pages; then GitHub raw; then local
+    const rdi = RDI_IMG + path;
+    const rawUrl = REPO_ASSET_CDN + "assets/" + path;
+    const local = "assets/" + path;
     return `<a href="${href}" target="_blank" rel="noopener" title="${safe}">
-      <img src="${local}${src}" alt="${safe}" loading="lazy" decoding="async"
-        data-cdn="${cdn}" data-remote="${remote}${src}"
-        onerror="if(this.dataset.cdn&&this.src!==this.dataset.cdn){const u=this.dataset.cdn;delete this.dataset.cdn;this.src=u;return;} if(this.dataset.remote&&this.src!==this.dataset.remote){const u=this.dataset.remote;delete this.dataset.remote;this.src=u;return;} this.closest('a').classList.add('is-fallback');" />
+      <img src="${rdi}" alt="${safe}" loading="eager" decoding="async" referrerpolicy="no-referrer"
+        data-raw="${rawUrl}" data-local="${local}"
+        onerror="if(this.dataset.raw){const u=this.dataset.raw;delete this.dataset.raw;this.src=u;return;} if(this.dataset.local){const u=this.dataset.local;delete this.dataset.local;this.src=u;return;} this.closest('a').classList.add('is-fallback');" />
       <span class="logo-fallback">${safe}</span>
     </a>`;
   }
@@ -2338,21 +2341,23 @@
     const root = document.getElementById("sponsors-root");
     if (!root) return;
     const tierClass = { Platinum: "platinum", Gold: "gold", Silver: "silver", Bronze: "bronze", "VC Partners": "vc" };
-    const needsCdn = /htmlpreview|raw\.githack|cdn\.jsdelivr/.test(location.hostname);
     root.innerHTML = Object.keys(SPONSORS).map((tier) => {
-      const logos = SPONSORS[tier].map((row) => logoCard(row[0], row[1], row[2], row[3] || "sponsor")).join("");
+      const logos = SPONSORS[tier].map((row) => logoCard(row[0], row[1], row[2])).join("");
       return `<div class="sponsor-tier"><div class="sponsor-tier-label">${esc(tier)}</div><div class="sponsor-logos ${tierClass[tier] || ""}">${logos}</div></div>`;
     }).join("");
-    if (needsCdn) {
-      root.querySelectorAll("img[data-cdn]").forEach((img) => { img.src = img.dataset.cdn; });
-    }
     const partners = document.getElementById("partners-root");
     if (partners) {
-      partners.innerHTML = PARTNERS.map((row) => logoCard(row[0], row[1], row[2], "partner")).join("");
-      if (needsCdn) {
-        partners.querySelectorAll("img[data-cdn]").forEach((img) => { img.src = img.dataset.cdn; });
-      }
+      partners.innerHTML = PARTNERS.map((row) => logoCard(row[0], row[1], row[2])).join("");
     }
+  }
+
+  function ensureSponsorImages() {
+    document.querySelectorAll("#panel-sponsors img").forEach((img) => {
+      if (img.complete && img.naturalWidth > 0) return;
+      // Nudge unloadable lazy/hidden images by re-assigning src
+      const cur = img.currentSrc || img.src;
+      if (cur) img.src = cur;
+    });
   }
 
   function initTracks() {
