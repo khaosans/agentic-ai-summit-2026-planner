@@ -279,15 +279,149 @@
     .session summary {
       list-style: none;
       cursor: pointer;
-      padding: 0.85rem 1rem;
+      padding: 0.85rem 0.75rem 0.85rem 1rem;
       display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 0.5rem;
+      grid-template-columns: 1fr auto auto;
+      gap: 0.4rem;
       align-items: start;
       -webkit-tap-highlight-color: transparent;
     }
     .session summary::-webkit-details-marker { display: none; }
     .session-summary-main { min-width: 0; }
+    .add-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      color: var(--berkeley-blue);
+      font-size: 1.35rem;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+      font-family: inherit;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+    .add-btn:hover, .add-btn:focus-visible {
+      border-color: var(--berkeley-blue);
+      outline: none;
+    }
+    .add-btn.on {
+      background: var(--berkeley-blue);
+      border-color: var(--berkeley-blue);
+      color: #fff;
+    }
+    .add-btn.on::after { content: none; }
+    .session.in-plan {
+      border-color: color-mix(in srgb, var(--berkeley-blue) 35%, var(--border));
+      box-shadow: 0 0 0 1px rgba(0,50,98,0.06);
+    }
+    .view-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.35rem;
+      margin-bottom: 0.75rem;
+      padding: 0.25rem;
+      background: var(--bg-elev);
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+    }
+    .view-toggle button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 0.55rem;
+      border-radius: 10px;
+      cursor: pointer;
+      min-height: 40px;
+    }
+    .view-toggle button.active {
+      background: #fff;
+      color: var(--berkeley-blue);
+      box-shadow: 0 1px 2px rgba(0,50,98,0.08);
+    }
+    .mine-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+    }
+    .mine-actions button, .btn-soft {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--berkeley-blue);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.5rem 0.75rem;
+      border-radius: 999px;
+      cursor: pointer;
+      min-height: 40px;
+    }
+    .mine-actions button.primary {
+      background: var(--berkeley-blue);
+      color: #fff;
+      border-color: var(--berkeley-blue);
+    }
+    .mine-actions button.danger {
+      color: #9f1239;
+      border-color: #fecdd3;
+    }
+    .mine-count {
+      margin-top: 0.65rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .conflict-box {
+      padding: 0.75rem 0.85rem;
+      border-radius: var(--radius-sm);
+      background: var(--warn-soft);
+      border: 1px solid rgba(180,83,9,0.25);
+      color: var(--warn);
+      font-size: 0.82rem;
+      margin-bottom: 0.85rem;
+      line-height: 1.4;
+    }
+    .empty-mine {
+      text-align: center;
+      padding: 1.5rem 1rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+      background: var(--bg-elev);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+    }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(4.5rem + var(--safe-bottom));
+      transform: translateX(-50%) translateY(120%);
+      background: var(--berkeley-blue);
+      color: #fff;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 0.65rem 1rem;
+      border-radius: 999px;
+      z-index: 80;
+      opacity: 0;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      pointer-events: none;
+      white-space: nowrap;
+      max-width: calc(100vw - 2rem);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .badge.conflict { background: var(--warn-soft); color: var(--warn); }
+    .badge.saved { background: rgba(0,50,98,0.1); color: var(--berkeley-blue); }
     .session-badges { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.4rem; }
     .badge {
       display: inline-flex;
@@ -537,18 +671,68 @@
     }
     .hero-banner-wrap {
       width: calc(100% + 2rem);
-      margin: 0 -1rem 0.75rem;
+      margin: 0 -1rem 0.55rem;
       background: var(--berkeley-blue);
       border-bottom: 1px solid var(--border-soft);
       line-height: 0;
+      position: relative;
     }
     .hero-banner {
       width: 100%;
       height: auto;
       display: block;
-      aspect-ratio: 1400 / 711;
-      object-fit: cover;
-      object-position: center 42%;
+      object-fit: contain; /* never crop official art */
+      object-position: center center;
+      background: var(--berkeley-blue);
+      cursor: zoom-in;
+    }
+    .hero-hint {
+      display: block;
+      text-align: center;
+      font-size: 0.68rem;
+      font-weight: 600;
+      color: var(--faint);
+      margin: 0 0 0.65rem;
+    }
+    .lightbox {
+      border: 0;
+      padding: 0;
+      margin: 0;
+      max-width: 100vw;
+      max-height: 100vh;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 20, 40, 0.94);
+    }
+    .lightbox::backdrop { background: rgba(0, 0, 0, 0.72); }
+    .lightbox-inner {
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      gap: 0.75rem;
+      box-sizing: border-box;
+    }
+    .lightbox-inner img {
+      max-width: min(1400px, 100%);
+      max-height: calc(100vh - 5rem);
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    .lightbox-close {
+      border: 0;
+      background: var(--cal-gold-bright);
+      color: var(--berkeley-blue);
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.55rem 1rem;
+      border-radius: 999px;
+      cursor: pointer;
     }
 
     .brand h1 { color: var(--berkeley-blue); font-weight: 700; }
@@ -727,8 +911,9 @@
       <div class="hero-banner-wrap">
         <img
           class="hero-banner"
+          id="hero-banner"
           src="assets/banner.jpg"
-          alt="Agentic AI Summit 2026 — Berkeley RDI"
+          alt="Agentic AI Summit 2026 — Berkeley RDI. Tap to view full banner."
           width="1400"
           height="711"
           decoding="async"
@@ -736,11 +921,12 @@
           data-fallback="https://rdi.berkeley.edu/assets/images/agentic-ai-summit-2026-banner.png"
           onerror="if(this.dataset.cdn){this.src=this.dataset.cdn;this.removeAttribute('data-cdn');return;} if(this.dataset.fallback){this.src=this.dataset.fallback;this.removeAttribute('data-fallback');}" />
       </div>
+      <p class="hero-hint">Official event banner · tap to enlarge</p>
       <div class="track-scroll" id="track-grid" role="tablist" aria-label="Tracks"></div>
       <div class="tabs" role="tablist" aria-label="Sections">
         <button type="button" class="tab active" data-panel="schedule">Schedule</button>
+        <button type="button" class="tab" data-panel="mine">My Plan</button>
         <button type="button" class="tab" data-panel="map">Map</button>
-        <button type="button" class="tab" data-panel="network">Network</button>
         <button type="button" class="tab" data-panel="sponsors">Sponsors</button>
         <button type="button" class="tab" data-panel="guide">Guide</button>
       </div>
@@ -750,6 +936,10 @@
       <div class="banner" id="active-banner"></div>
 
       <section class="panel active" id="panel-schedule" role="tabpanel">
+        <div class="view-toggle" role="tablist" aria-label="Schedule view">
+          <button type="button" class="active" data-sched-view="track">Track plan</button>
+          <button type="button" data-sched-view="all">Browse all</button>
+        </div>
         <div class="day-switch">
           <button type="button" class="day-btn active" data-day="sat">Saturday</button>
           <button type="button" class="day-btn" data-day="sun">Sunday</button>
@@ -780,6 +970,27 @@
           <div class="toolbar"><h2>Sessions</h2><p class="day-sub" id="sun-sub" style="margin:0;font-size:0.78rem;color:var(--muted)"></p></div>
           <div id="sun-sessions"></div>
         </div>
+      </section>
+
+      <section class="panel" id="panel-mine" role="tabpanel">
+        <div class="card">
+          <h3>My Plan</h3>
+          <p>Build your own agenda like Google Cloud Next — tap <strong>+</strong> on any session to save it. Your plan stays on this device.</p>
+          <div class="mine-actions">
+            <button type="button" class="primary" id="seed-track">Add current track</button>
+            <button type="button" id="goto-browse">Browse all</button>
+            <button type="button" class="danger" id="clear-mine">Clear plan</button>
+          </div>
+          <div class="mine-count" id="mine-count">0 sessions saved</div>
+        </div>
+        <div id="mine-conflicts" hidden></div>
+        <div class="day-switch" style="margin-top:0.25rem">
+          <button type="button" class="day-btn active" data-mine-day="sat">Saturday</button>
+          <button type="button" class="day-btn" data-mine-day="sun">Sunday</button>
+        </div>
+        <div id="mine-sat"></div>
+        <div id="mine-sun" hidden></div>
+        <div class="card" id="network-card" style="margin-top:1rem"></div>
       </section>
 
       <section class="panel" id="panel-map" role="tabpanel">
@@ -823,20 +1034,6 @@
         <div class="your-stops" id="path-stops"></div>
       </section>
 
-      <section class="panel" id="panel-network" role="tabpanel">
-        <div class="card" id="network-card"></div>
-        <div class="card">
-          <h3>Shared playbook</h3>
-          <ul>
-            <li>Arrive ~8:30 both days for hallway conversations.</li>
-            <li>Leave panels 1–2 minutes early to catch speakers at the exit.</li>
-            <li>Photo + short post after headliners is fine — skip long handshake queues.</li>
-            <li>Log name / org / ask the same night.</li>
-          </ul>
-        </div>
-      </section>
-
-      
       <section class="panel" id="panel-sponsors" role="tabpanel">
         <div class="card">
           <h3>Our Sponsors</h3>
@@ -855,10 +1052,20 @@
         <div class="card">
           <h3>How to use this planner</h3>
           <ul>
-            <li>Choose a <strong>track</strong> at the top to generate Saturday/Sunday plans.</li>
-            <li>Use <strong>Schedule</strong> for the timeline. Sessions are collapsed by default — tap to expand speakers and notes.</li>
-            <li><strong>Optional</strong> sessions are dashed; <strong>locks</strong> are highlighted.</li>
-            <li><strong>Map</strong> shows primary campus buildings marked — match Plenary/Atlas/Nexus/Compass on-site.</li>
+            <li>Pick a <strong>track</strong> for a suggested plan, or tap <strong>Browse all</strong> to see every session.</li>
+            <li>Tap <strong>+</strong> on any session to add it to <strong>My Plan</strong> (saved on this device).</li>
+            <li>Use <strong>Add current track</strong> on My Plan to seed your agenda in one tap, then customize.</li>
+            <li><strong>Optional</strong> sessions are dashed; <strong>locks</strong> are gold-highlighted headliners.</li>
+            <li><strong>Map</strong> shows primary campus buildings — match Plenary/Atlas/Nexus/Compass on-site.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Networking playbook</h3>
+          <ul>
+            <li>Arrive ~8:30 both days for hallway conversations.</li>
+            <li>Leave panels 1–2 minutes early to catch speakers at the exit.</li>
+            <li>Photo + short post after headliners is fine — skip long handshake queues.</li>
+            <li>Log name / org / ask the same night.</li>
           </ul>
         </div>
         <div class="card">
@@ -891,11 +1098,19 @@
     </main>
   </div>
 
+  <dialog class="lightbox" id="banner-lightbox" aria-label="Full event banner">
+    <div class="lightbox-inner">
+      <img id="lightbox-img" alt="Agentic AI Summit 2026 full banner" />
+      <button type="button" class="lightbox-close" id="lightbox-close">Close</button>
+    </div>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
   <nav class="bottom-nav" aria-label="Primary">
     <div class="inner">
       <button type="button" class="active" data-panel="schedule"><span>▤</span>Schedule</button>
+      <button type="button" data-panel="mine"><span>★</span>My Plan</button>
       <button type="button" data-panel="map"><span>⌖</span>Map</button>
-      <button type="button" data-panel="network"><span>●</span>Network</button>
       <button type="button" data-panel="sponsors"><span>◇</span>Sponsors</button>
       <button type="button" data-panel="guide"><span>ⓘ</span>Guide</button>
     </div>
@@ -1513,6 +1728,92 @@
 
   const TRACK_ORDER = ["builder", "fintech", "founder", "enterprise", "research"];
   const STORAGE_TRACK = "aas2026-track";
+  const STORAGE_AGENDA = "aas2026-agenda-v1";
+  const STORAGE_VIEW = "aas2026-sched-view";
+
+  // day + sort key (HHMM) for catalog / conflicts
+  const META = {
+    earlySat: { day: "sat", sort: 830, end: 915 },
+    openingsSat: { day: "sat", sort: 915, end: 1105 },
+    circle: { day: "sat", sort: 1045, end: 1145 },
+    software: { day: "sat", sort: 1110, end: 1220 },
+    daytona: { day: "sat", sort: 1110, end: 1210 },
+    fetcherr: { day: "sat", sort: 1350, end: 1450 },
+    temporal: { day: "sat", sort: 1400, end: 1500 },
+    lambda: { day: "sat", sort: 1400, end: 1500 },
+    replit: { day: "sat", sort: 1410, end: 1510 },
+    secure: { day: "sat", sort: 1525, end: 1625 },
+    markets: { day: "sat", sort: 1630, end: 1700 },
+    ng: { day: "sat", sort: 1700, end: 1730 },
+    receptionSat: { day: "sat", sort: 1730, end: 1900 },
+    earlySun: { day: "sun", sort: 830, end: 940 },
+    enterprise: { day: "sun", sort: 940, end: 1100 },
+    ghodsi: { day: "sun", sort: 1105, end: 1145 },
+    ema: { day: "sun", sort: 1120, end: 1220 },
+    evals: { day: "sun", sort: 1300, end: 1400 },
+    platforms: { day: "sun", sort: 1405, end: 1505 },
+    finance: { day: "sun", sort: 1440, end: 1540 },
+    spotlight: { day: "sun", sort: 1545, end: 1645 },
+    karpathy: { day: "sun", sort: 2000, end: 2100 },
+    receptionSun: { day: "sun", sort: 1700, end: 1900 }
+  };
+
+  const ALL_SAT = Object.keys(META).filter((id) => META[id].day === "sat").sort((a, b) => META[a].sort - META[b].sort);
+  const ALL_SUN = Object.keys(META).filter((id) => META[id].day === "sun").sort((a, b) => META[a].sort - META[b].sort);
+
+  let currentTrackId = "builder";
+  let schedView = localStorage.getItem(STORAGE_VIEW) || "track";
+
+  function loadAgenda() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(STORAGE_AGENDA) || "[]");
+      return Array.isArray(raw) ? raw.filter((id) => S[id]) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+  function saveAgenda(ids) {
+    localStorage.setItem(STORAGE_AGENDA, JSON.stringify(ids));
+  }
+  function isSaved(id) {
+    return loadAgenda().includes(id);
+  }
+  function toggleAgenda(id) {
+    const ids = loadAgenda();
+    const i = ids.indexOf(id);
+    if (i >= 0) ids.splice(i, 1);
+    else ids.push(id);
+    saveAgenda(ids);
+    return ids.includes(id);
+  }
+  function toast(msg) {
+    const el = document.getElementById("toast");
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add("show");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => el.classList.remove("show"), 1600);
+  }
+
+  function findConflicts(ids) {
+    const byDay = { sat: [], sun: [] };
+    ids.forEach((id) => {
+      const m = META[id];
+      if (m) byDay[m.day].push({ id, ...m, title: S[id].title });
+    });
+    const conflicts = [];
+    ["sat", "sun"].forEach((day) => {
+      const list = byDay[day].sort((a, b) => a.sort - b.sort);
+      for (let i = 0; i < list.length; i++) {
+        for (let j = i + 1; j < list.length; j++) {
+          if (list[j].sort < list[i].end && list[i].sort < list[j].end) {
+            conflicts.push([list[i], list[j]]);
+          }
+        }
+      }
+    });
+    return conflicts;
+  }
 
   const BUILDINGS = [
     { name: "Haas Pavilion", kind: "primary", desc: "Large arena — common for high-capacity keynotes", lat: 37.86935, lng: -122.26225, q: "Haas+Pavilion+UC+Berkeley" },
@@ -1535,17 +1836,23 @@
       .replace(/"/g, "&quot;");
   }
 
-  function renderSession(sess) {
+  function renderSession(sess, opts) {
+    opts = opts || {};
+    const saved = isSaved(sess.id);
     const cls = ["session"];
     if (sess.lock) cls.push("lock");
     if (sess.optional) cls.push("optional-session");
-    let html = `<details class="${cls.join(" ")}"><summary>`;
+    if (saved) cls.push("in-plan");
+    let html = `<details class="${cls.join(" ")}" data-sid="${esc(sess.id)}"><summary>`;
     html += `<div class="session-summary-main"><div class="session-badges">`;
     sess.badges.forEach((b, i) => {
       html += `<span class="badge ${b}">${esc(sess.badgeLabels[i] || b)}</span>`;
     });
+    if (saved) html += `<span class="badge saved">In My Plan</span>`;
+    if (opts.conflict) html += `<span class="badge conflict">Time conflict</span>`;
     html += `</div><div class="time">${esc(sess.time)} · ${esc(sess.duration)}</div>`;
     html += `<h4 class="session-title">${esc(sess.title)}</h4></div>`;
+    html += `<button type="button" class="add-btn${saved ? " on" : ""}" data-add="${esc(sess.id)}" aria-label="${saved ? "Remove from My Plan" : "Add to My Plan"}" title="${saved ? "Remove from My Plan" : "Add to My Plan"}">${saved ? "✓" : "+"}</button>`;
     html += `<span class="chev" aria-hidden="true">▾</span></summary><div class="session-body">`;
     html += `<p class="session-topic">${esc(sess.topic)}</p>`;
     (sess.groups || []).forEach((g, idx) => {
@@ -1569,38 +1876,110 @@
     ).join("");
   }
 
+  function renderScheduleDays() {
+    const track = TRACKS[currentTrackId];
+    if (!track) return;
+    const satIds = schedView === "all" ? ALL_SAT : track.sat;
+    const sunIds = schedView === "all" ? ALL_SUN : track.sun;
+    document.getElementById("sat-sub").textContent = schedView === "all"
+      ? "Full catalog — tap + to add any session to My Plan"
+      : track.satSub;
+    document.getElementById("sun-sub").textContent = schedView === "all"
+      ? "Full catalog — tap + to add any session to My Plan"
+      : track.sunSub;
+    document.getElementById("sat-glance").innerHTML = schedView === "all"
+      ? renderGlance([["—", "Browse all Saturday sessions", "Add what you want · watch for conflicts in My Plan"]])
+      : renderGlance(track.satGlance);
+    document.getElementById("sun-glance").innerHTML = schedView === "all"
+      ? renderGlance([["—", "Browse all Sunday sessions", "Add what you want · watch for conflicts in My Plan"]])
+      : renderGlance(track.sunGlance);
+    document.getElementById("sat-sessions").innerHTML = satIds.map((sid) => renderSession(S[sid])).join("");
+    document.getElementById("sun-sessions").innerHTML = sunIds.map((sid) => renderSession(S[sid])).join("");
+  }
+
+  function renderMine() {
+    const ids = loadAgenda();
+    const conflicts = findConflicts(ids);
+    const conflictIds = new Set();
+    conflicts.forEach(([a, b]) => { conflictIds.add(a.id); conflictIds.add(b.id); });
+    const box = document.getElementById("mine-conflicts");
+    if (conflicts.length) {
+      box.hidden = false;
+      box.className = "conflict-box";
+      box.innerHTML = "<strong>Time overlaps</strong> — " + conflicts.map(([a, b]) =>
+        `${esc(a.title)} ↔ ${esc(b.title)}`
+      ).join("; ") + ". Keep one, or accept the overlap.";
+    } else {
+      box.hidden = true;
+      box.innerHTML = "";
+    }
+    document.getElementById("mine-count").textContent =
+      ids.length === 0 ? "0 sessions saved — add from Schedule or seed a track"
+        : `${ids.length} session${ids.length === 1 ? "" : "s"} saved`;
+
+    const sat = ids.filter((id) => META[id] && META[id].day === "sat").sort((a, b) => META[a].sort - META[b].sort);
+    const sun = ids.filter((id) => META[id] && META[id].day === "sun").sort((a, b) => META[a].sort - META[b].sort);
+    const empty = `<div class="empty-mine">Nothing here yet.<br/>Open <strong>Schedule</strong>, tap <strong>+</strong>, or use <strong>Add current track</strong>.</div>`;
+    document.getElementById("mine-sat").innerHTML = sat.length
+      ? sat.map((id) => renderSession(S[id], { conflict: conflictIds.has(id) })).join("")
+      : empty;
+    document.getElementById("mine-sun").innerHTML = sun.length
+      ? sun.map((id) => renderSession(S[id], { conflict: conflictIds.has(id) })).join("")
+      : empty;
+  }
+
+  function refreshAgendaUI() {
+    renderScheduleDays();
+    renderMine();
+  }
+
   function setTrack(id) {
     const track = TRACKS[id];
     if (!track) return;
+    currentTrackId = id;
     localStorage.setItem(STORAGE_TRACK, id);
     document.querySelectorAll(".track-chip").forEach((btn) => {
       btn.classList.toggle("active", btn.dataset.track === id);
     });
+    const n = loadAgenda().length;
     document.getElementById("active-banner").innerHTML =
-      `<strong>${esc(track.name)} track</strong><p>${esc(track.blurb)}. Optional sessions are dashed — expand any card for full speakers.</p>`;
-    document.getElementById("sat-sub").textContent = track.satSub;
-    document.getElementById("sun-sub").textContent = track.sunSub;
-    document.getElementById("sat-glance").innerHTML = renderGlance(track.satGlance);
-    document.getElementById("sun-glance").innerHTML = renderGlance(track.sunGlance);
-    document.getElementById("sat-sessions").innerHTML = track.sat.map((sid) => renderSession(S[sid])).join("");
-    document.getElementById("sun-sessions").innerHTML = track.sun.map((sid) => renderSession(S[sid])).join("");
-    document.getElementById("network-card").innerHTML = `<h3 style="margin:0 0 0.55rem;font-size:0.95rem;font-weight:800;color:var(--text)">Networking · ${esc(track.name)}</h3>` + track.networkHtml;
+      `<strong>${esc(track.name)} track</strong><p>${esc(track.blurb)}. Tap <strong>+</strong> to save sessions to My Plan${n ? ` · ${n} saved` : ""}. Optional sessions are dashed.</p>`;
+    document.getElementById("network-card").innerHTML =
+      `<h3 style="margin:0 0 0.55rem;font-size:0.95rem;font-weight:800;color:var(--text)">Networking · ${esc(track.name)}</h3>` + track.networkHtml;
     document.getElementById("path-stops").innerHTML = track.path.map((p) =>
       `<div class="stop ${p.cls}"><strong>${esc(p.t)}</strong><span>${esc(p.d)}</span></div>`
     ).join("");
+    renderScheduleDays();
+    renderMine();
+  }
+
+  function setSchedView(view) {
+    schedView = view === "all" ? "all" : "track";
+    localStorage.setItem(STORAGE_VIEW, schedView);
+    document.querySelectorAll("[data-sched-view]").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.schedView === schedView);
+    });
+    renderScheduleDays();
   }
 
   function showPanel(name) {
     document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("active", p.id === "panel-" + name));
     document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.dataset.panel === name));
     document.querySelectorAll(".bottom-nav button").forEach((b) => b.classList.toggle("active", b.dataset.panel === name));
+    if (name === "mine") renderMine();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function showDay(day) {
     document.getElementById("day-sat").hidden = day !== "sat";
     document.getElementById("day-sun").hidden = day !== "sun";
-    document.querySelectorAll(".day-btn").forEach((b) => b.classList.toggle("active", b.dataset.day === day));
+    document.querySelectorAll(".day-btn[data-day]").forEach((b) => b.classList.toggle("active", b.dataset.day === day));
+  }
+
+  function showMineDay(day) {
+    document.getElementById("mine-sat").hidden = day !== "sat";
+    document.getElementById("mine-sun").hidden = day !== "sun";
+    document.querySelectorAll(".day-btn[data-mine-day]").forEach((b) => b.classList.toggle("active", b.dataset.mineDay === day));
   }
 
   function setOpenAll(day, open) {
@@ -1751,6 +2130,7 @@
       if (btn) setTrack(btn.dataset.track);
     });
     const initial = localStorage.getItem(STORAGE_TRACK) || "builder";
+    setSchedView(schedView);
     setTrack(TRACKS[initial] ? initial : "builder");
   }
 
@@ -1758,8 +2138,14 @@
     document.querySelectorAll(".tab, .bottom-nav button").forEach((el) => {
       el.addEventListener("click", () => showPanel(el.dataset.panel));
     });
-    document.querySelectorAll(".day-btn").forEach((btn) => {
+    document.querySelectorAll(".day-btn[data-day]").forEach((btn) => {
       btn.addEventListener("click", () => showDay(btn.dataset.day));
+    });
+    document.querySelectorAll(".day-btn[data-mine-day]").forEach((btn) => {
+      btn.addEventListener("click", () => showMineDay(btn.dataset.mineDay));
+    });
+    document.querySelectorAll("[data-sched-view]").forEach((btn) => {
+      btn.addEventListener("click", () => setSchedView(btn.dataset.schedView));
     });
     document.querySelectorAll("[data-expand]").forEach((btn) => {
       btn.addEventListener("click", () => setOpenAll(btn.dataset.expand, true));
@@ -1767,12 +2153,67 @@
     document.querySelectorAll("[data-collapse]").forEach((btn) => {
       btn.addEventListener("click", () => setOpenAll(btn.dataset.collapse, false));
     });
+
+    document.addEventListener("click", (e) => {
+      const add = e.target.closest("[data-add]");
+      if (!add) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const id = add.dataset.add;
+      const nowOn = toggleAgenda(id);
+      toast(nowOn ? "Added to My Plan" : "Removed from My Plan");
+      refreshAgendaUI();
+    });
+    // Keep + from toggling the details row open/closed
+    document.addEventListener("mousedown", (e) => {
+      if (e.target.closest("[data-add]")) e.preventDefault();
+    }, true);
+
+    document.getElementById("seed-track").addEventListener("click", () => {
+      const track = TRACKS[currentTrackId];
+      if (!track) return;
+      const set = new Set(loadAgenda());
+      track.sat.concat(track.sun).forEach((id) => set.add(id));
+      saveAgenda([...set]);
+      toast(`Added ${track.name} track to My Plan`);
+      renderMine();
+      renderScheduleDays();
+      showPanel("mine");
+    });
+    document.getElementById("clear-mine").addEventListener("click", () => {
+      if (!loadAgenda().length) return;
+      if (!confirm("Clear your entire My Plan?")) return;
+      saveAgenda([]);
+      toast("My Plan cleared");
+      refreshAgendaUI();
+    });
+    document.getElementById("goto-browse").addEventListener("click", () => {
+      setSchedView("all");
+      showPanel("schedule");
+    });
+
+    const hero = document.getElementById("hero-banner");
+    const dlg = document.getElementById("banner-lightbox");
+    const dlgImg = document.getElementById("lightbox-img");
+    const closeBtn = document.getElementById("lightbox-close");
+    function openBanner() {
+      if (!hero || !dlg || !dlgImg) return;
+      dlgImg.src = hero.currentSrc || hero.src;
+      if (typeof dlg.showModal === "function") dlg.showModal();
+      else dlg.setAttribute("open", "");
+    }
+    if (hero) hero.addEventListener("click", openBanner);
+    if (closeBtn) closeBtn.addEventListener("click", () => dlg.close());
+    if (dlg) dlg.addEventListener("click", (e) => {
+      if (e.target === dlg) dlg.close();
+    });
   }
 
   initTracks();
   initBuildingsList();
   renderSponsorTier();
   initChrome();
+  showMineDay("sat");
 })();
   </script>
 </body>
