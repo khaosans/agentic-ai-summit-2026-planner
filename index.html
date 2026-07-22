@@ -275,7 +275,6 @@
       overflow: hidden;
     }
     .session.lock { border-color: color-mix(in srgb, var(--lock) 40%, var(--border)); }
-    .session.optional-session { border-style: dashed; }
     .session summary {
       list-style: none;
       cursor: pointer;
@@ -489,7 +488,6 @@
     .badge.where-campus { background: var(--accent-soft); color: var(--accent); }
     .badge.lock { background: var(--lock-soft); color: var(--lock); }
     .badge.network { background: var(--ok-soft); color: var(--ok); }
-    .badge.optional { background: var(--warn-soft); color: var(--warn); }
     .badge.headliner { background: rgba(240,193,77,0.18); color: var(--lock); }
     .badge.core { background: var(--accent-soft); color: var(--accent); }
     .time {
@@ -961,6 +959,31 @@
       font-size: 0.62rem; font-weight: 800; letter-spacing: 0.06em;
       text-transform: uppercase; color: var(--cal-gold); padding-top: 0.15rem; white-space: nowrap;
     }
+
+    .session-where {
+      margin: 0.25rem 0 0;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--berkeley-blue);
+      line-height: 1.35;
+    }
+    .session-where span { color: var(--muted); font-weight: 500; }
+    .loc-box {
+      margin: 0.75rem 0 0.5rem;
+      padding: 0.65rem 0.75rem;
+      background: rgba(0,50,98,0.05);
+      border: 1px solid rgba(0,50,98,0.12);
+      border-radius: 12px;
+      font-size: 0.82rem;
+      line-height: 1.4;
+      color: var(--text);
+    }
+    .loc-box strong { color: var(--berkeley-blue); }
+    .loc-box .lm { display: block; margin-top: 0.25rem; color: var(--muted); font-size: 0.75rem; }
+    .how-to-go { margin: 0.55rem 0 0; padding-left: 1.1rem; color: var(--muted); font-size: 0.84rem; }
+    .how-to-go li { margin-bottom: 0.35rem; }
+    .venue-form { margin-top: 0.55rem; }
+    .venue-form .hint { font-size: 0.75rem; color: var(--muted); margin: 0 0 0.55rem; }
   </style>
 </head>
 <body>
@@ -1088,9 +1111,33 @@
 
       <section class="panel" id="panel-map" role="tabpanel">
         <div class="card">
-          <h3>Primary campus buildings</h3>
-          <p>Marked below are the main UC Berkeley venues used for large multi-hall events. The summit runs across <strong>four stages</strong> (Plenary · Atlas · Nexus · Compass); official stage→building assignments are released at registration / on-site signage. Use these landmarks to orient and walk between halls.</p>
+          <h3>Where to go</h3>
+          <p>The summit is on the <strong>UC Berkeley campus</strong> (Aug 1–2) across four named stages. Exact halls are on your badge / check-in map — save them below once you know.</p>
+          <ul class="how-to-go">
+            <li>Arrive via <strong>Sproul Plaza</strong> (main campus entrance / wayfinding hub).</li>
+            <li>Get your <strong>badge + stage map</strong> at registration — that map is the source of truth.</li>
+            <li>Follow on-site signs for <strong>Plenary · Atlas · Nexus · Compass</strong> (colors match this app).</li>
+            <li>Walk time between nearby halls is usually <strong>5–12 minutes</strong> — leave talks a minute early if switching stages.</li>
+          </ul>
         </div>
+
+        <div class="card">
+          <h3>Save your stage buildings</h3>
+          <p class="hint" style="margin:0;font-size:0.78rem;color:var(--muted)">Fill these in at check-in (saved on this device). They appear on every session card.</p>
+          <form class="venue-form" id="venue-form" autocomplete="off">
+            <div class="venue-row"><label class="plenary" for="venue-plenary">Plenary</label><input id="venue-plenary" name="plenary" placeholder="e.g. Haas Pavilion / Zellerbach" /></div>
+            <div class="venue-row"><label class="atlas" for="venue-atlas">Atlas</label><input id="venue-atlas" name="atlas" placeholder="Building from badge map" /></div>
+            <div class="venue-row"><label class="nexus" for="venue-nexus">Nexus</label><input id="venue-nexus" name="nexus" placeholder="Building from badge map" /></div>
+            <div class="venue-row"><label class="compass" for="venue-compass">Compass</label><input id="venue-compass" name="compass" placeholder="Building from badge map" /></div>
+            <div class="venue-row"><label class="campus" for="venue-campus">Campus hub</label><input id="venue-campus" name="campus" placeholder="e.g. Sproul / Pauley / registration" /></div>
+            <div class="form-row-actions" style="margin-top:0.55rem">
+              <button type="submit" class="btn-soft primary" style="background:var(--berkeley-blue);color:#fff;border-color:var(--berkeley-blue)">Save venues</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="stage-grid" id="stage-info-grid"></div>
+
         <div class="map-frame">
           <iframe
             title="UC Berkeley campus map"
@@ -1113,17 +1160,10 @@
           <a href="https://www.berkeley.edu/wp-content/uploads/2025/06/campus-map-20250609.pdf" target="_blank" rel="noopener">Official PDF ↗</a>
         </div>
 
-        <h2 style="font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--faint);font-weight:800;margin:0 0 0.55rem">Marked buildings</h2>
+        <h2 style="font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--faint);font-weight:800;margin:0 0 0.55rem">Orientation landmarks</h2>
         <div class="building-list" id="building-list"></div>
 
-        <div class="stage-grid">
-          <div class="stage-card"><div class="sn plenary">Plenary</div><div class="sd">Main stage — headliners &amp; flagship panels. Building TBA at check-in.</div></div>
-          <div class="stage-card"><div class="sn atlas">Atlas</div><div class="sd">Research, workshops, evals. Building TBA at check-in.</div></div>
-          <div class="stage-card"><div class="sn nexus">Nexus</div><div class="sd">Science, coding, quant, security. Building TBA at check-in.</div></div>
-          <div class="stage-card"><div class="sn compass">Compass</div><div class="sd">Systems, platforms, tooling. Building TBA at check-in.</div></div>
-        </div>
-
-        <h2 style="font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--faint);font-weight:800;margin:0 0 0.55rem">Track walking path (by stage)</h2>
+        <h2 style="font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--faint);font-weight:800;margin:0 0 0.55rem">Your track path</h2>
         <div class="your-stops" id="path-stops"></div>
       </section>
 
@@ -1148,8 +1188,8 @@
             <li>Pick a <strong>track</strong> for a suggested plan, or tap <strong>Browse all</strong> to see every session.</li>
             <li>Tap <strong>+</strong> on any session to add it to <strong>My Plan</strong> (saved on this device).</li>
             <li>Use <strong>Speakers</strong> to browse the official roster (name, title, org, stage).</li>
-            <li><strong>Optional</strong> sessions are dashed; <strong>locks</strong> are gold-highlighted headliners.</li>
-            <li><strong>Map</strong> shows primary campus buildings — match Plenary/Atlas/Nexus/Compass on-site.</li>
+            <li><strong>Locks</strong> (gold) are must-see headliners. Each card shows <strong>where</strong> to go by stage.</li>
+            <li><strong>Map</strong> shows campus landmarks and lets you save the building name for each stage at check-in.</li>
           </ul>
         </div>
         <div class="card">
@@ -1216,16 +1256,16 @@
         speakers: [
           { name: "Badge + stage map", role: "Find Plenary · Atlas · Nexus · Compass" },
           { name: "Coffee / hallway loops", role: "Aim for several real conversations before midday" },
-          { name: "Optional Plenary openings", role: "9:15 remarks · 9:30 DeSantis infra · 10:45 Casado fireside — sit any, skip any" }
+          { name: "Plenary openings", role: "9:15 remarks · 9:30 DeSantis infra · 10:45 Casado fireside" }
         ]
       }],
       action: "Use early time for people access. Celebrity seats for Ng are claimed later (~4:30), not at 8:30."
     },
     openingsSat: {
-      id: "openingsSat", optional: true, lock: false, stage: "plenary",
-      time: "9:15 – ~11:05 AM", duration: "optional picks",
-      badges: ["where-plenary", "optional", "headliner"], badgeLabels: ["Plenary", "Optional", "Openings"],
-      title: "Optional: Saturday openings",
+      id: "openingsSat", optional: false, lock: false, stage: "plenary",
+      time: "9:15 – ~11:05 AM", duration: "morning block",
+      badges: ["where-plenary", "headliner"], badgeLabels: ["Plenary", "Openings"],
+      title: "Saturday openings",
       topic: "Infra keynote + a16z/DeepMind fireside. Worth sitting if already early — not required.",
       groups: [
         {
@@ -1295,9 +1335,9 @@
       action: "Leave panel 1–2 min early → catch Lopopolo / Graveley / Catasta at stage exit."
     },
     circle: {
-      id: "circle", optional: true, lock: false, stage: "compass",
+      id: "circle", optional: false, lock: false, stage: "compass",
       time: "10:45 AM", duration: "until ~11:45",
-      badges: ["where-compass", "optional", "network"], badgeLabels: ["Compass", "Optional", "Workshop"],
+      badges: ["where-compass", "network"], badgeLabels: ["Compass", "Workshop"],
       title: "Workshop: Why Your AI Agent Needs a Wallet",
       topic: "Agentic commerce on Arc with USDC and nanopayments — Circle.",
       groups: [{
@@ -1307,9 +1347,9 @@
       action: "High-access workshop. Conflicts with Casado fireside and overlaps Software start — only if payments rails are a priority."
     },
     daytona: {
-      id: "daytona", optional: true, lock: false, stage: "atlas",
+      id: "daytona", optional: false, lock: false, stage: "atlas",
       time: "11:05 AM", duration: "until lunch 12:05",
-      badges: ["where-atlas", "optional", "network"], badgeLabels: ["Atlas", "Optional", "Workshop"],
+      badges: ["where-atlas", "network"], badgeLabels: ["Atlas", "Workshop"],
       title: "Workshop: Turning Chatbots into Agents (Daytona)",
       topic: "What modern RL looks like when moving from chatbots to agents.",
       groups: [{
@@ -1350,9 +1390,9 @@
       action: "High-access production workshop — stay after."
     },
     lambda: {
-      id: "lambda", optional: true, lock: false, stage: "atlas",
+      id: "lambda", optional: false, lock: false, stage: "atlas",
       time: "2:00 PM", duration: "until ~3:00",
-      badges: ["where-atlas", "optional", "network"], badgeLabels: ["Atlas", "Optional", "Workshop"],
+      badges: ["where-atlas", "network"], badgeLabels: ["Atlas", "Workshop"],
       title: "Workshop: Open-Source Agent Investigations (Lambda)",
       topic: "Security arena, distilled traces, and auto-optimization.",
       groups: [{
@@ -1366,9 +1406,9 @@
       action: "Conflicts with Temporal at 2:00 — pick one workshop."
     },
     replit: {
-      id: "replit", optional: true, lock: false, stage: "atlas",
+      id: "replit", optional: false, lock: false, stage: "atlas",
       time: "3:00 PM", duration: "until ~4:00",
-      badges: ["where-atlas", "optional", "network"], badgeLabels: ["Atlas", "Optional", "Workshop"],
+      badges: ["where-atlas", "network"], badgeLabels: ["Atlas", "Workshop"],
       title: "Workshop: Building Agentic Apps End-to-End (Replit)",
       topic: "Hands-on agent app building with Replit Agent.",
       groups: [{
@@ -1456,7 +1496,7 @@
         speakers: [
           { name: "Follow-ups first", role: "Reconnect with people met Saturday" },
           { name: "A few new adjacent chats", role: "Keep breadth — not only one vertical" },
-          { name: "Optional opening remarks", role: "Jennifer Chayes · Dawn Song · 9:30" }
+          { name: "Opening remarks", role: "Jennifer Chayes · Dawn Song · 9:30" }
         ]
       }],
       action: "Quality over badge-collecting. Be seated (or ready) for the first core session."
@@ -1492,9 +1532,9 @@
       action: "Strong for enterprise and founder tracks; soft for pure research."
     },
     ghodsi: {
-      id: "ghodsi", optional: true, lock: false, stage: "plenary",
+      id: "ghodsi", optional: false, lock: false, stage: "plenary",
       time: "11:05 AM", duration: "until lunch 11:30",
-      badges: ["where-plenary", "optional", "headliner"], badgeLabels: ["Plenary", "Optional", "Headliner"],
+      badges: ["where-plenary", "headliner"], badgeLabels: ["Plenary", "Headliner"],
       title: "Fireside: Ali Ghodsi × Andy Konwinski",
       topic: "Databricks / data-platform lens. Skip if Karpathy lands in this slot.",
       groups: [{
@@ -1553,9 +1593,9 @@
       note: "If Karpathy conflicts, prefer Karpathy live and recover finance speakers at 5:00 reception."
     },
     platforms: {
-      id: "platforms", optional: true, lock: false, stage: "plenary",
+      id: "platforms", optional: false, lock: false, stage: "plenary",
       time: "2:05 PM", duration: "talk + panel ~2:10",
-      badges: ["where-plenary", "optional"], badgeLabels: ["Plenary", "Optional"],
+      badges: ["where-plenary"], badgeLabels: ["Plenary"],
       title: "Agentic AI Developer Platforms",
       topic: "Open stacks and platform builders.",
       groups: [
@@ -1587,9 +1627,9 @@
       action: "Talk to pitching teams and scouts. Include at least some startups outside a single vertical."
     },
     ema: {
-      id: "ema", optional: true, lock: false, stage: "atlas",
+      id: "ema", optional: false, lock: false, stage: "atlas",
       time: "11:20 AM", duration: "until ~12:20",
-      badges: ["where-atlas", "optional", "network"], badgeLabels: ["Atlas", "Optional", "Workshop"],
+      badges: ["where-atlas", "network"], badgeLabels: ["Atlas", "Workshop"],
       title: "Workshop: From Assistants to AI Employees (Ema)",
       topic: "Designing agents that own a role, not a task.",
       groups: [{
@@ -1634,7 +1674,7 @@
       sunSub: "Early network → optional Ghodsi → evals → platforms → Spotlight",
       satGlance: [
         ["8:30", "Campus · Arrive early", "Badge · coffee · network"],
-        ["9:15+", "Plenary openings (opt)", "DeSantis · Casado — pick any"],
+        ["9:15+", "Plenary · Openings", "DeSantis · Casado"],
         ["11:10", "Plenary · Software", "Harness / coding agents"],
         ["2:00", "Compass · Temporal", "Agents that survive failure"],
         ["5:00", "Plenary · Ng × Lin ★", "Headliner lock"],
@@ -1642,9 +1682,9 @@
       ],
       sunGlance: [
         ["8:30", "Campus · Arrive early", "Follow-ups + new chats"],
-        ["11:05", "Ghodsi (opt)", "Platform headliner"],
+        ["11:05", "Plenary · Ghodsi", "Platform headliner"],
         ["1:00", "Atlas · Evals", "Production readiness"],
-        ["2:05", "Plenary · Platforms (opt)", "LF / Fireworks / Daytona"],
+        ["2:05", "Plenary · Platforms", "LF / Fireworks / Daytona"],
         ["3:45", "Spotlight", "Peer founders"],
         ["TBA", "Karpathy ★", "Overrides when posted"]
       ],
@@ -1653,9 +1693,9 @@
       path: [
         { cls: "campus", t: "Both mornings ~8:30", d: "Campus networking before sessions" },
         { cls: "plenary", t: "Sat Plenary", d: "Software 11:10 · Ng 5:00" },
-        { cls: "compass", t: "Sat Compass", d: "Temporal 2:00 (Lambda/Replit optional)" },
+        { cls: "compass", t: "Sat Compass", d: "Temporal 2:00 (or Lambda/Replit on Atlas)" },
         { cls: "atlas", t: "Sun Atlas", d: "Evals 1:00" },
-        { cls: "plenary", t: "Sun Plenary", d: "Platforms (opt) · Spotlight 3:45" }
+        { cls: "plenary", t: "Sun Plenary", d: "Platforms · Spotlight 3:45" }
       ],
     },
     fintech: {
@@ -1666,7 +1706,7 @@
       sunSub: "Early network → Enterprise (soft) → evals → Finance & Legal → Spotlight",
       satGlance: [
         ["8:30", "Campus · Arrive early", "Network window"],
-        ["9:15+", "Openings (opt)", "Infra / Casado"],
+        ["9:15+", "Plenary · Openings", "Infra / Casado"],
         ["11:10", "Plenary · Software", "Adjacent breadth"],
         ["1:50", "Nexus · Fetcherr", "Quant decision agents"],
         ["3:25", "Nexus · Secure AI", "Trust / governance"],
@@ -1702,7 +1742,7 @@
         ["11:10", "Software", "Product / agent narrative"],
         ["2:00", "Temporal or Lambda", "Production credibility"],
         ["3:25+", "Secure or seat early", "Trust story or Ng seat"],
-        ["4:30", "Capital Markets (opt)", "If fintech thesis"],
+        ["4:30", "Plenary · Capital Markets", "If fintech thesis"],
         ["5:00", "Ng × Lin ★", "Listen for thesis · no swarm"]
       ],
       sunGlance: [
@@ -1727,10 +1767,10 @@
       name: "Enterprise",
       blurb: "Adoption, evals, security, platforms",
       satSub: "Early network → openings/Software → Temporal → Secure → Ng",
-      sunSub: "Enterprise Plenary → Ema workshop (opt) → evals → Spotlight",
+      sunSub: "Enterprise Plenary → Ema workshop → evals → Spotlight",
       satGlance: [
         ["8:30", "Arrive early", "Network"],
-        ["9:15+", "Openings (opt)", "Infra context"],
+        ["9:15+", "Plenary · Openings", "Infra context"],
         ["11:10", "Software", "How agents ship"],
         ["2:00", "Temporal", "Reliability"],
         ["3:25", "Secure AI", "Governance"],
@@ -1739,7 +1779,7 @@
       sunGlance: [
         ["8:30", "Arrive early", "Follow-ups"],
         ["9:40", "Enterprise ★", "Core block"],
-        ["11:20", "Ema workshop (opt)", "AI employees"],
+        ["11:20", "Atlas · Ema workshop", "AI employees"],
         ["1:00", "Evals ★", "Exam before deploy"],
         ["3:45", "Spotlight", "Vendors + peers"],
         ["TBA", "Karpathy ★", "Lock when posted"]
@@ -1751,7 +1791,7 @@
         { cls: "plenary", t: "Sat–Sun Plenary", d: "Software · Ng · Enterprise" },
         { cls: "compass", t: "Sat Temporal", d: "Failure-tolerant agents" },
         { cls: "nexus", t: "Sat Secure", d: "Trust plane" },
-        { cls: "atlas", t: "Sun Evals (+ Ema opt)", d: "Production readiness" }
+        { cls: "atlas", t: "Sun Atlas", d: "Evals · Ema workshop" }
       ],
     },
     research: {
@@ -1759,18 +1799,18 @@
       name: "Research",
       blurb: "Openings, foundations-adjacent, evals, security",
       satSub: "Openings → Software or workshops → Secure → Ng",
-      sunSub: "Optional Ghodsi → Evals → Spotlight · watch Frontier if energy allows",
+      sunSub: "Ghodsi → Evals → Spotlight · watch Frontier if energy allows",
       satGlance: [
         ["8:30", "Arrive early", "Network + posters"],
         ["9:15", "Openings", "Infra + Casado"],
         ["11:10", "Software or Daytona", "Pick breadth vs workshop"],
-        ["2:00", "Lambda (opt)", "Open-source agents"],
+        ["2:00", "Atlas · Lambda", "Open-source agents"],
         ["3:25", "Secure AI", "Safety research + industry"],
         ["5:00", "Ng × Lin ★", "Headliner"]
       ],
       sunGlance: [
         ["8:30", "Arrive early", "Academic / lab chats"],
-        ["11:05", "Ghodsi (opt)", "Systems celebrity"],
+        ["11:05", "Plenary · Ghodsi", "Systems celebrity"],
         ["1:00", "Evals ★", "Benchmark science"],
         ["3:45", "Spotlight", "Research startups"],
         ["TBA", "Karpathy ★", "Lock when posted"]
@@ -1780,7 +1820,7 @@
       path: [
         { cls: "campus", t: "Mornings + posters", d: "High-access research conversations" },
         { cls: "plenary", t: "Sat openings + Software/Ng", d: "Infra context + headliners" },
-        { cls: "atlas", t: "Workshops / Sun evals", d: "Daytona/Lambda opt · Evals core" },
+        { cls: "atlas", t: "Workshops / Sun evals", d: "Daytona / Lambda · Evals" },
         { cls: "nexus", t: "Sat Secure", d: "Safety & security talks" }
       ],
     }
@@ -1790,6 +1830,69 @@
   const STORAGE_TRACK = "aas2026-track";
   const STORAGE_AGENDA = "aas2026-agenda-v1";
   const STORAGE_VIEW = "aas2026-sched-view";
+
+  const STORAGE_VENUES = "aas2026-venues-v1";
+  const STAGE_INFO = {
+    campus: {
+      label: "Campus hub",
+      short: "Campus",
+      find: "Registration, mornings, receptions, posters. Start at Sproul Plaza and follow campus/event signs.",
+      landmarks: "Sproul Plaza · MLK / Pauley Ballroom · check-in tents"
+    },
+    plenary: {
+      label: "Plenary stage",
+      short: "Plenary",
+      find: "Main stage for keynotes and flagship panels (openings, Software, Markets, Ng, Enterprise…). Follow Plenary signs from check-in.",
+      landmarks: "Large auditorium/arena — often Haas Pavilion / Zellerbach / Wheeler area (confirm on badge map)"
+    },
+    atlas: {
+      label: "Atlas stage",
+      short: "Atlas",
+      find: "Workshops, evals, research-heavy blocks. Follow Atlas signs; leave 5+ min if coming from Plenary.",
+      landmarks: "Secondary hall — see badge map; often near engineering / Sutardja area"
+    },
+    nexus: {
+      label: "Nexus stage",
+      short: "Nexus",
+      find: "Science, quant, security sessions & workshops. Follow Nexus signs between blocks.",
+      landmarks: "Secondary hall — see badge map"
+    },
+    compass: {
+      label: "Compass stage",
+      short: "Compass",
+      find: "Systems, platforms, tooling workshops. Follow Compass signs; budget walk time from Plenary.",
+      landmarks: "Secondary hall — see badge map"
+    }
+  };
+
+  function loadVenues() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(STORAGE_VENUES) || "{}");
+      return raw && typeof raw === "object" ? raw : {};
+    } catch (e) { return {}; }
+  }
+  function saveVenues(v) {
+    localStorage.setItem(STORAGE_VENUES, JSON.stringify(v));
+  }
+  function stageWhereLine(stage) {
+    const info = STAGE_INFO[stage] || STAGE_INFO.campus;
+    const venues = loadVenues();
+    const saved = venues[stage];
+    if (saved) return info.short + " · " + saved;
+    return info.short + " · " + info.find.split(".")[0];
+  }
+  function stageLocBox(stage) {
+    const info = STAGE_INFO[stage] || STAGE_INFO.campus;
+    const venues = loadVenues();
+    const saved = venues[stage];
+    const building = saved
+      ? ("Saved building: " + saved)
+      : ("Building: TBA at check-in — save it on the Map tab");
+    return '<div class="loc-box"><strong>Where · ' + esc(info.label) + '</strong><br/>' +
+      esc(info.find) +
+      '<span class="lm">' + esc(building) + ' · ' + esc(info.landmarks) + '</span></div>';
+  }
+
 
 
   // day + sort key (HHMM) for catalog / conflicts
@@ -1877,14 +1980,14 @@
   }
 
   const BUILDINGS = [
-    { name: "Haas Pavilion", kind: "primary", desc: "Large arena — common for high-capacity keynotes", lat: 37.86935, lng: -122.26225, q: "Haas+Pavilion+UC+Berkeley" },
-    { name: "Zellerbach Hall", kind: "primary", desc: "Major auditorium next to Haas Pavilion", lat: 37.86895, lng: -122.26065, q: "Zellerbach+Hall+UC+Berkeley" },
-    { name: "Wheeler Auditorium", kind: "primary", desc: "Central campus lecture hall (Wheeler Hall)", lat: 37.87125, lng: -122.25915, q: "Wheeler+Auditorium+UC+Berkeley" },
-    { name: "Pauley Ballroom", kind: "primary", desc: "MLK Student Union — large flexible hall", lat: 37.86915, lng: -122.25945, q: "Pauley+Ballroom+UC+Berkeley" },
-    { name: "Sproul Plaza", kind: "hub", desc: "Main pedestrian hub / wayfinding landmark", lat: 37.86965, lng: -122.25955, q: "Sproul+Plaza+UC+Berkeley" },
-    { name: "Sibley Auditorium", kind: "hall", desc: "Bechtel Engineering Center auditorium", lat: 37.87385, lng: -122.25845, q: "Sibley+Auditorium+UC+Berkeley" },
-    { name: "Banatao Auditorium", kind: "hall", desc: "Sutardja Dai Hall — tech/engineering events", lat: 37.87495, lng: -122.25835, q: "Banatao+Auditorium+Sutardja+Dai+Hall" },
-    { name: "Cheit Hall (Haas)", kind: "hall", desc: "Haas School of Business classrooms / overflow", lat: 37.87155, lng: -122.25355, q: "Cheit+Hall+Haas+School+UC+Berkeley" }
+    { name: "Sproul Plaza", kind: "primary", desc: "Start here — main south entrance, registration/wayfinding, ~2 min walk to Pauley / MLK", lat: 37.86965, lng: -122.25955, q: "Sproul+Plaza+UC+Berkeley" },
+    { name: "Pauley Ballroom (MLK)", kind: "primary", desc: "On Sproul — large flexible hall for receptions / overflow; beside MLK Student Union", lat: 37.86915, lng: -122.25945, q: "Pauley+Ballroom+UC+Berkeley" },
+    { name: "Haas Pavilion", kind: "primary", desc: "South campus arena (~5–8 min west of Sproul) — typical high-capacity keynote hall", lat: 37.86935, lng: -122.26225, q: "Haas+Pavilion+UC+Berkeley" },
+    { name: "Zellerbach Hall", kind: "primary", desc: "Next to Haas Pavilion — major auditorium; same south-campus cluster", lat: 37.86895, lng: -122.26065, q: "Zellerbach+Hall+UC+Berkeley" },
+    { name: "Wheeler Auditorium", kind: "primary", desc: "Central campus (~4–6 min north of Sproul uphill) — large lecture hall", lat: 37.87125, lng: -122.25915, q: "Wheeler+Auditorium+UC+Berkeley" },
+    { name: "Sibley Auditorium", kind: "hall", desc: "Bechtel Engineering Center (~8–12 min north of Sproul) — mid-size hall", lat: 37.87385, lng: -122.25845, q: "Sibley+Auditorium+UC+Berkeley" },
+    { name: "Banatao Auditorium", kind: "hall", desc: "Sutardja Dai Hall / CITRIS (~10–14 min north) — tech & engineering events", lat: 37.87495, lng: -122.25835, q: "Banatao+Auditorium+Sutardja+Dai+Hall" },
+    { name: "Cheit Hall (Haas School)", kind: "hall", desc: "East of campus core (~10–15 min toward Haas) — classrooms / overflow", lat: 37.87155, lng: -122.25355, q: "Cheit+Hall+Haas+School+UC+Berkeley" }
   ];
 
 
@@ -1902,19 +2005,24 @@
     const saved = isSaved(sess.id);
     const cls = ["session"];
     if (sess.lock) cls.push("lock");
-    if (sess.optional) cls.push("optional-session");
     if (saved) cls.push("in-plan");
+    const stage = sess.stage || "campus";
     let html = `<details class="${cls.join(" ")}" data-sid="${esc(sess.id)}"><summary>`;
     html += `<div class="session-summary-main"><div class="session-badges">`;
-    sess.badges.forEach((b, i) => {
-      html += `<span class="badge ${b}">${esc(sess.badgeLabels[i] || b)}</span>`;
+    (sess.badges || []).forEach((b, i) => {
+      if (b === "optional") return;
+      const lab = (sess.badgeLabels && sess.badgeLabels[i]) || b;
+      if (String(lab).toLowerCase() === "optional") return;
+      html += `<span class="badge ${b}">${esc(lab)}</span>`;
     });
     if (saved) html += `<span class="badge saved">In My Plan</span>`;
     if (opts.conflict) html += `<span class="badge conflict">Time conflict</span>`;
     html += `</div><div class="time">${esc(sess.time)} · ${esc(sess.duration)}</div>`;
+    html += `<p class="session-where">Where: ${esc(stageWhereLine(stage))}</p>`;
     html += `<h4 class="session-title">${esc(sess.title)}</h4></div>`;
     html += `<button type="button" class="add-btn${saved ? " on" : ""}" data-add="${esc(sess.id)}" aria-label="${saved ? "Remove from My Plan" : "Add to My Plan"}" title="${saved ? "Remove from My Plan" : "Add to My Plan"}">${saved ? "✓" : "+"}</button>`;
     html += `<span class="chev" aria-hidden="true">▾</span></summary><div class="session-body">`;
+    html += stageLocBox(stage);
     html += `<p class="session-topic">${esc(sess.topic)}</p>`;
     (sess.groups || []).forEach((g, idx) => {
       html += `<p class="field-label"${idx === 0 ? ' style="margin-top:0"' : ""}>${esc(g.label)}</p><ul class="speakers">`;
@@ -2004,10 +2112,11 @@
     });
     const n = loadAgenda().length;
     document.getElementById("active-banner").innerHTML =
-      `<strong>${esc(track.name)} track</strong><p>${esc(track.blurb)}. Tap <strong>+</strong> to save sessions to My Plan${n ? ` · ${n} saved` : ""}. Optional sessions are dashed.</p>`;
-    document.getElementById("path-stops").innerHTML = track.path.map((p) =>
-      `<div class="stop ${p.cls}"><strong>${esc(p.t)}</strong><span>${esc(p.d)}</span></div>`
-    ).join("");
+      `<strong>${esc(track.name)} track</strong><p>${esc(track.blurb)}. Tap <strong>+</strong> to save sessions to My Plan${n ? ` · ${n} saved` : ""}. Check Where on each card for stage + how to find it.</p>`;
+    document.getElementById("path-stops").innerHTML = track.path.map((p) => {
+      const where = stageWhereLine(p.cls);
+      return `<div class="stop ${p.cls}"><strong>${esc(p.t)}</strong><span>${esc(p.d)}</span><span style="display:block;margin-top:0.2rem;color:var(--berkeley-blue);font-size:0.72rem;font-weight:600">→ ${esc(where)}</span></div>`;
+    }).join("");
     renderScheduleDays();
     renderMine();
     renderSpeakers();
@@ -2028,6 +2137,7 @@
     document.querySelectorAll(".bottom-nav button").forEach((b) => b.classList.toggle("active", b.dataset.panel === name));
     if (name === "mine") renderMine();
     if (name === "speakers") renderSpeakers();
+    if (name === "map") renderStageInfoGrid();
     if (name === "sponsors") ensureSponsorImages();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -2111,8 +2221,51 @@
     }
   }
 
-function initBuildingsList() {
+  function renderStageInfoGrid() {
+    const grid = document.getElementById("stage-info-grid");
+    if (!grid) return;
+    const venues = loadVenues();
+    const order = ["plenary", "atlas", "nexus", "compass", "campus"];
+    grid.innerHTML = order.map((id) => {
+      const info = STAGE_INFO[id];
+      const saved = venues[id];
+      const extra = saved
+        ? (" · <strong>" + esc(saved) + "</strong>")
+        : " · building TBA at check-in";
+      const sn = id === "campus" ? "plenary" : id;
+      return `<div class="stage-card"><div class="sn ${sn}">${esc(info.short)}</div>` +
+        `<div class="sd">${esc(info.find)}${extra}<br/><span style="color:var(--faint)">${esc(info.landmarks)}</span></div></div>`;
+    }).join("");
+  }
+
+  function initVenues() {
+    const form = document.getElementById("venue-form");
+    if (!form) return;
+    const venues = loadVenues();
+    ["plenary", "atlas", "nexus", "compass", "campus"].forEach((k) => {
+      const input = document.getElementById("venue-" + k);
+      if (input && venues[k]) input.value = venues[k];
+    });
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const next = {};
+      ["plenary", "atlas", "nexus", "compass", "campus"].forEach((k) => {
+        const input = document.getElementById("venue-" + k);
+        const v = ((input && input.value) || "").trim();
+        if (v) next[k] = v;
+      });
+      saveVenues(next);
+      renderStageInfoGrid();
+      renderScheduleDays();
+      renderMine();
+      if (typeof toast === "function") toast("Venues saved — shown on session cards");
+    });
+    renderStageInfoGrid();
+  }
+
+  function initBuildingsList() {
     const list = document.getElementById("building-list");
+    if (!list) return;
     list.innerHTML = BUILDINGS.map((b) => {
       const primary = b.kind === "primary";
       return `<div class="building-item">
@@ -2334,6 +2487,7 @@ function initBuildingsList() {
 
   initTracks();
   initBuildingsList();
+  initVenues();
   renderSponsorTier();
   initChrome();
   initSpeakers();
