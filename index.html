@@ -950,13 +950,14 @@
         <div class="brand">
           <img
             class="brand-logo"
-            src="assets/rdi-logo.png"
+            src="https://raw.githubusercontent.com/khaosans/agentic-ai-summit-2026-planner/main/assets/rdi-logo.png"
             alt="Berkeley RDI"
             width="220"
             height="40"
             decoding="async"
+            data-local="assets/rdi-logo.png"
             data-fallback="https://rdi.berkeley.edu/assets/images/rdi_logo_horizontal_720.png"
-            onerror="if(this.dataset.cdn){this.src=this.dataset.cdn;this.removeAttribute('data-cdn');return;} if(this.dataset.fallback){this.src=this.dataset.fallback;this.removeAttribute('data-fallback');}" />
+            onerror="if(this.dataset.fallback){const u=this.dataset.fallback;delete this.dataset.fallback;this.src=u;}" />
           <h1>Agentic AI Summit 2026</h1>
           <p>Hosted by Berkeley RDI · UC Berkeley · Aug 1–2</p>
         </div>
@@ -966,14 +967,15 @@
         <img
           class="hero-banner"
           id="hero-banner"
-          src="assets/banner.jpg"
+          src="https://raw.githubusercontent.com/khaosans/agentic-ai-summit-2026-planner/main/assets/banner.jpg"
           alt="Agentic AI Summit 2026 — Berkeley RDI. Tap to view full banner."
           width="1400"
           height="711"
           decoding="async"
           fetchpriority="high"
+          data-local="assets/banner.jpg"
           data-fallback="https://rdi.berkeley.edu/assets/images/agentic-ai-summit-2026-banner.png"
-          onerror="if(this.dataset.cdn){this.src=this.dataset.cdn;this.removeAttribute('data-cdn');return;} if(this.dataset.fallback){this.src=this.dataset.fallback;this.removeAttribute('data-fallback');}" />
+          onerror="if(this.dataset.fallback){const u=this.dataset.fallback;delete this.dataset.fallback;this.src=u;}" />
       </div>
       <p class="hero-hint">Official event banner · tap to enlarge</p>
       <div class="track-scroll" id="track-grid" role="tablist" aria-label="Tracks"></div>
@@ -2257,15 +2259,13 @@
   const REPO_ASSET_CDN = "https://raw.githubusercontent.com/khaosans/agentic-ai-summit-2026-planner/main/";
   const RDI_IMG = "https://rdi.berkeley.edu/assets/images/";
 
-  // htmlpreview can't resolve relative assets — point brand images at raw GitHub first
-  (function wireCdnFallbacks() {
-    const needsCdn = /htmlpreview|raw\.githack|cdn\.jsdelivr/.test(location.hostname) ||
-      (location.hostname === "gist.github.com");
+  // On GitHub Pages / local file, prefer same-origin assets for speed
+  (function preferLocalBrandAssets() {
+    const useLocal = location.protocol === "file:" ||
+      (/\.github\.io$/.test(location.hostname) && /agentic-ai-summit-2026-planner/.test(location.pathname));
+    if (!useLocal) return;
     document.querySelectorAll(".brand-logo, .hero-banner").forEach((img) => {
-      const rel = img.getAttribute("src");
-      if (!rel || !rel.startsWith("assets/")) return;
-      img.dataset.cdn = REPO_ASSET_CDN + rel;
-      if (needsCdn) img.src = img.dataset.cdn;
+      if (img.dataset.local) img.src = img.dataset.local;
     });
   })();
 
