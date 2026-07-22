@@ -472,66 +472,6 @@
       font-size: 1.1rem; cursor: pointer; line-height: 1; padding: 0.25rem;
     }
     .form-row-actions { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.25rem; }
-
-    .speaker-filters {
-      display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.35rem;
-    }
-    .speaker-filters button {
-      border: 1px solid var(--border);
-      background: #fff;
-      color: var(--muted);
-      font-family: inherit;
-      font-size: 0.72rem;
-      font-weight: 700;
-      padding: 0.4rem 0.7rem;
-      border-radius: 999px;
-      cursor: pointer;
-      min-height: 36px;
-    }
-    .speaker-filters button.active {
-      background: var(--berkeley-blue);
-      border-color: var(--berkeley-blue);
-      color: #fff;
-    }
-    .speaker-list { display: flex; flex-direction: column; gap: 0.35rem; }
-    .spk-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 0.5rem;
-      align-items: start;
-      text-decoration: none;
-      color: inherit;
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 0.7rem 0.8rem;
-    }
-    .spk-row:hover, .spk-row:focus-visible {
-      border-color: rgba(203,148,69,0.55);
-      outline: none;
-    }
-    .spk-row-name {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--berkeley-blue);
-      line-height: 1.25;
-    }
-    .spk-row-meta {
-      margin-top: 0.15rem;
-      font-size: 0.75rem;
-      color: var(--muted);
-      line-height: 1.35;
-    }
-    .spk-row-stage {
-      font-size: 0.62rem;
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--cal-gold);
-      padding-top: 0.15rem;
-      white-space: nowrap;
-    }
-
     .session-badges { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.4rem; }
     .badge {
       display: inline-flex;
@@ -998,6 +938,29 @@
       .sponsor-logos.platinum img { max-width: 190px; max-height: 64px; }
       .hero-banner-wrap { border-radius: 0 0 12px 12px; overflow: hidden; width: 100%; margin-left: 0; margin-right: 0; }
     }
+
+    .speaker-filters { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.35rem; }
+    .speaker-filters button {
+      border: 1px solid var(--border); background: #fff; color: var(--muted);
+      font-family: inherit; font-size: 0.72rem; font-weight: 700;
+      padding: 0.4rem 0.7rem; border-radius: 999px; cursor: pointer; min-height: 36px;
+    }
+    .speaker-filters button.active {
+      background: var(--berkeley-blue); border-color: var(--berkeley-blue); color: #fff;
+    }
+    .speaker-list { display: flex; flex-direction: column; gap: 0.35rem; }
+    .spk-row {
+      display: grid; grid-template-columns: 1fr auto; gap: 0.5rem; align-items: start;
+      text-decoration: none; color: inherit; background: #fff;
+      border: 1px solid var(--border); border-radius: 12px; padding: 0.7rem 0.8rem;
+    }
+    .spk-row:hover, .spk-row:focus-visible { border-color: rgba(203,148,69,0.55); outline: none; }
+    .spk-row-name { font-size: 0.9rem; font-weight: 700; color: var(--berkeley-blue); line-height: 1.25; }
+    .spk-row-meta { margin-top: 0.15rem; font-size: 0.75rem; color: var(--muted); line-height: 1.35; }
+    .spk-row-stage {
+      font-size: 0.62rem; font-weight: 800; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--cal-gold); padding-top: 0.15rem; white-space: nowrap;
+    }
   </style>
 </head>
 <body>
@@ -1184,7 +1147,7 @@
           <ul>
             <li>Pick a <strong>track</strong> for a suggested plan, or tap <strong>Browse all</strong> to see every session.</li>
             <li>Tap <strong>+</strong> on any session to add it to <strong>My Plan</strong> (saved on this device).</li>
-            <li>Use <strong>Network</strong> to browse speakers by stage with title and org from the official roster.</li>
+            <li>Use <strong>Network</strong> for the speaker list (name, title, org, stage).</li>
             <li><strong>Optional</strong> sessions are dashed; <strong>locks</strong> are gold-highlighted headliners.</li>
             <li><strong>Map</strong> shows primary campus buildings — match Plenary/Atlas/Nexus/Compass on-site.</li>
           </ul>
@@ -1862,41 +1825,306 @@
   const STORAGE_TRACK = "aas2026-track";
   const STORAGE_AGENDA = "aas2026-agenda-v1";
   const STORAGE_VIEW = "aas2026-sched-view";
-  const SPEAKERS = [{"n":"Aaron Jacobson","t":"GP","o":"NEA","s":"mainstage","u":"https://www.nea.com/team/aaron-jacobson"},{"n":"Aayush Agrawal","t":"Product Lead","o":"Uber","s":"compass","u":"https://www.linkedin.com/in/aayushxagrawal/"},{"n":"Adarsh Hiremath","t":"Co-CEO","o":"Mercor","s":"mainstage","u":"https://www.forbes.com/profile/adarsh-hiremath/"},{"n":"Aditya Grover","t":"Co-Founder/CTO","o":"Inception Labs","s":"atlas","u":"https://aditya-grover.github.io/"},{"n":"Alex Graveley","t":"Director, Comet","o":"Perplexity AI","s":"mainstage","u":"https://alexgraveley.com/"},{"n":"Alex Obadia","t":"Programme Director","o":"Advanced Research & Invention Agency","s":"compass","u":"https://alexobadia.com/(%E3%83%84)/about"},{"n":"Alfred Lin","t":"General Partner","o":"Sequoia Capital","s":"mainstage","u":"https://sequoiacap.com/people/alfred-lin/"},{"n":"Ali Ghodsi","t":"Co-Founder/CEO","o":"Databricks","s":"mainstage","u":"https://people.eecs.berkeley.edu/~alig/"},{"n":"Ali Nazari","t":"Head of Deep Learning Research","o":"Susquehanna International Group","s":"mainstage","u":"https://www.linkedin.com/in/ali-nazari-97246716/"},{"n":"Anahita Tafvizi","t":"Chief Data & AI Officer","o":"Snowflake","s":"mainstage","u":"https://www.snowflake.com/en/blog/authors/anahita-tafvizi-/"},{"n":"Anastasios N Angelopoulos","t":"Co-Founder/CEO","o":"LLMArena","s":"atlas","u":"https://people.eecs.berkeley.edu/~angelopoulos/"},{"n":"Anastasis Germanidis","t":"Co-Founder/Co-CEO","o":"Runway","s":"mainstage","u":"https://agermanidis.com/"},{"n":"Andi Peng","t":"Co-Founder","o":"Humans&","s":"mainstage","u":"https://andipeng.com/"},{"n":"Andrew Ng","t":"Founder","o":"DeepLearning.AI","s":"mainstage","u":"https://www.andrewng.org/"},{"n":"Andrew Schoen","t":"Partner","o":"NEA","s":"nexus","u":"https://www.nea.com/team/andrew-schoen"},{"n":"Andy Konwinski","t":"Co-Founder, Databricks · Perplexity · Laude Ventures","o":"databricks; perplexity; laude ventures","s":"mainstage","u":"https://andykonwinski.com/about/"},{"n":"Anjney Midha","t":"Founder","o":"AMP PBC","s":"mainstage","u":"https://a16z.com/author/anjney-midha/"},{"n":"Ankit Goyal","t":"Principal Staff Software Engineer","o":"LinkedIn","s":"compass","u":"https://www.linkedin.com/in/goyalankit3/"},{"n":"Ankit Sobti","t":"Co-Founder & CTO","o":"Postman","s":"compass","u":"https://www.linkedin.com/in/ankit-sobti/"},{"n":"Arindam Sett","t":"Principal ML Engineer","o":"Genentech","s":"compass","u":"https://www.ischool.berkeley.edu/people/arindam-sett"},{"n":"Banghua Zhu","t":"Co-Founder","o":"RadixArk","s":"atlas","u":"https://banghua.me/"},{"n":"Barr Moses","t":"CEO and co-founder","o":"Monte Carlo AI","s":"compass","u":"https://www.linkedin.com/in/barrmoses/"},{"n":"Ben Athiwaratkun","t":"Senior Director, Core ML (Turbo)","o":"Together AI","s":"compass","u":"https://benathi.github.io/"},{"n":"Bo Li","t":"Co-Founder and CEO, Virtue AI · UIUC","o":"virtue ai; uiuc","s":"nexus","u":"https://www.linkedin.com/in/lxbosky/"},{"n":"Bolei Zhou","t":"Associate Professor, UCLA · Chief AI Scientist, Coco Robotics","o":"ucla; coco robotics","s":"atlas","u":"https://boleizhou.github.io/"},{"n":"Bradley Olson","t":"Technology Editor","o":"WSJ","s":"mainstage","u":"https://www.wsj.com/news/author/bradley-olson"},{"n":"Brandon Middleton","t":"Head of Education","o":"Replit","s":"atlas","u":"https://dschool.stanford.edu/directory/brandon-middleton"},{"n":"Carina Hong","t":"Founder and CEO","o":"Axiom Math","s":"atlas","u":"https://www.forbes.com/profile/carina-hong/"},{"n":"Chenguang Wang","t":"Assistant Professor, University of California, Santa Cruz · Research Advisor, Scale AI","o":"university of california, santa cruz; scale ai","s":"compass","u":"https://cgraywang.github.io/"},{"n":"Chris Bregler","t":"Senior Director / Distinguished Scientist","o":"Google DeepMind","s":"compass","u":"https://chris.bregler.com/"},{"n":"Christopher Petrillo","t":"Principal Product Manager","o":"The Wikimedia Foundation","s":"compass","u":"https://www.linkedin.com/in/christopher-petrillo-a0b64b76/"},{"n":"Chuan Li","t":"Chief Scientific Officer","o":"Lambda","s":"mainstage","u":"https://github.com/chuanli11"},{"n":"Dan Klein","t":"Professor, UC Berkeley · Co-founder CTO, Scaled Cognition","o":"uc berkeley; scaled cognition","s":"atlas","u":"https://people.eecs.berkeley.edu/~klein/"},{"n":"Dan Roth","t":"Chief AI Scientist","o":"Oracle","s":"mainstage","u":"https://www.cis.upenn.edu/~danroth/"},{"n":"Daniel Fink","t":"AI Engineering Lead","o":"Cognizant","s":"compass","u":"https://www.cognizant.com/us/en/ai-lab/blog/agentic-ai-developer-interview-daniel-fink"},{"n":"Daniel Homola","t":"Lead AI Engineer","o":"BMW Research","s":"compass","u":"https://danielhomola.ai/"},{"n":"David Hsu","t":"CEO and founder","o":"Retool","s":"atlas","u":"https://www.linkedin.com/in/dvdhsu"},{"n":"Dawn Song","t":"Professor, UC Berkeley · Co-Director, Berkeley RDI","o":"uc berkeley; berkeley rdi","s":"mainstage","u":"https://people.eecs.berkeley.edu/~dawnsong/"},{"n":"Denis Akhiyarov","t":"Senior Staff AI Scientist","o":"ServiceNow","s":"compass","u":"https://scholar.google.com/citations?user=TfBvStoAAAAJ&hl=en"},{"n":"Devina Jain","t":"Research Engineer","o":"Lambda","s":"atlas","u":"https://www.linkedin.com/in/devina-jain-088aba86"},{"n":"Dhruv Batra","t":"Chief Scientist / co-founder","o":"Yutori","s":"nexus","u":"https://dhruvbatra.com/"},{"n":"Dima Dmytro Dzhulgakov","t":"Co-Founder/CTO","o":"Fireworks AI","s":"mainstage","u":"https://www.linkedin.com/in/dzhulgakov/"},{"n":"Doga Kerestecioglu","t":"Principal Applied Scientist","o":"Microsoft Corporation","s":"compass","u":"https://www.linkedin.com/in/dogaker"},{"n":"Duncan Lennox","t":"Chief Product & Technology Officer","o":"HubSpot","s":"mainstage","u":"https://www.hubspot.com/company/board-of-directors/duncan-lennox"},{"n":"Ed Chi","t":"VP of Research","o":"Google DeepMind","s":"mainstage","u":"https://www.edchi.net/"},{"n":"Ekin Dogus Cubuk","t":"Co-Founder","o":"Periodic Labs","s":"mainstage","u":"https://www.linkedin.com/in/ekin-dogus-cubuk-9148b8114/"},{"n":"Eno Reyes","t":"Co-Founder / CTO","o":"Factory AI","s":"nexus","u":"https://www.linkedin.com/in/enoreyes/"},{"n":"Eric Ho","t":"Co-Founder/CEO","o":"Goodfire","s":"nexus","u":"https://www.linkedin.com/in/eric-ho-53981862/"},{"n":"Eric Wallace","t":"Researcher","o":"OpenAI","s":"nexus","u":"https://www.ericswallace.com/"},{"n":"Faraz Shafiq","t":"Head of AI","o":"Wells Fargo","s":"mainstage","u":"https://www.linkedin.com/in/fshafiq/"},{"n":"Furong Huang","t":"Associate Professor","o":"University of Maryland","s":"compass","u":"https://furong-huang.com/"},{"n":"Gabe Pereyra","t":"Co-Founder/President","o":"Harvey AI","s":"mainstage","u":"https://www.harvey.ai/blog/author/gabe-pereyra"},{"n":"Giambattista Parascandolo","t":"leading reasoning research team","o":"OpenAI","s":"atlas","u":"https://sites.google.com/view/giambattista-parascandolo/home"},{"n":"Gideon Mendels","t":"CEO and Co-founder","o":"Comet","s":"compass","u":"https://www.linkedin.com/in/gideon-mendels/"},{"n":"Gosia Steinder","t":"IBM Fellow","o":"IBM Research","s":"compass","u":"https://www.linkedin.com/in/gosia-steinder/"},{"n":"Guru Chahal","t":"Partner","o":"Lightspeed Venture Partners","s":"mainstage","u":"https://lsvp.com/team-member/guru-chahal/"},{"n":"Haishi Bai","t":"Principal Architect","o":"Microsoft","s":"compass","u":"https://www.linkedin.com/in/haishi/"},{"n":"Huan Sun","t":"Associate Professor","o":"The Ohio State University","s":"compass","u":"https://u.osu.edu/ihudas/people/"},{"n":"Igor Babuschkin","t":"Co-Founder/CEO","o":"River AI","s":"mainstage","u":"https://babushk.in"},{"n":"Ion Stoica","t":"Co-Founder, Databricks and Anyscale · Professor, UC Berkeley","o":"databricks and anyscale; uc berkeley","s":"mainstage","u":"https://people.eecs.berkeley.edu/~istoica/"},{"n":"Itsik Mantin","t":"Head of AI Security Research","o":"Intuit","s":"nexus","u":"https://www.linkedin.com/in/imantin/"},{"n":"Ivan Burazin","t":"Co-Founder/CEO","o":"Daytona","s":"mainstage","u":"https://www.daytona.io/dotfiles/author/ivan-burazin"},{"n":"Izzy Miller","t":"AI Research Lead","o":"Hex","s":"compass","u":"https://www.izzy.co/"},{"n":"James Zou","t":"Professor","o":"Stanford","s":"nexus","u":"https://www.james-zou.com/"},{"n":"Jasjeet Sekhon","t":"Chief Strategy Officer","o":"Google DeepMind","s":"mainstage","u":"https://jsekhon.com"},{"n":"Jeff Wecker","t":"CTO","o":"Two Sigma","s":"mainstage","u":"https://www.linkedin.com/in/jeffwecker/"},{"n":"Jen Allum","t":"SVP, Co-Head of GenAI","o":"The D. E. Shaw Group","s":"mainstage","u":"https://www.linkedin.com/in/jen-allum/"},{"n":"Jennifer Chayes","t":"Dean of CDSS","o":"UC Berkeley","s":"mainstage","u":"https://cdss.berkeley.edu/people/jennifer-chayes"},{"n":"Jerry Tworek","t":"CEO; Former VP of Research","o":"Core Automation; OpenAI","s":"mainstage","u":"https://www.linkedin.com/in/jerry-tworek-b5b9aa56/"},{"n":"Jianfeng Gao","t":"Technical Fellow & Corporate Vice President","o":"Microsoft Research","s":"atlas","u":"https://www.microsoft.com/en-us/research/people/jfgao/"},{"n":"Jim Fan","t":"Director of Robotics & Distinguished Scientist","o":"Nvidia","s":"mainstage","u":"https://jimfan.me/"},{"n":"John A McDermid","t":"Director, Centre for Assuring Autonomy","o":"Institute for Safe Autonomy, University of York","s":"nexus","u":"https://www.cs.york.ac.uk/people/jam"},{"n":"John Liu","t":"Principal Product Manager","o":"AWS","s":"compass","u":"https://www.linkedin.com/in/johnliu13"},{"n":"Jon-Rav Shende","t":"Chief Technology Officer","o":"Thales Group","s":"nexus","u":"https://www.linkedin.com/in/jonshende/"},{"n":"Jonathan Cohen","t":"VP of Applied Research","o":"Nvidia","s":"mainstage","u":"https://www.jcohen.name/"},{"n":"Jongryool Kim","t":"Senior Director / Head of AI System Infra.","o":"SK hynix","s":"compass","u":"https://www.linkedin.com/in/jongryool-kim-72bb3982/"},{"n":"Jordan Jindong Gu","t":"Senior Research Scientist, Google · University of Oxford","o":"google; university of oxford","s":"compass","u":"https://jindonggu.github.io/"},{"n":"Josh Albrecht","t":"Co-founder and CTO","o":"Imbue","s":"atlas","u":"https://joshalbrecht.com/"},{"n":"Jun Yang","t":"Senior Director of Compute Architecture","o":"NVIDIA","s":"compass","u":"https://www.linkedin.com/in/yangjunpro/"},{"n":"Kira Radinsky","t":"CTO and Founder","o":"Diagnostic Robotics","s":"nexus","u":"http://www.kiraradinsky.com/"},{"n":"Krishnakumar Sharma","t":"CEO","o":"Omokai","s":"nexus","u":"https://www.linkedin.com/in/krisberlin/"},{"n":"Krishnaram Kenthapadi","t":"Chief Scientist","o":"Oracle Health","s":"nexus","u":"http://www-cs-students.stanford.edu/~kngk/"},{"n":"Krithik Puthalath","t":"CEO","o":"Zyphra","s":"mainstage","u":"https://www.linkedin.com/in/krithikputhalath/"},{"n":"Li Deng","t":"Chief AI Officer, Global Head of ML","o":"Vatic Investments","s":"mainstage","u":"https://www.ece.uw.edu/people/li-deng/"},{"n":"Lijie Chen","t":"Researcher","o":"OpenAI","s":"atlas","u":"https://www2.eecs.berkeley.edu/Faculty/Homepages/lijiechen.html"},{"n":"Lovedeep Gondara","t":"Head of AI R&D, Vanguard · Adjunct Professor, University of British Columbia","o":"vanguard; university of british columbia","s":"compass","u":"https://lovedeepgondara.com/"},{"n":"Lovre Pesut","t":"AI Engineer","o":"Daytona","s":"atlas","u":"https://lov.re/"},{"n":"Manmohan Chandraker","t":"Professor","o":"University of California, San Diego","s":"atlas","u":"https://cseweb.ucsd.edu/~mkchandraker/"},{"n":"Markus J. Buehler","t":"Professor, MIT · Founder & CTO, Unreasonable Labs","o":"mit; unreasonable labs","s":"nexus","u":"https://cee.mit.edu/people_individual/markus-j-buehler/"},{"n":"Martin Casado","t":"General Partner","o":"a16z","s":"mainstage","u":"https://a16z.com/author/martin-casado/"},{"n":"Matt White","t":"Global CTO of AI, Linux Foundation; CTO, PyTorch Foundation","o":"","s":"mainstage","u":"https://www.matt-white.com/"},{"n":"Megan Morrone","t":"Editor of Technology","o":"Axios","s":"mainstage","u":"https://www.axios.com/authors/mmorrone"},{"n":"Mengdi Wang","t":"Professor","o":"Princeton","s":"nexus","u":"https://mwang.princeton.edu/"},{"n":"Michael Spranger","t":"President","o":"Sony AI","s":"mainstage","u":"https://sites.google.com/view/michaelspranger/"},{"n":"Michal Shmueli-Scheuer","t":"Distinguished Engineer, AI Benchmarking and Evaluation","o":"IBM Research","s":"atlas","u":"https://research.ibm.com/people/michal-shmueli-scheuer"},{"n":"Michele Catasta","t":"President","o":"Replit","s":"mainstage","u":"https://www.linkedin.com/in/pirroh"},{"n":"Milind Naphade","t":"SVP, AI Foundations","o":"Capital One","s":"mainstage","u":"https://www.capitalone.com/tech/ai/milind-naphade-svp-ai-foundations/"},{"n":"Mohamed Nabeel","t":"Senior Principal Researcher","o":"Palo Alto Networks","s":"nexus","u":"https://scholar.google.com/citations?user=Lka4RwsAAAAJ&hl=en"},{"n":"Muhammad Hashmi","t":"DevRel","o":"Daytona","s":"atlas","u":"https://www.linkedin.com/in/mu-hash/"},{"n":"Navrina Singh","t":"CEO, Founder","o":"Credo AI","s":"compass","u":"https://www.linkedin.com/in/navrina"},{"n":"Nayaki Nayyar","t":"CEO","o":"Siteimprove","s":"compass","u":"https://www.linkedin.com/in/nayakinayyar"},{"n":"Neil Lawrence","t":"Chief Scientist and Co-founder","o":"Trent AI","s":"compass","u":"https://inverseprobability.com/"},{"n":"Nick Harris","t":"Founder/CEO","o":"Lightmatter","s":"compass","u":"https://nicholascharris.com/"},{"n":"Nick Talken","t":"CEO & Cofounder","o":"Albert Invent","s":"nexus","u":"https://www.linkedin.com/in/nick-talken-b720ba42/"},{"n":"Nikhil Chandhok","t":"Chief Product & Technology Officer","o":"Circle","s":"mainstage","u":"https://www.circle.com/leadership/nikhil-chandhok"},{"n":"Nilou Salehi","t":"Associate professor","o":"UC, Berkeley","s":"compass","u":"https://niloufar.org/"},{"n":"Ori Goshen","t":"Co-Founder/CEO","o":"AI21 Labs","s":"atlas","u":"https://www.linkedin.com/in/ori-goshen-809a263/"},{"n":"Peter DeSantis","t":"SVP, Foundational AI Models, Custom Silicon, Quantum Computing","o":"Amazon","s":"mainstage","u":"https://www.aboutamazon.com/news/innovation-at-amazon/peter-desantis-amazon-artificial-general-intelligence"},{"n":"Peter Steinberger","t":"Creator of OpenClaw","o":"OpenAI","s":"mainstage","u":"https://steipete.me/"},{"n":"Peter Stone","t":"Chief Scientist, Sony AI · Professor, UT Austin","o":"sony ai; ut austin","s":"atlas","u":"https://www.cs.utexas.edu/~pstone/"},{"n":"Philip Rathle","t":"CTO","o":"Neo4j","s":"atlas","u":"https://www.linkedin.com/in/prathle/"},{"n":"Priya Ponnapalli","t":"SVP of Engineering, Enterprise AI","o":"Scale AI","s":"atlas","u":"https://www.linkedin.com/in/priya-ponnapalli/"},{"n":"Pushmeet Kohli","t":"VP of Science","o":"Google DeepMind","s":"mainstage","u":"https://research.google/people/105667/"},{"n":"Rahul Bakshi","t":"Director, Applied Science (Edge AI)","o":"Amazon","s":"compass","u":"https://www.linkedin.com/in/thetechnologist"},{"n":"Rahul Krishna","t":"Senior Research Scientist","o":"IBM Software Innovation Labs","s":"compass","u":"http://rkrsn.us"},{"n":"Raja Giryes","t":"Professor","o":"Tel Aviv University","s":"compass","u":"https://www.giryes.sites.tau.ac.il/"},{"n":"Ramesh Raskar","t":"Professor","o":"MIT","s":"compass","u":"https://www.media.mit.edu/people/raskar/overview/"},{"n":"Ranjan Sinha","t":"IBM Fellow, CTO & VP for watsonx, Enterprise AI","o":"IBM","s":"atlas","u":"https://www.linkedin.com/in/sinharanjan/"},{"n":"Rao Surapaneni","t":"VP/GM AI Search & Specialized AI","o":"Google Cloud","s":"mainstage","u":"https://www.linkedin.com/in/raosurapaneni/"},{"n":"Rene Pajta","t":"Chief Architect Cloud & AI","o":"Microsoft","s":"atlas","u":"https://www.linkedin.com/in/renepajta/"},{"n":"Rich Lyons","t":"Chancellor","o":"UC Berkeley","s":"mainstage","u":"https://chancellor.berkeley.edu/people/richard-k-lyons"},{"n":"Richard Socher","t":"Co-Founder/CEO","o":"Recursive & You.com","s":"mainstage","u":"https://socher.org"},{"n":"Rishi Bommasani","t":"Senior Research Scholar","o":"Stanford Institute for Human-Centered Artificial Intelligence","s":"compass","u":"https://rishibommasani.github.io/"},{"n":"Rose Yu","t":"Professor; CEO/Co-Founder","o":"UC San Diego; GistFlow","s":"nexus","u":"https://roseyu.com/"},{"n":"Ryan Lopopolo","t":"Principal Engineer","o":"Agentic Google Cloud Platform","s":"mainstage","u":"https://hyperbo.la/contact/"},{"n":"S. Joy Mountford","t":"Vice President, Innovation Lab","o":"S.A.P.","s":"compass","u":"https://www.joymountford.com/"},{"n":"Sanja Fidler","t":"VP of AI Research","o":"Nvidia","s":"atlas","u":"https://www.cs.utoronto.ca/~fidler/"},{"n":"Saurabh Gupta","t":"Sr. Director, AI/ML","o":"Cisco","s":"compass","u":"https://www.linkedin.com/in/saurabhguptaprofile/"},{"n":"Saurabh Tiwary","t":"VP & GM, Google Cloud AI","o":"","s":"mainstage","u":"https://www.linkedin.com/in/saurabh-tiwary/"},{"n":"Scott Clark","t":"Co-Founder & CEO","o":"Distributional","s":"compass","u":"https://scottclark.io/"},{"n":"Sergei Gukov","t":"Executive Director, American Institute of Mathematics · John D. MacArthur Professor of Theoretical Physics and Mathematics, California Institute of Technology","o":"american institute of mathematics; california institute of technology","s":"atlas","u":"https://www.pma.caltech.edu/people/gukov"},{"n":"Sergey Levine","t":"Co-Founder; Professor","o":"Physical Intelligence; UC Berkeley","s":"mainstage","u":"https://people.eecs.berkeley.edu/~svlevine/"},{"n":"Shaghayegh Gharghabi","t":"Deep Learning Scientists","o":"NVIDIA","s":"nexus","u":"https://www.linkedin.com/in/sh-gharghabi/"},{"n":"Shamir Abdul Aziz","t":"Prinicipal Product Manager","o":"Microsoft","s":"nexus","u":"https://www.linkedin.com/in/meetshamir/"},{"n":"Shiva Kasiviswanthan","t":"Principal Applied Scientist","o":"Amazon Web Services","s":"compass","u":"https://www.linkedin.com/in/kasivisw/"},{"n":"Silas Alberti","t":"SVP of Research","o":"Cognition","s":"nexus","u":"https://sil.as/"},{"n":"Sri Pangulur","t":"Partner","o":"Mayfield Fund","s":"mainstage","u":"https://www.mayfield.com/team/sri-pangulur/"},{"n":"Srijith Rajamohan","t":"Head of AI Research","o":"Redis","s":"atlas","u":"https://srijithr.gitlab.io/"},{"n":"Sunita Verma","t":"Chief Technology Officer (CTO)","o":"Ironclad","s":"atlas","u":"https://www.linkedin.com/in/sunita-verma-1a4491/"},{"n":"Surbhi Rathore","t":"VP, AI Products & Strategy","o":"Invoca","s":"compass","u":"https://www.linkedin.com/in/surbhi-rathore/"},{"n":"Surojit Chatterjee","t":"Founder/CEO","o":"Ema","s":"mainstage","u":"https://www.linkedin.com/in/surojitchatterjee/"},{"n":"Tanya Roosta","t":"Director of AI","o":"AMD, Berkeley","s":"compass","u":"https://tanyaroosta.github.io/"},{"n":"Tim Hockin","t":"Distinguished Engineer","o":"Google","s":"compass","u":"https://hockin.org/~thockin/"},{"n":"Todd Graham","t":"Managing Partner","o":"M12","s":"mainstage","u":"https://m12.vc/team/todd-graham/"},{"n":"Trevor Darrell","t":"Professor","o":"UC Berkeley","s":"atlas","u":"https://people.eecs.berkeley.edu/~trevor/"},{"n":"Tushar Krishna","t":"Associate Professor","o":"Georgia Institute of Technology","s":"compass","u":"https://tusharkrishna.ece.gatech.edu/"},{"n":"Vaishnavi Gudur","t":"Senior AI Security Engineer","o":"Microsoft","s":"nexus","u":"https://www.linkedin.com/in/vaishnavi-gudur"},{"n":"Venkat Bhat","t":"Associate Professor; Director, AI for Mental Health (AI-M) Program","o":"University of Toronto","s":"nexus","u":"https://psychiatry.utoronto.ca/faculty/venkat-bhat"},{"n":"Vijay Ganesh","t":"Professor","o":"Georgia Institute of Technology","s":"atlas","u":"https://www.cc.gatech.edu/people/vijay-ganesh"},{"n":"Vincent Sunn Chen","t":"VP & Founding Member","o":"Snorkel AI","s":"atlas","u":"https://snorkel.ai/author/vincent-chen/"},{"n":"Vincent Vanhoucke","t":"Distinguished Engineer","o":"Waymo","s":"atlas","u":"https://vincent.vanhoucke.com/"},{"n":"Wei Zhan","t":"Chief Scientist","o":"Applied Intuition","s":"mainstage","u":"https://zhanwei.site/"},{"n":"Weizhu Chen","t":"Technical Fellow & CVP","o":"Microsoft AI","s":"mainstage","u":"https://www.microsoft.com/en-us/research/people/wzchen/"},{"n":"Wenbo Guo","t":"Assistant Professor","o":"UCSB","s":"compass","u":"https://henrygwb.github.io/"},{"n":"Will Knight","t":"Senior Writer","o":"Wired","s":"mainstage","u":"https://www.wired.com/author/will-knight/"},{"n":"Wojciech Zaremba","t":"Co-Founder","o":"OpenAI","s":"mainstage","u":"https://www.linkedin.com/in/wojciech-zaremba-356568164/"},{"n":"Woosuk Kwon","t":"Co-Founder & CTO","o":"Inferact","s":"atlas","u":"https://woosuk.me/"},{"n":"Yu Su","t":"CEO, NeoCognition · Associate Professor, OSU","o":"neocognition; osu","s":"compass","u":"https://ysu1989.github.io/"},{"n":"Yuan (Emily) Xue","t":"Head of Enterprise AI","o":"Scale AI","s":"compass","u":"https://yuanxue.github.io/"},{"n":"Zach Mueller","t":"Head of Developer Relations","o":"Lambda","s":"atlas","u":"https://www.linkedin.com/in/zachary-mueller-135257118/"},{"n":"Zelin Wan, Ph.D.","t":"Senior AI Engineer","o":"Postman","s":"compass","u":"https://www.linkedin.com/in/zelinwan/"}];
+  const STORAGE_PITCH = "aas2026-pitch";
+  const STORAGE_CONTACTS = "aas2026-contacts-v1";
 
+  const MEETUP_WINDOWS = [
+    { t: "8:30", d: "Both mornings", s: "Badge lines, coffee, stage-finding — thinnest crowds of the day" },
+    { t: "Breaks", d: "Between Plenary blocks", s: "Hallways outside the main stage · leave 1–2 min early" },
+    { t: "Workshops", d: "Atlas / Compass / Nexus", s: "Table neighbors > stage exits after hands-on blocks" },
+    { t: "5:30", d: "Saturday reception", s: "Best density for peer intros — host a small circle if you can" },
+    { t: "Posters", d: "Poster / demo areas", s: "Authors want feedback; bring one specific question" },
+    { t: "Sun PM", d: "Spotlight + wrap", s: "Founders and ICs still open before people bolt for flights" }
+  ];
+
+  // day + sort key (HHMM) for catalog / conflicts
+  const META = {
+    earlySat: { day: "sat", sort: 830, end: 915 },
+    openingsSat: { day: "sat", sort: 915, end: 1105 },
+    circle: { day: "sat", sort: 1045, end: 1145 },
+    software: { day: "sat", sort: 1110, end: 1220 },
+    daytona: { day: "sat", sort: 1110, end: 1210 },
+    fetcherr: { day: "sat", sort: 1350, end: 1450 },
+    temporal: { day: "sat", sort: 1400, end: 1500 },
+    lambda: { day: "sat", sort: 1400, end: 1500 },
+    replit: { day: "sat", sort: 1410, end: 1510 },
+    secure: { day: "sat", sort: 1525, end: 1625 },
+    markets: { day: "sat", sort: 1630, end: 1700 },
+    ng: { day: "sat", sort: 1700, end: 1730 },
+    receptionSat: { day: "sat", sort: 1730, end: 1900 },
+    earlySun: { day: "sun", sort: 830, end: 940 },
+    enterprise: { day: "sun", sort: 940, end: 1100 },
+    ghodsi: { day: "sun", sort: 1105, end: 1145 },
+    ema: { day: "sun", sort: 1120, end: 1220 },
+    evals: { day: "sun", sort: 1300, end: 1400 },
+    platforms: { day: "sun", sort: 1405, end: 1505 },
+    finance: { day: "sun", sort: 1440, end: 1540 },
+    spotlight: { day: "sun", sort: 1545, end: 1645 },
+    karpathy: { day: "sun", sort: 2000, end: 2100 },
+    receptionSun: { day: "sun", sort: 1700, end: 1900 }
+  };
+
+  const ALL_SAT = Object.keys(META).filter((id) => META[id].day === "sat").sort((a, b) => META[a].sort - META[b].sort);
+  const ALL_SUN = Object.keys(META).filter((id) => META[id].day === "sun").sort((a, b) => META[a].sort - META[b].sort);
+
+  let currentTrackId = "builder";
+  let schedView = localStorage.getItem(STORAGE_VIEW) || "track";
+
+  function loadAgenda() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(STORAGE_AGENDA) || "[]");
+      return Array.isArray(raw) ? raw.filter((id) => S[id]) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+  function saveAgenda(ids) {
+    localStorage.setItem(STORAGE_AGENDA, JSON.stringify(ids));
+  }
+  function isSaved(id) {
+    return loadAgenda().includes(id);
+  }
+  function toggleAgenda(id) {
+    const ids = loadAgenda();
+    const i = ids.indexOf(id);
+    if (i >= 0) ids.splice(i, 1);
+    else ids.push(id);
+    saveAgenda(ids);
+    return ids.includes(id);
+  }
+  function toast(msg) {
+    const el = document.getElementById("toast");
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add("show");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => el.classList.remove("show"), 1600);
+  }
+
+  function findConflicts(ids) {
+    const byDay = { sat: [], sun: [] };
+    ids.forEach((id) => {
+      const m = META[id];
+      if (m) byDay[m.day].push({ id, ...m, title: S[id].title });
+    });
+    const conflicts = [];
+    ["sat", "sun"].forEach((day) => {
+      const list = byDay[day].sort((a, b) => a.sort - b.sort);
+      for (let i = 0; i < list.length; i++) {
+        for (let j = i + 1; j < list.length; j++) {
+          if (list[j].sort < list[i].end && list[i].sort < list[j].end) {
+            conflicts.push([list[i], list[j]]);
+          }
+        }
+      }
+    });
+    return conflicts;
+  }
+
+  const BUILDINGS = [
+    { name: "Haas Pavilion", kind: "primary", desc: "Large arena — common for high-capacity keynotes", lat: 37.86935, lng: -122.26225, q: "Haas+Pavilion+UC+Berkeley" },
+    { name: "Zellerbach Hall", kind: "primary", desc: "Major auditorium next to Haas Pavilion", lat: 37.86895, lng: -122.26065, q: "Zellerbach+Hall+UC+Berkeley" },
+    { name: "Wheeler Auditorium", kind: "primary", desc: "Central campus lecture hall (Wheeler Hall)", lat: 37.87125, lng: -122.25915, q: "Wheeler+Auditorium+UC+Berkeley" },
+    { name: "Pauley Ballroom", kind: "primary", desc: "MLK Student Union — large flexible hall", lat: 37.86915, lng: -122.25945, q: "Pauley+Ballroom+UC+Berkeley" },
+    { name: "Sproul Plaza", kind: "hub", desc: "Main pedestrian hub / wayfinding landmark", lat: 37.86965, lng: -122.25955, q: "Sproul+Plaza+UC+Berkeley" },
+    { name: "Sibley Auditorium", kind: "hall", desc: "Bechtel Engineering Center auditorium", lat: 37.87385, lng: -122.25845, q: "Sibley+Auditorium+UC+Berkeley" },
+    { name: "Banatao Auditorium", kind: "hall", desc: "Sutardja Dai Hall — tech/engineering events", lat: 37.87495, lng: -122.25835, q: "Banatao+Auditorium+Sutardja+Dai+Hall" },
+    { name: "Cheit Hall (Haas)", kind: "hall", desc: "Haas School of Business classrooms / overflow", lat: 37.87155, lng: -122.25355, q: "Cheit+Hall+Haas+School+UC+Berkeley" }
+  ];
+
+
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function renderSession(sess, opts) {
+    opts = opts || {};
+    const saved = isSaved(sess.id);
+    const cls = ["session"];
+    if (sess.lock) cls.push("lock");
+    if (sess.optional) cls.push("optional-session");
+    if (saved) cls.push("in-plan");
+    let html = `<details class="${cls.join(" ")}" data-sid="${esc(sess.id)}"><summary>`;
+    html += `<div class="session-summary-main"><div class="session-badges">`;
+    sess.badges.forEach((b, i) => {
+      html += `<span class="badge ${b}">${esc(sess.badgeLabels[i] || b)}</span>`;
+    });
+    if (saved) html += `<span class="badge saved">In My Plan</span>`;
+    if (opts.conflict) html += `<span class="badge conflict">Time conflict</span>`;
+    html += `</div><div class="time">${esc(sess.time)} · ${esc(sess.duration)}</div>`;
+    html += `<h4 class="session-title">${esc(sess.title)}</h4></div>`;
+    html += `<button type="button" class="add-btn${saved ? " on" : ""}" data-add="${esc(sess.id)}" aria-label="${saved ? "Remove from My Plan" : "Add to My Plan"}" title="${saved ? "Remove from My Plan" : "Add to My Plan"}">${saved ? "✓" : "+"}</button>`;
+    html += `<span class="chev" aria-hidden="true">▾</span></summary><div class="session-body">`;
+    html += `<p class="session-topic">${esc(sess.topic)}</p>`;
+    (sess.groups || []).forEach((g, idx) => {
+      html += `<p class="field-label"${idx === 0 ? ' style="margin-top:0"' : ""}>${esc(g.label)}</p><ul class="speakers">`;
+      g.speakers.forEach((sp) => {
+        html += `<li><span class="name">${esc(sp.name)}</span><span class="role">${esc(sp.role)}</span>`;
+        if (sp.talk) html += `<span class="talk">${esc(sp.talk)}</span>`;
+        html += `</li>`;
+      });
+      html += `</ul>`;
+    });
+    if (sess.action) html += `<div class="action"><strong>Do:</strong> ${esc(sess.action)}</div>`;
+    if (sess.note) html += `<p class="note-inline">${esc(sess.note)}</p>`;
+    html += `</div></details>`;
+    return html;
+  }
+
+  function renderGlance(rows) {
+    return rows.map(([t, g, small]) =>
+      `<div class="glance-item"><div class="t">${esc(t)}</div><div class="g">${esc(g)}<small>${esc(small)}</small></div></div>`
+    ).join("");
+  }
+
+  function renderScheduleDays() {
+    const track = TRACKS[currentTrackId];
+    if (!track) return;
+    const satIds = schedView === "all" ? ALL_SAT : track.sat;
+    const sunIds = schedView === "all" ? ALL_SUN : track.sun;
+    document.getElementById("sat-sub").textContent = schedView === "all"
+      ? "Full catalog — tap + to add any session to My Plan"
+      : track.satSub;
+    document.getElementById("sun-sub").textContent = schedView === "all"
+      ? "Full catalog — tap + to add any session to My Plan"
+      : track.sunSub;
+    document.getElementById("sat-glance").innerHTML = schedView === "all"
+      ? renderGlance([["—", "Browse all Saturday sessions", "Add what you want · watch for conflicts in My Plan"]])
+      : renderGlance(track.satGlance);
+    document.getElementById("sun-glance").innerHTML = schedView === "all"
+      ? renderGlance([["—", "Browse all Sunday sessions", "Add what you want · watch for conflicts in My Plan"]])
+      : renderGlance(track.sunGlance);
+    document.getElementById("sat-sessions").innerHTML = satIds.map((sid) => renderSession(S[sid])).join("");
+    document.getElementById("sun-sessions").innerHTML = sunIds.map((sid) => renderSession(S[sid])).join("");
+  }
+
+  function renderMine() {
+    const ids = loadAgenda();
+    const conflicts = findConflicts(ids);
+    const conflictIds = new Set();
+    conflicts.forEach(([a, b]) => { conflictIds.add(a.id); conflictIds.add(b.id); });
+    const box = document.getElementById("mine-conflicts");
+    if (conflicts.length) {
+      box.hidden = false;
+      box.className = "conflict-box";
+      box.innerHTML = "<strong>Time overlaps</strong> — " + conflicts.map(([a, b]) =>
+        `${esc(a.title)} ↔ ${esc(b.title)}`
+      ).join("; ") + ". Keep one, or accept the overlap.";
+    } else {
+      box.hidden = true;
+      box.innerHTML = "";
+    }
+    document.getElementById("mine-count").textContent =
+      ids.length === 0 ? "0 sessions saved — add from Schedule or seed a track"
+        : `${ids.length} session${ids.length === 1 ? "" : "s"} saved`;
+
+    const sat = ids.filter((id) => META[id] && META[id].day === "sat").sort((a, b) => META[a].sort - META[b].sort);
+    const sun = ids.filter((id) => META[id] && META[id].day === "sun").sort((a, b) => META[a].sort - META[b].sort);
+    const empty = `<div class="empty-mine">Nothing here yet.<br/>Open <strong>Schedule</strong>, tap <strong>+</strong>, or use <strong>Add current track</strong>.</div>`;
+    document.getElementById("mine-sat").innerHTML = sat.length
+      ? sat.map((id) => renderSession(S[id], { conflict: conflictIds.has(id) })).join("")
+      : empty;
+    document.getElementById("mine-sun").innerHTML = sun.length
+      ? sun.map((id) => renderSession(S[id], { conflict: conflictIds.has(id) })).join("")
+      : empty;
+  }
+
+  function refreshAgendaUI() {
+    renderScheduleDays();
+    renderMine();
+  }
+
+  function setTrack(id) {
+    const track = TRACKS[id];
+    if (!track) return;
+    currentTrackId = id;
+    localStorage.setItem(STORAGE_TRACK, id);
+    document.querySelectorAll(".track-chip").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.track === id);
+    });
+    const n = loadAgenda().length;
+    document.getElementById("active-banner").innerHTML =
+      `<strong>${esc(track.name)} track</strong><p>${esc(track.blurb)}. Tap <strong>+</strong> to save sessions to My Plan${n ? ` · ${n} saved` : ""}. Optional sessions are dashed.</p>`;
+    document.getElementById("path-stops").innerHTML = track.path.map((p) =>
+      `<div class="stop ${p.cls}"><strong>${esc(p.t)}</strong><span>${esc(p.d)}</span></div>`
+    ).join("");
+    renderScheduleDays();
+    renderMine();
+    renderNetwork();
+  }
+
+  function setSchedView(view) {
+    schedView = view === "all" ? "all" : "track";
+    localStorage.setItem(STORAGE_VIEW, schedView);
+    document.querySelectorAll("[data-sched-view]").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.schedView === schedView);
+    });
+    renderScheduleDays();
+  }
+
+  function showPanel(name) {
+    document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("active", p.id === "panel-" + name));
+    document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.dataset.panel === name));
+    document.querySelectorAll(".bottom-nav button").forEach((b) => b.classList.toggle("active", b.dataset.panel === name));
+    if (name === "mine") renderMine();
+    if (name === "network") renderNetwork();
+    if (name === "sponsors") ensureSponsorImages();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function showDay(day) {
+    document.getElementById("day-sat").hidden = day !== "sat";
+    document.getElementById("day-sun").hidden = day !== "sun";
+    document.querySelectorAll(".day-btn[data-day]").forEach((b) => b.classList.toggle("active", b.dataset.day === day));
+  }
+
+  function showMineDay(day) {
+    document.getElementById("mine-sat").hidden = day !== "sat";
+    document.getElementById("mine-sun").hidden = day !== "sun";
+    document.querySelectorAll(".day-btn[data-mine-day]").forEach((b) => b.classList.toggle("active", b.dataset.mineDay === day));
+  }
+
+  function setOpenAll(day, open) {
+    document.querySelectorAll("#" + day + "-sessions details.session").forEach((d) => { d.open = open; });
+  }
+
+    const SPEAKERS = [{"n":"Aaron Jacobson","t":"GP","o":"NEA","s":"mainstage","u":"https://www.nea.com/team/aaron-jacobson"},{"n":"Aayush Agrawal","t":"Product Lead","o":"Uber","s":"compass","u":"https://www.linkedin.com/in/aayushxagrawal/"},{"n":"Adarsh Hiremath","t":"Co-CEO","o":"Mercor","s":"mainstage","u":"https://www.forbes.com/profile/adarsh-hiremath/"},{"n":"Aditya Grover","t":"Co-Founder/CTO","o":"Inception Labs","s":"atlas","u":"https://aditya-grover.github.io/"},{"n":"Alex Graveley","t":"Director, Comet","o":"Perplexity AI","s":"mainstage","u":"https://alexgraveley.com/"},{"n":"Alex Obadia","t":"Programme Director","o":"Advanced Research & Invention Agency","s":"compass","u":"https://alexobadia.com/(%E3%83%84)/about"},{"n":"Alfred Lin","t":"General Partner","o":"Sequoia Capital","s":"mainstage","u":"https://sequoiacap.com/people/alfred-lin/"},{"n":"Ali Ghodsi","t":"Co-Founder/CEO","o":"Databricks","s":"mainstage","u":"https://people.eecs.berkeley.edu/~alig/"},{"n":"Ali Nazari","t":"Head of Deep Learning Research","o":"Susquehanna International Group","s":"mainstage","u":"https://www.linkedin.com/in/ali-nazari-97246716/"},{"n":"Anahita Tafvizi","t":"Chief Data & AI Officer","o":"Snowflake","s":"mainstage","u":"https://www.snowflake.com/en/blog/authors/anahita-tafvizi-/"},{"n":"Anastasios N Angelopoulos","t":"Co-Founder/CEO","o":"LLMArena","s":"atlas","u":"https://people.eecs.berkeley.edu/~angelopoulos/"},{"n":"Anastasis Germanidis","t":"Co-Founder/Co-CEO","o":"Runway","s":"mainstage","u":"https://agermanidis.com/"},{"n":"Andi Peng","t":"Co-Founder","o":"Humans&","s":"mainstage","u":"https://andipeng.com/"},{"n":"Andrew Ng","t":"Founder","o":"DeepLearning.AI","s":"mainstage","u":"https://www.andrewng.org/"},{"n":"Andrew Schoen","t":"Partner","o":"NEA","s":"nexus","u":"https://www.nea.com/team/andrew-schoen"},{"n":"Andy Konwinski","t":"Co-Founder, Databricks · Perplexity · Laude Ventures","o":"databricks; perplexity; laude ventures","s":"mainstage","u":"https://andykonwinski.com/about/"},{"n":"Anjney Midha","t":"Founder","o":"AMP PBC","s":"mainstage","u":"https://a16z.com/author/anjney-midha/"},{"n":"Ankit Goyal","t":"Principal Staff Software Engineer","o":"LinkedIn","s":"compass","u":"https://www.linkedin.com/in/goyalankit3/"},{"n":"Ankit Sobti","t":"Co-Founder & CTO","o":"Postman","s":"compass","u":"https://www.linkedin.com/in/ankit-sobti/"},{"n":"Arindam Sett","t":"Principal ML Engineer","o":"Genentech","s":"compass","u":"https://www.ischool.berkeley.edu/people/arindam-sett"},{"n":"Banghua Zhu","t":"Co-Founder","o":"RadixArk","s":"atlas","u":"https://banghua.me/"},{"n":"Barr Moses","t":"CEO and co-founder","o":"Monte Carlo AI","s":"compass","u":"https://www.linkedin.com/in/barrmoses/"},{"n":"Ben Athiwaratkun","t":"Senior Director, Core ML (Turbo)","o":"Together AI","s":"compass","u":"https://benathi.github.io/"},{"n":"Bo Li","t":"Co-Founder and CEO, Virtue AI · UIUC","o":"virtue ai; uiuc","s":"nexus","u":"https://www.linkedin.com/in/lxbosky/"},{"n":"Bolei Zhou","t":"Associate Professor, UCLA · Chief AI Scientist, Coco Robotics","o":"ucla; coco robotics","s":"atlas","u":"https://boleizhou.github.io/"},{"n":"Bradley Olson","t":"Technology Editor","o":"WSJ","s":"mainstage","u":"https://www.wsj.com/news/author/bradley-olson"},{"n":"Brandon Middleton","t":"Head of Education","o":"Replit","s":"atlas","u":"https://dschool.stanford.edu/directory/brandon-middleton"},{"n":"Carina Hong","t":"Founder and CEO","o":"Axiom Math","s":"atlas","u":"https://www.forbes.com/profile/carina-hong/"},{"n":"Chenguang Wang","t":"Assistant Professor, University of California, Santa Cruz · Research Advisor, Scale AI","o":"university of california, santa cruz; scale ai","s":"compass","u":"https://cgraywang.github.io/"},{"n":"Chris Bregler","t":"Senior Director / Distinguished Scientist","o":"Google DeepMind","s":"compass","u":"https://chris.bregler.com/"},{"n":"Christopher Petrillo","t":"Principal Product Manager","o":"The Wikimedia Foundation","s":"compass","u":"https://www.linkedin.com/in/christopher-petrillo-a0b64b76/"},{"n":"Chuan Li","t":"Chief Scientific Officer","o":"Lambda","s":"mainstage","u":"https://github.com/chuanli11"},{"n":"Dan Klein","t":"Professor, UC Berkeley · Co-founder CTO, Scaled Cognition","o":"uc berkeley; scaled cognition","s":"atlas","u":"https://people.eecs.berkeley.edu/~klein/"},{"n":"Dan Roth","t":"Chief AI Scientist","o":"Oracle","s":"mainstage","u":"https://www.cis.upenn.edu/~danroth/"},{"n":"Daniel Fink","t":"AI Engineering Lead","o":"Cognizant","s":"compass","u":"https://www.cognizant.com/us/en/ai-lab/blog/agentic-ai-developer-interview-daniel-fink"},{"n":"Daniel Homola","t":"Lead AI Engineer","o":"BMW Research","s":"compass","u":"https://danielhomola.ai/"},{"n":"David Hsu","t":"CEO and founder","o":"Retool","s":"atlas","u":"https://www.linkedin.com/in/dvdhsu"},{"n":"Dawn Song","t":"Professor, UC Berkeley · Co-Director, Berkeley RDI","o":"uc berkeley; berkeley rdi","s":"mainstage","u":"https://people.eecs.berkeley.edu/~dawnsong/"},{"n":"Denis Akhiyarov","t":"Senior Staff AI Scientist","o":"ServiceNow","s":"compass","u":"https://scholar.google.com/citations?user=TfBvStoAAAAJ&hl=en"},{"n":"Devina Jain","t":"Research Engineer","o":"Lambda","s":"atlas","u":"https://www.linkedin.com/in/devina-jain-088aba86"},{"n":"Dhruv Batra","t":"Chief Scientist / co-founder","o":"Yutori","s":"nexus","u":"https://dhruvbatra.com/"},{"n":"Dima Dmytro Dzhulgakov","t":"Co-Founder/CTO","o":"Fireworks AI","s":"mainstage","u":"https://www.linkedin.com/in/dzhulgakov/"},{"n":"Doga Kerestecioglu","t":"Principal Applied Scientist","o":"Microsoft Corporation","s":"compass","u":"https://www.linkedin.com/in/dogaker"},{"n":"Duncan Lennox","t":"Chief Product & Technology Officer","o":"HubSpot","s":"mainstage","u":"https://www.hubspot.com/company/board-of-directors/duncan-lennox"},{"n":"Ed Chi","t":"VP of Research","o":"Google DeepMind","s":"mainstage","u":"https://www.edchi.net/"},{"n":"Ekin Dogus Cubuk","t":"Co-Founder","o":"Periodic Labs","s":"mainstage","u":"https://www.linkedin.com/in/ekin-dogus-cubuk-9148b8114/"},{"n":"Eno Reyes","t":"Co-Founder / CTO","o":"Factory AI","s":"nexus","u":"https://www.linkedin.com/in/enoreyes/"},{"n":"Eric Ho","t":"Co-Founder/CEO","o":"Goodfire","s":"nexus","u":"https://www.linkedin.com/in/eric-ho-53981862/"},{"n":"Eric Wallace","t":"Researcher","o":"OpenAI","s":"nexus","u":"https://www.ericswallace.com/"},{"n":"Faraz Shafiq","t":"Head of AI","o":"Wells Fargo","s":"mainstage","u":"https://www.linkedin.com/in/fshafiq/"},{"n":"Furong Huang","t":"Associate Professor","o":"University of Maryland","s":"compass","u":"https://furong-huang.com/"},{"n":"Gabe Pereyra","t":"Co-Founder/President","o":"Harvey AI","s":"mainstage","u":"https://www.harvey.ai/blog/author/gabe-pereyra"},{"n":"Giambattista Parascandolo","t":"leading reasoning research team","o":"OpenAI","s":"atlas","u":"https://sites.google.com/view/giambattista-parascandolo/home"},{"n":"Gideon Mendels","t":"CEO and Co-founder","o":"Comet","s":"compass","u":"https://www.linkedin.com/in/gideon-mendels/"},{"n":"Gosia Steinder","t":"IBM Fellow","o":"IBM Research","s":"compass","u":"https://www.linkedin.com/in/gosia-steinder/"},{"n":"Guru Chahal","t":"Partner","o":"Lightspeed Venture Partners","s":"mainstage","u":"https://lsvp.com/team-member/guru-chahal/"},{"n":"Haishi Bai","t":"Principal Architect","o":"Microsoft","s":"compass","u":"https://www.linkedin.com/in/haishi/"},{"n":"Huan Sun","t":"Associate Professor","o":"The Ohio State University","s":"compass","u":"https://u.osu.edu/ihudas/people/"},{"n":"Igor Babuschkin","t":"Co-Founder/CEO","o":"River AI","s":"mainstage","u":"https://babushk.in"},{"n":"Ion Stoica","t":"Co-Founder, Databricks and Anyscale · Professor, UC Berkeley","o":"databricks and anyscale; uc berkeley","s":"mainstage","u":"https://people.eecs.berkeley.edu/~istoica/"},{"n":"Itsik Mantin","t":"Head of AI Security Research","o":"Intuit","s":"nexus","u":"https://www.linkedin.com/in/imantin/"},{"n":"Ivan Burazin","t":"Co-Founder/CEO","o":"Daytona","s":"mainstage","u":"https://www.daytona.io/dotfiles/author/ivan-burazin"},{"n":"Izzy Miller","t":"AI Research Lead","o":"Hex","s":"compass","u":"https://www.izzy.co/"},{"n":"James Zou","t":"Professor","o":"Stanford","s":"nexus","u":"https://www.james-zou.com/"},{"n":"Jasjeet Sekhon","t":"Chief Strategy Officer","o":"Google DeepMind","s":"mainstage","u":"https://jsekhon.com"},{"n":"Jeff Wecker","t":"CTO","o":"Two Sigma","s":"mainstage","u":"https://www.linkedin.com/in/jeffwecker/"},{"n":"Jen Allum","t":"SVP, Co-Head of GenAI","o":"The D. E. Shaw Group","s":"mainstage","u":"https://www.linkedin.com/in/jen-allum/"},{"n":"Jennifer Chayes","t":"Dean of CDSS","o":"UC Berkeley","s":"mainstage","u":"https://cdss.berkeley.edu/people/jennifer-chayes"},{"n":"Jerry Tworek","t":"CEO; Former VP of Research","o":"Core Automation; OpenAI","s":"mainstage","u":"https://www.linkedin.com/in/jerry-tworek-b5b9aa56/"},{"n":"Jianfeng Gao","t":"Technical Fellow & Corporate Vice President","o":"Microsoft Research","s":"atlas","u":"https://www.microsoft.com/en-us/research/people/jfgao/"},{"n":"Jim Fan","t":"Director of Robotics & Distinguished Scientist","o":"Nvidia","s":"mainstage","u":"https://jimfan.me/"},{"n":"John A McDermid","t":"Director, Centre for Assuring Autonomy","o":"Institute for Safe Autonomy, University of York","s":"nexus","u":"https://www.cs.york.ac.uk/people/jam"},{"n":"John Liu","t":"Principal Product Manager","o":"AWS","s":"compass","u":"https://www.linkedin.com/in/johnliu13"},{"n":"Jon-Rav Shende","t":"Chief Technology Officer","o":"Thales Group","s":"nexus","u":"https://www.linkedin.com/in/jonshende/"},{"n":"Jonathan Cohen","t":"VP of Applied Research","o":"Nvidia","s":"mainstage","u":"https://www.jcohen.name/"},{"n":"Jongryool Kim","t":"Senior Director / Head of AI System Infra.","o":"SK hynix","s":"compass","u":"https://www.linkedin.com/in/jongryool-kim-72bb3982/"},{"n":"Jordan Jindong Gu","t":"Senior Research Scientist, Google · University of Oxford","o":"google; university of oxford","s":"compass","u":"https://jindonggu.github.io/"},{"n":"Josh Albrecht","t":"Co-founder and CTO","o":"Imbue","s":"atlas","u":"https://joshalbrecht.com/"},{"n":"Jun Yang","t":"Senior Director of Compute Architecture","o":"NVIDIA","s":"compass","u":"https://www.linkedin.com/in/yangjunpro/"},{"n":"Kira Radinsky","t":"CTO and Founder","o":"Diagnostic Robotics","s":"nexus","u":"http://www.kiraradinsky.com/"},{"n":"Krishnakumar Sharma","t":"CEO","o":"Omokai","s":"nexus","u":"https://www.linkedin.com/in/krisberlin/"},{"n":"Krishnaram Kenthapadi","t":"Chief Scientist","o":"Oracle Health","s":"nexus","u":"http://www-cs-students.stanford.edu/~kngk/"},{"n":"Krithik Puthalath","t":"CEO","o":"Zyphra","s":"mainstage","u":"https://www.linkedin.com/in/krithikputhalath/"},{"n":"Li Deng","t":"Chief AI Officer, Global Head of ML","o":"Vatic Investments","s":"mainstage","u":"https://www.ece.uw.edu/people/li-deng/"},{"n":"Lijie Chen","t":"Researcher","o":"OpenAI","s":"atlas","u":"https://www2.eecs.berkeley.edu/Faculty/Homepages/lijiechen.html"},{"n":"Lovedeep Gondara","t":"Head of AI R&D, Vanguard · Adjunct Professor, University of British Columbia","o":"vanguard; university of british columbia","s":"compass","u":"https://lovedeepgondara.com/"},{"n":"Lovre Pesut","t":"AI Engineer","o":"Daytona","s":"atlas","u":"https://lov.re/"},{"n":"Manmohan Chandraker","t":"Professor","o":"University of California, San Diego","s":"atlas","u":"https://cseweb.ucsd.edu/~mkchandraker/"},{"n":"Markus J. Buehler","t":"Professor, MIT · Founder & CTO, Unreasonable Labs","o":"mit; unreasonable labs","s":"nexus","u":"https://cee.mit.edu/people_individual/markus-j-buehler/"},{"n":"Martin Casado","t":"General Partner","o":"a16z","s":"mainstage","u":"https://a16z.com/author/martin-casado/"},{"n":"Matt White","t":"Global CTO of AI, Linux Foundation; CTO, PyTorch Foundation","o":"","s":"mainstage","u":"https://www.matt-white.com/"},{"n":"Megan Morrone","t":"Editor of Technology","o":"Axios","s":"mainstage","u":"https://www.axios.com/authors/mmorrone"},{"n":"Mengdi Wang","t":"Professor","o":"Princeton","s":"nexus","u":"https://mwang.princeton.edu/"},{"n":"Michael Spranger","t":"President","o":"Sony AI","s":"mainstage","u":"https://sites.google.com/view/michaelspranger/"},{"n":"Michal Shmueli-Scheuer","t":"Distinguished Engineer, AI Benchmarking and Evaluation","o":"IBM Research","s":"atlas","u":"https://research.ibm.com/people/michal-shmueli-scheuer"},{"n":"Michele Catasta","t":"President","o":"Replit","s":"mainstage","u":"https://www.linkedin.com/in/pirroh"},{"n":"Milind Naphade","t":"SVP, AI Foundations","o":"Capital One","s":"mainstage","u":"https://www.capitalone.com/tech/ai/milind-naphade-svp-ai-foundations/"},{"n":"Mohamed Nabeel","t":"Senior Principal Researcher","o":"Palo Alto Networks","s":"nexus","u":"https://scholar.google.com/citations?user=Lka4RwsAAAAJ&hl=en"},{"n":"Muhammad Hashmi","t":"DevRel","o":"Daytona","s":"atlas","u":"https://www.linkedin.com/in/mu-hash/"},{"n":"Navrina Singh","t":"CEO, Founder","o":"Credo AI","s":"compass","u":"https://www.linkedin.com/in/navrina"},{"n":"Nayaki Nayyar","t":"CEO","o":"Siteimprove","s":"compass","u":"https://www.linkedin.com/in/nayakinayyar"},{"n":"Neil Lawrence","t":"Chief Scientist and Co-founder","o":"Trent AI","s":"compass","u":"https://inverseprobability.com/"},{"n":"Nick Harris","t":"Founder/CEO","o":"Lightmatter","s":"compass","u":"https://nicholascharris.com/"},{"n":"Nick Talken","t":"CEO & Cofounder","o":"Albert Invent","s":"nexus","u":"https://www.linkedin.com/in/nick-talken-b720ba42/"},{"n":"Nikhil Chandhok","t":"Chief Product & Technology Officer","o":"Circle","s":"mainstage","u":"https://www.circle.com/leadership/nikhil-chandhok"},{"n":"Nilou Salehi","t":"Associate professor","o":"UC, Berkeley","s":"compass","u":"https://niloufar.org/"},{"n":"Ori Goshen","t":"Co-Founder/CEO","o":"AI21 Labs","s":"atlas","u":"https://www.linkedin.com/in/ori-goshen-809a263/"},{"n":"Peter DeSantis","t":"SVP, Foundational AI Models, Custom Silicon, Quantum Computing","o":"Amazon","s":"mainstage","u":"https://www.aboutamazon.com/news/innovation-at-amazon/peter-desantis-amazon-artificial-general-intelligence"},{"n":"Peter Steinberger","t":"Creator of OpenClaw","o":"OpenAI","s":"mainstage","u":"https://steipete.me/"},{"n":"Peter Stone","t":"Chief Scientist, Sony AI · Professor, UT Austin","o":"sony ai; ut austin","s":"atlas","u":"https://www.cs.utexas.edu/~pstone/"},{"n":"Philip Rathle","t":"CTO","o":"Neo4j","s":"atlas","u":"https://www.linkedin.com/in/prathle/"},{"n":"Priya Ponnapalli","t":"SVP of Engineering, Enterprise AI","o":"Scale AI","s":"atlas","u":"https://www.linkedin.com/in/priya-ponnapalli/"},{"n":"Pushmeet Kohli","t":"VP of Science","o":"Google DeepMind","s":"mainstage","u":"https://research.google/people/105667/"},{"n":"Rahul Bakshi","t":"Director, Applied Science (Edge AI)","o":"Amazon","s":"compass","u":"https://www.linkedin.com/in/thetechnologist"},{"n":"Rahul Krishna","t":"Senior Research Scientist","o":"IBM Software Innovation Labs","s":"compass","u":"http://rkrsn.us"},{"n":"Raja Giryes","t":"Professor","o":"Tel Aviv University","s":"compass","u":"https://www.giryes.sites.tau.ac.il/"},{"n":"Ramesh Raskar","t":"Professor","o":"MIT","s":"compass","u":"https://www.media.mit.edu/people/raskar/overview/"},{"n":"Ranjan Sinha","t":"IBM Fellow, CTO & VP for watsonx, Enterprise AI","o":"IBM","s":"atlas","u":"https://www.linkedin.com/in/sinharanjan/"},{"n":"Rao Surapaneni","t":"VP/GM AI Search & Specialized AI","o":"Google Cloud","s":"mainstage","u":"https://www.linkedin.com/in/raosurapaneni/"},{"n":"Rene Pajta","t":"Chief Architect Cloud & AI","o":"Microsoft","s":"atlas","u":"https://www.linkedin.com/in/renepajta/"},{"n":"Rich Lyons","t":"Chancellor","o":"UC Berkeley","s":"mainstage","u":"https://chancellor.berkeley.edu/people/richard-k-lyons"},{"n":"Richard Socher","t":"Co-Founder/CEO","o":"Recursive & You.com","s":"mainstage","u":"https://socher.org"},{"n":"Rishi Bommasani","t":"Senior Research Scholar","o":"Stanford Institute for Human-Centered Artificial Intelligence","s":"compass","u":"https://rishibommasani.github.io/"},{"n":"Rose Yu","t":"Professor; CEO/Co-Founder","o":"UC San Diego; GistFlow","s":"nexus","u":"https://roseyu.com/"},{"n":"Ryan Lopopolo","t":"Principal Engineer","o":"Agentic Google Cloud Platform","s":"mainstage","u":"https://hyperbo.la/contact/"},{"n":"S. Joy Mountford","t":"Vice President, Innovation Lab","o":"S.A.P.","s":"compass","u":"https://www.joymountford.com/"},{"n":"Sanja Fidler","t":"VP of AI Research","o":"Nvidia","s":"atlas","u":"https://www.cs.utoronto.ca/~fidler/"},{"n":"Saurabh Gupta","t":"Sr. Director, AI/ML","o":"Cisco","s":"compass","u":"https://www.linkedin.com/in/saurabhguptaprofile/"},{"n":"Saurabh Tiwary","t":"VP & GM, Google Cloud AI","o":"","s":"mainstage","u":"https://www.linkedin.com/in/saurabh-tiwary/"},{"n":"Scott Clark","t":"Co-Founder & CEO","o":"Distributional","s":"compass","u":"https://scottclark.io/"},{"n":"Sergei Gukov","t":"Executive Director, American Institute of Mathematics · John D. MacArthur Professor of Theoretical Physics and Mathematics, California Institute of Technology","o":"american institute of mathematics; california institute of technology","s":"atlas","u":"https://www.pma.caltech.edu/people/gukov"},{"n":"Sergey Levine","t":"Co-Founder; Professor","o":"Physical Intelligence; UC Berkeley","s":"mainstage","u":"https://people.eecs.berkeley.edu/~svlevine/"},{"n":"Shaghayegh Gharghabi","t":"Deep Learning Scientists","o":"NVIDIA","s":"nexus","u":"https://www.linkedin.com/in/sh-gharghabi/"},{"n":"Shamir Abdul Aziz","t":"Prinicipal Product Manager","o":"Microsoft","s":"nexus","u":"https://www.linkedin.com/in/meetshamir/"},{"n":"Shiva Kasiviswanthan","t":"Principal Applied Scientist","o":"Amazon Web Services","s":"compass","u":"https://www.linkedin.com/in/kasivisw/"},{"n":"Silas Alberti","t":"SVP of Research","o":"Cognition","s":"nexus","u":"https://sil.as/"},{"n":"Sri Pangulur","t":"Partner","o":"Mayfield Fund","s":"mainstage","u":"https://www.mayfield.com/team/sri-pangulur/"},{"n":"Srijith Rajamohan","t":"Head of AI Research","o":"Redis","s":"atlas","u":"https://srijithr.gitlab.io/"},{"n":"Sunita Verma","t":"Chief Technology Officer (CTO)","o":"Ironclad","s":"atlas","u":"https://www.linkedin.com/in/sunita-verma-1a4491/"},{"n":"Surbhi Rathore","t":"VP, AI Products & Strategy","o":"Invoca","s":"compass","u":"https://www.linkedin.com/in/surbhi-rathore/"},{"n":"Surojit Chatterjee","t":"Founder/CEO","o":"Ema","s":"mainstage","u":"https://www.linkedin.com/in/surojitchatterjee/"},{"n":"Tanya Roosta","t":"Director of AI","o":"AMD, Berkeley","s":"compass","u":"https://tanyaroosta.github.io/"},{"n":"Tim Hockin","t":"Distinguished Engineer","o":"Google","s":"compass","u":"https://hockin.org/~thockin/"},{"n":"Todd Graham","t":"Managing Partner","o":"M12","s":"mainstage","u":"https://m12.vc/team/todd-graham/"},{"n":"Trevor Darrell","t":"Professor","o":"UC Berkeley","s":"atlas","u":"https://people.eecs.berkeley.edu/~trevor/"},{"n":"Tushar Krishna","t":"Associate Professor","o":"Georgia Institute of Technology","s":"compass","u":"https://tusharkrishna.ece.gatech.edu/"},{"n":"Vaishnavi Gudur","t":"Senior AI Security Engineer","o":"Microsoft","s":"nexus","u":"https://www.linkedin.com/in/vaishnavi-gudur"},{"n":"Venkat Bhat","t":"Associate Professor; Director, AI for Mental Health (AI-M) Program","o":"University of Toronto","s":"nexus","u":"https://psychiatry.utoronto.ca/faculty/venkat-bhat"},{"n":"Vijay Ganesh","t":"Professor","o":"Georgia Institute of Technology","s":"atlas","u":"https://www.cc.gatech.edu/people/vijay-ganesh"},{"n":"Vincent Sunn Chen","t":"VP & Founding Member","o":"Snorkel AI","s":"atlas","u":"https://snorkel.ai/author/vincent-chen/"},{"n":"Vincent Vanhoucke","t":"Distinguished Engineer","o":"Waymo","s":"atlas","u":"https://vincent.vanhoucke.com/"},{"n":"Wei Zhan","t":"Chief Scientist","o":"Applied Intuition","s":"mainstage","u":"https://zhanwei.site/"},{"n":"Weizhu Chen","t":"Technical Fellow & CVP","o":"Microsoft AI","s":"mainstage","u":"https://www.microsoft.com/en-us/research/people/wzchen/"},{"n":"Wenbo Guo","t":"Assistant Professor","o":"UCSB","s":"compass","u":"https://henrygwb.github.io/"},{"n":"Will Knight","t":"Senior Writer","o":"Wired","s":"mainstage","u":"https://www.wired.com/author/will-knight/"},{"n":"Wojciech Zaremba","t":"Co-Founder","o":"OpenAI","s":"mainstage","u":"https://www.linkedin.com/in/wojciech-zaremba-356568164/"},{"n":"Woosuk Kwon","t":"Co-Founder & CTO","o":"Inferact","s":"atlas","u":"https://woosuk.me/"},{"n":"Yu Su","t":"CEO, NeoCognition · Associate Professor, OSU","o":"neocognition; osu","s":"compass","u":"https://ysu1989.github.io/"},{"n":"Yuan (Emily) Xue","t":"Head of Enterprise AI","o":"Scale AI","s":"compass","u":"https://yuanxue.github.io/"},{"n":"Zach Mueller","t":"Head of Developer Relations","o":"Lambda","s":"atlas","u":"https://www.linkedin.com/in/zachary-mueller-135257118/"},{"n":"Zelin Wan, Ph.D.","t":"Senior AI Engineer","o":"Postman","s":"compass","u":"https://www.linkedin.com/in/zelinwan/"}];
   const STAGE_LABEL = { mainstage: "Plenary", atlas: "Atlas", nexus: "Nexus", compass: "Compass" };
-  let speakerFilter = "all";
-  let speakerQuery = "";
+  var speakerFilter = "all";
+  var speakerQuery = "";
 
   function speakerMatches(sp) {
     if (speakerFilter !== "all" && sp.s !== speakerFilter) return false;
     if (!speakerQuery) return true;
-    const hay = (sp.n + " " + sp.t + " " + sp.o + " " + (STAGE_LABEL[sp.s] || sp.s)).toLowerCase();
-    return hay.includes(speakerQuery);
+    var hay = (sp.n + " " + (sp.t || "") + " " + (sp.o || "") + " " + (STAGE_LABEL[sp.s] || sp.s)).toLowerCase();
+    return hay.indexOf(speakerQuery) !== -1;
   }
 
   function renderNetwork() {
-    const filters = document.getElementById("speaker-filters");
-    const listEl = document.getElementById("speaker-list");
-    const count = document.getElementById("speaker-count");
+    var filters = document.getElementById("speaker-filters");
+    var listEl = document.getElementById("speaker-list");
+    var count = document.getElementById("speaker-count");
     if (!filters || !listEl) return;
-
-    const stages = ["all", "mainstage", "atlas", "nexus", "compass"];
+    var stages = ["all", "mainstage", "atlas", "nexus", "compass"];
     filters.innerHTML = stages.map(function (id) {
-      const label = id === "all" ? "All" : (STAGE_LABEL[id] || id);
+      var label = id === "all" ? "All" : (STAGE_LABEL[id] || id);
       return '<button type="button" data-stage-filter="' + id + '" class="' + (speakerFilter === id ? "active" : "") + '">' + label + "</button>";
     }).join("");
-
-    const list = SPEAKERS.filter(speakerMatches);
-    count.textContent = list.length + " speakers";
+    var list = SPEAKERS.filter(speakerMatches);
+    if (count) count.textContent = list.length + " speakers";
     if (!list.length) {
       listEl.innerHTML = '<div class="empty-mine">No matches.</div>';
       return;
     }
     listEl.innerHTML = list.map(function (sp) {
-      const stage = STAGE_LABEL[sp.s] || sp.s;
-      const href = sp.u || "https://rdi.berkeley.edu/events/agentic-ai-summit-2026";
-      const meta = [sp.t, sp.o].filter(Boolean).join(" · ");
+      var stage = STAGE_LABEL[sp.s] || sp.s;
+      var href = sp.u || "https://rdi.berkeley.edu/events/agentic-ai-summit-2026";
+      var meta = [sp.t, sp.o].filter(Boolean).join(" · ");
       return '<a class="spk-row" href="' + esc(href) + '" target="_blank" rel="noopener">' +
         '<div class="spk-row-main"><div class="spk-row-name">' + esc(sp.n) + '</div>' +
         (meta ? '<div class="spk-row-meta">' + esc(meta) + "</div>" : "") +
@@ -1906,17 +2134,17 @@
 
   function initNetwork() {
     try {
-      const search = document.getElementById("speaker-search");
+      var search = document.getElementById("speaker-search");
       if (search) {
         search.addEventListener("input", function () {
           speakerQuery = search.value.trim().toLowerCase();
           renderNetwork();
         });
       }
-      const filters = document.getElementById("speaker-filters");
+      var filters = document.getElementById("speaker-filters");
       if (filters) {
         filters.addEventListener("click", function (e) {
-          const btn = e.target.closest("[data-stage-filter]");
+          var btn = e.target.closest("[data-stage-filter]");
           if (!btn) return;
           speakerFilter = btn.dataset.stageFilter;
           renderNetwork();
@@ -1928,8 +2156,7 @@
     }
   }
 
-
-  function initBuildingsList() {
+function initBuildingsList() {
     const list = document.getElementById("building-list");
     list.innerHTML = BUILDINGS.map((b) => {
       const primary = b.kind === "primary";
