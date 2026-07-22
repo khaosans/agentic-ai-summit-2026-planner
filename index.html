@@ -472,6 +472,89 @@
       font-size: 1.1rem; cursor: pointer; line-height: 1; padding: 0.25rem;
     }
     .form-row-actions { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.25rem; }
+
+    .speaker-filters {
+      display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.35rem;
+    }
+    .speaker-filters button {
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.4rem 0.7rem;
+      border-radius: 999px;
+      cursor: pointer;
+      min-height: 36px;
+    }
+    .speaker-filters button.active {
+      background: var(--berkeley-blue);
+      border-color: var(--berkeley-blue);
+      color: #fff;
+    }
+    .speaker-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.55rem;
+    }
+    @media (min-width: 560px) {
+      .speaker-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    .spk-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      text-decoration: none;
+      color: inherit;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0.85rem 0.55rem 0.75rem;
+      min-height: 100%;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .spk-card:hover, .spk-card:focus-visible {
+      border-color: rgba(203,148,69,0.55);
+      box-shadow: 0 0 0 2px rgba(203,148,69,0.16);
+      outline: none;
+    }
+    .spk-avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      object-fit: cover; background: #e8eef5;
+      border: 2px solid rgba(203,148,69,0.45);
+      display: block;
+    }
+    .spk-name {
+      margin: 0.55rem 0 0.15rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--berkeley-blue);
+      line-height: 1.25;
+    }
+    .spk-title {
+      margin: 0;
+      font-size: 0.7rem;
+      color: var(--muted);
+      line-height: 1.3;
+    }
+    .spk-org {
+      margin: 0.2rem 0 0;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.3;
+    }
+    .spk-stage {
+      margin-top: 0.45rem;
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--cal-gold);
+    }
+
     .session-badges { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.4rem; }
     .badge {
       display: inline-flex;
@@ -1051,66 +1134,16 @@
 
       <section class="panel" id="panel-network" role="tabpanel">
         <div class="card">
-          <h3>Network like an operator</h3>
-          <p>Skip celebrity queues. Use this tab to clarify your ask, find <strong>peers</strong>, catch high-odds meetup windows, and log people before you forget.</p>
-        </div>
-
-        <div class="card">
-          <h3>Your 15-second pitch</h3>
-          <p>What you do + what you want this weekend. Saved on this device.</p>
-          <div class="field" style="margin-top:0.65rem">
-            <label for="pitch-input">Pitch</label>
-            <textarea id="pitch-input" placeholder="e.g. I build agent workflows for fintech ops — looking for design partners who own evals / compliance."></textarea>
+          <h3>Speakers</h3>
+          <p>Browse the official Agentic AI Summit 2026 roster — name, title, org, and stage. Tap a card for their public profile link.</p>
+          <div class="field" style="margin-top:0.65rem;margin-bottom:0.45rem">
+            <label for="speaker-search">Search</label>
+            <input id="speaker-search" type="search" placeholder="Name, org, title…" autocomplete="off" />
           </div>
-          <div class="form-row-actions">
-            <button type="button" class="btn-soft primary" id="save-pitch" style="background:var(--berkeley-blue);color:#fff;border-color:var(--berkeley-blue)">Save pitch</button>
-          </div>
+          <div class="speaker-filters" id="speaker-filters" role="tablist" aria-label="Stage filter"></div>
+          <p class="mine-count" id="speaker-count" style="margin-top:0.55rem">0 speakers</p>
         </div>
-
-        <div class="card">
-          <h3 id="peer-title">Who to find</h3>
-          <p id="peer-blurb">Peer targets for your track — not stage celebrities.</p>
-          <div class="peer-list" id="peer-list"></div>
-        </div>
-
-        <div class="card">
-          <h3>Best windows to meet people</h3>
-          <p>Where conversations actually happen. Headliner seats are for listening — network around them.</p>
-          <div class="window-list" id="meetup-windows"></div>
-        </div>
-
-        <div class="card">
-          <h3>People log</h3>
-          <p>Capture name · org · note before reception ends. Export isn’t needed — copy from here later.</p>
-          <form id="contact-form" autocomplete="off">
-            <div class="field">
-              <label for="c-name">Name</label>
-              <input id="c-name" name="name" required placeholder="Alex Kim" />
-            </div>
-            <div class="field">
-              <label for="c-org">Org / role</label>
-              <input id="c-org" name="org" placeholder="Acme · Staff eng" />
-            </div>
-            <div class="field">
-              <label for="c-note">Note / ask</label>
-              <textarea id="c-note" name="note" placeholder="Met at Temporal workshop — follow up on eval harness"></textarea>
-            </div>
-            <div class="field">
-              <label for="c-follow">Follow-up</label>
-              <select id="c-follow" name="follow">
-                <option value="this-week">This week</option>
-                <option value="intro">Needs intro</option>
-                <option value="coffee">Coffee / call</option>
-                <option value="later">Later / weak tie</option>
-              </select>
-            </div>
-            <div class="form-row-actions">
-              <button type="submit" class="btn-soft primary" style="background:var(--berkeley-blue);color:#fff;border-color:var(--berkeley-blue)">Add person</button>
-              <button type="button" class="btn-soft danger" id="clear-contacts">Clear log</button>
-            </div>
-          </form>
-          <div class="contact-list" id="contact-list"></div>
-        </div>
+        <div class="speaker-grid" id="speaker-grid"></div>
       </section>
 
       <section class="panel" id="panel-map" role="tabpanel">
@@ -1174,7 +1207,7 @@
           <ul>
             <li>Pick a <strong>track</strong> for a suggested plan, or tap <strong>Browse all</strong> to see every session.</li>
             <li>Tap <strong>+</strong> on any session to add it to <strong>My Plan</strong> (saved on this device).</li>
-            <li>Use <strong>Network</strong> for your pitch, peer targets, meetup windows, and a people log — not celebrity queues.</li>
+            <li>Use <strong>Network</strong> to browse speakers by stage with title and org from the official roster.</li>
             <li><strong>Optional</strong> sessions are dashed; <strong>locks</strong> are gold-highlighted headliners.</li>
             <li><strong>Map</strong> shows primary campus buildings — match Plenary/Atlas/Nexus/Compass on-site.</li>
           </ul>
@@ -1852,381 +1885,70 @@
   const STORAGE_TRACK = "aas2026-track";
   const STORAGE_AGENDA = "aas2026-agenda-v1";
   const STORAGE_VIEW = "aas2026-sched-view";
-  const STORAGE_PITCH = "aas2026-pitch";
-  const STORAGE_CONTACTS = "aas2026-contacts-v1";
+  const SPEAKER_IMG = "https://rdi.berkeley.edu/assets/images/agentic-summit-2026/speakers/";
+  const SPEAKERS = [{"n":"Aaron Jacobson","t":"GP","o":"NEA","s":"mainstage","i":"aaron_jacobson.png","u":"https://www.nea.com/team/aaron-jacobson"},{"n":"Aayush Agrawal","t":"Product Lead","o":"Uber","s":"compass","i":"aayush_agrawal.png","u":"https://www.linkedin.com/in/aayushxagrawal/"},{"n":"Adarsh Hiremath","t":"Co-CEO","o":"Mercor","s":"mainstage","i":"adarsh_hiremath.png","u":"https://www.forbes.com/profile/adarsh-hiremath/"},{"n":"Aditya Grover","t":"Co-Founder/CTO","o":"Inception Labs","s":"atlas","i":"aditya_grover.png","u":"https://aditya-grover.github.io/"},{"n":"Alex Graveley","t":"Director, Comet","o":"Perplexity AI","s":"mainstage","i":"alex_graveley.png","u":"https://alexgraveley.com/"},{"n":"Alex Obadia","t":"Programme Director","o":"Advanced Research & Invention Agency","s":"compass","i":"alex_obadia.png","u":"https://alexobadia.com/(%E3%83%84)/about"},{"n":"Alfred Lin","t":"General Partner","o":"Sequoia Capital","s":"mainstage","i":"alfred_lin.png","u":"https://sequoiacap.com/people/alfred-lin/"},{"n":"Ali Ghodsi","t":"Co-Founder/CEO","o":"Databricks","s":"mainstage","i":"ali_ghodsi.png","u":"https://people.eecs.berkeley.edu/~alig/"},{"n":"Ali Nazari","t":"Head of Deep Learning Research","o":"Susquehanna International Group","s":"mainstage","i":"ali_nazari.png","u":"https://www.linkedin.com/in/ali-nazari-97246716/"},{"n":"Anahita Tafvizi","t":"Chief Data & AI Officer","o":"Snowflake","s":"mainstage","i":"anahita_tafvizi.png","u":"https://www.snowflake.com/en/blog/authors/anahita-tafvizi-/"},{"n":"Anastasios N Angelopoulos","t":"Co-Founder/CEO","o":"LLMArena","s":"atlas","i":"anastasios_angelopoulos.png","u":"https://people.eecs.berkeley.edu/~angelopoulos/"},{"n":"Anastasis Germanidis","t":"Co-Founder/Co-CEO","o":"Runway","s":"mainstage","i":"anastasis_germanidis.png","u":"https://agermanidis.com/"},{"n":"Andi Peng","t":"Co-Founder","o":"Humans&","s":"mainstage","i":"andi_peng.png","u":"https://andipeng.com/"},{"n":"Andrew Ng","t":"Founder","o":"DeepLearning.AI","s":"mainstage","i":"andrew_ng.png","u":"https://www.andrewng.org/"},{"n":"Andrew Schoen","t":"Partner","o":"NEA","s":"nexus","i":"andrew_schoen.webp","u":"https://www.nea.com/team/andrew-schoen"},{"n":"Andy Konwinski","t":"Co-Founder, Databricks · Perplexity · Laude Ventures","o":"databricks; perplexity; laude ventures","s":"mainstage","i":"andy_konwinski.png","u":"https://andykonwinski.com/about/"},{"n":"Anjney Midha","t":"Founder","o":"AMP PBC","s":"mainstage","i":"anjney_midha.png","u":"https://a16z.com/author/anjney-midha/"},{"n":"Ankit Goyal","t":"Principal Staff Software Engineer","o":"LinkedIn","s":"compass","i":"ankit_goyal.png","u":"https://www.linkedin.com/in/goyalankit3/"},{"n":"Ankit Sobti","t":"Co-Founder & CTO","o":"Postman","s":"compass","i":"ankit_sobti.png","u":"https://www.linkedin.com/in/ankit-sobti/"},{"n":"Arindam Sett","t":"Principal ML Engineer","o":"Genentech","s":"compass","i":"arindam_sett.png","u":"https://www.ischool.berkeley.edu/people/arindam-sett"},{"n":"Banghua Zhu","t":"Co-Founder","o":"RadixArk","s":"atlas","i":"banghua_zhu.png","u":"https://banghua.me/"},{"n":"Barr Moses","t":"CEO and co-founder","o":"Monte Carlo AI","s":"compass","i":"barr_moses.png","u":"https://www.linkedin.com/in/barrmoses/"},{"n":"Ben Athiwaratkun","t":"Senior Director, Core ML (Turbo)","o":"Together AI","s":"compass","i":"ben_athiwaratkun.png","u":"https://benathi.github.io/"},{"n":"Bo Li","t":"Co-Founder and CEO, Virtue AI · UIUC","o":"virtue ai; uiuc","s":"nexus","i":"bo_li.png","u":"https://www.linkedin.com/in/lxbosky/"},{"n":"Bolei Zhou","t":"Associate Professor, UCLA · Chief AI Scientist, Coco Robotics","o":"ucla; coco robotics","s":"atlas","i":"bolei_zhou.png","u":"https://boleizhou.github.io/"},{"n":"Bradley Olson","t":"Technology Editor","o":"WSJ","s":"mainstage","i":"bradley_olson.png","u":"https://www.wsj.com/news/author/bradley-olson"},{"n":"Brandon Middleton","t":"Head of Education","o":"Replit","s":"atlas","i":"brandon_middleton.png","u":"https://dschool.stanford.edu/directory/brandon-middleton"},{"n":"Carina Hong","t":"Founder and CEO","o":"Axiom Math","s":"atlas","i":"carina_hong.webp","u":"https://www.forbes.com/profile/carina-hong/"},{"n":"Chenguang Wang","t":"Assistant Professor, University of California, Santa Cruz · Research Advisor, Scale AI","o":"university of california, santa cruz; scale ai","s":"compass","i":"chenguang_wang.png","u":"https://cgraywang.github.io/"},{"n":"Chris Bregler","t":"Senior Director / Distinguished Scientist","o":"Google DeepMind","s":"compass","i":"chris_bregler.png","u":"https://chris.bregler.com/"},{"n":"Christopher Petrillo","t":"Principal Product Manager","o":"The Wikimedia Foundation","s":"compass","i":"christopher_petrillo.png","u":"https://www.linkedin.com/in/christopher-petrillo-a0b64b76/"},{"n":"Chuan Li","t":"Chief Scientific Officer","o":"Lambda","s":"mainstage","i":"chuan_li.png","u":"https://github.com/chuanli11"},{"n":"Dan Klein","t":"Professor, UC Berkeley · Co-founder CTO, Scaled Cognition","o":"uc berkeley; scaled cognition","s":"atlas","i":"dan_klein.png","u":"https://people.eecs.berkeley.edu/~klein/"},{"n":"Dan Roth","t":"Chief AI Scientist","o":"Oracle","s":"mainstage","i":"dan_roth.png","u":"https://www.cis.upenn.edu/~danroth/"},{"n":"Daniel Fink","t":"AI Engineering Lead","o":"Cognizant","s":"compass","i":"daniel_fink.png","u":"https://www.cognizant.com/us/en/ai-lab/blog/agentic-ai-developer-interview-daniel-fink"},{"n":"Daniel Homola","t":"Lead AI Engineer","o":"BMW Research","s":"compass","i":"daniel_homola.png","u":"https://danielhomola.ai/"},{"n":"David Hsu","t":"CEO and founder","o":"Retool","s":"atlas","i":"david_hsu.png","u":"https://www.linkedin.com/in/dvdhsu"},{"n":"Dawn Song","t":"Professor, UC Berkeley · Co-Director, Berkeley RDI","o":"uc berkeley; berkeley rdi","s":"mainstage","i":"dawn_song.jpg","u":"https://people.eecs.berkeley.edu/~dawnsong/"},{"n":"Denis Akhiyarov","t":"Senior Staff AI Scientist","o":"ServiceNow","s":"compass","i":"denis_akhiyarov.png","u":"https://scholar.google.com/citations?user=TfBvStoAAAAJ&hl=en"},{"n":"Devina Jain","t":"Research Engineer","o":"Lambda","s":"atlas","i":"devina_jain.png","u":"https://www.linkedin.com/in/devina-jain-088aba86"},{"n":"Dhruv Batra","t":"Chief Scientist / co-founder","o":"Yutori","s":"nexus","i":"dhruv_batra.png","u":"https://dhruvbatra.com/"},{"n":"Dima Dmytro Dzhulgakov","t":"Co-Founder/CTO","o":"Fireworks AI","s":"mainstage","i":"dima_dzhulgakov.png","u":"https://www.linkedin.com/in/dzhulgakov/"},{"n":"Doga Kerestecioglu","t":"Principal Applied Scientist","o":"Microsoft Corporation","s":"compass","i":"doga_kerestecioglu.png","u":"https://www.linkedin.com/in/dogaker"},{"n":"Duncan Lennox","t":"Chief Product & Technology Officer","o":"HubSpot","s":"mainstage","i":"duncan_lennox.png","u":"https://www.hubspot.com/company/board-of-directors/duncan-lennox"},{"n":"Ed Chi","t":"VP of Research","o":"Google DeepMind","s":"mainstage","i":"ed_chi.png","u":"https://www.edchi.net/"},{"n":"Ekin Dogus Cubuk","t":"Co-Founder","o":"Periodic Labs","s":"mainstage","i":"ekin_dogus_cubuk.png","u":"https://www.linkedin.com/in/ekin-dogus-cubuk-9148b8114/"},{"n":"Eno Reyes","t":"Co-Founder / CTO","o":"Factory AI","s":"nexus","i":"eno_reyes.png","u":"https://www.linkedin.com/in/enoreyes/"},{"n":"Eric Ho","t":"Co-Founder/CEO","o":"Goodfire","s":"nexus","i":"eric_ho.png","u":"https://www.linkedin.com/in/eric-ho-53981862/"},{"n":"Eric Wallace","t":"Researcher","o":"OpenAI","s":"nexus","i":"eric_wallace.jpg","u":"https://www.ericswallace.com/"},{"n":"Faraz Shafiq","t":"Head of AI","o":"Wells Fargo","s":"mainstage","i":"faraz_shafiq.png","u":"https://www.linkedin.com/in/fshafiq/"},{"n":"Furong Huang","t":"Associate Professor","o":"University of Maryland","s":"compass","i":"furong_huang.png","u":"https://furong-huang.com/"},{"n":"Gabe Pereyra","t":"Co-Founder/President","o":"Harvey AI","s":"mainstage","i":"gabe_pereyra.png","u":"https://www.harvey.ai/blog/author/gabe-pereyra"},{"n":"Giambattista Parascandolo","t":"leading reasoning research team","o":"OpenAI","s":"atlas","i":"giambattista_parascandolo.png","u":"https://sites.google.com/view/giambattista-parascandolo/home"},{"n":"Gideon Mendels","t":"CEO and Co-founder","o":"Comet","s":"compass","i":"gideon_mendels.png","u":"https://www.linkedin.com/in/gideon-mendels/"},{"n":"Gosia Steinder","t":"IBM Fellow","o":"IBM Research","s":"compass","i":"gosia_steinder.png","u":"https://www.linkedin.com/in/gosia-steinder/"},{"n":"Guru Chahal","t":"Partner","o":"Lightspeed Venture Partners","s":"mainstage","i":"guru_chahal.png","u":"https://lsvp.com/team-member/guru-chahal/"},{"n":"Haishi Bai","t":"Principal Architect","o":"Microsoft","s":"compass","i":"haishi_bai.png","u":"https://www.linkedin.com/in/haishi/"},{"n":"Huan Sun","t":"Associate Professor","o":"The Ohio State University","s":"compass","i":"huan_sun.png","u":"https://u.osu.edu/ihudas/people/"},{"n":"Igor Babuschkin","t":"Co-Founder/CEO","o":"River AI","s":"mainstage","i":"igor_babuschkin.png","u":"https://babushk.in"},{"n":"Ion Stoica","t":"Co-Founder, Databricks and Anyscale · Professor, UC Berkeley","o":"databricks and anyscale; uc berkeley","s":"mainstage","i":"ion_stoica.png","u":"https://people.eecs.berkeley.edu/~istoica/"},{"n":"Itsik Mantin","t":"Head of AI Security Research","o":"Intuit","s":"nexus","i":"itsik_mantin.png","u":"https://www.linkedin.com/in/imantin/"},{"n":"Ivan Burazin","t":"Co-Founder/CEO","o":"Daytona","s":"mainstage","i":"ivan_burazin.png","u":"https://www.daytona.io/dotfiles/author/ivan-burazin"},{"n":"Izzy Miller","t":"AI Research Lead","o":"Hex","s":"compass","i":"izzy_miller.png","u":"https://www.izzy.co/"},{"n":"James Zou","t":"Professor","o":"Stanford","s":"nexus","i":"james_zou.png","u":"https://www.james-zou.com/"},{"n":"Jasjeet Sekhon","t":"Chief Strategy Officer","o":"Google DeepMind","s":"mainstage","i":"jasjeet_sekhon.png","u":"https://jsekhon.com"},{"n":"Jeff Wecker","t":"CTO","o":"Two Sigma","s":"mainstage","i":"jeff_wecker.png","u":"https://www.linkedin.com/in/jeffwecker/"},{"n":"Jen Allum","t":"SVP, Co-Head of GenAI","o":"The D. E. Shaw Group","s":"mainstage","i":"jen_allum.png","u":"https://www.linkedin.com/in/jen-allum/"},{"n":"Jennifer Chayes","t":"Dean of CDSS","o":"UC Berkeley","s":"mainstage","i":"jennifer_chayes.png","u":"https://cdss.berkeley.edu/people/jennifer-chayes"},{"n":"Jerry Tworek","t":"CEO; Former VP of Research","o":"Core Automation; OpenAI","s":"mainstage","i":"jerry_tworek.jpg","u":"https://www.linkedin.com/in/jerry-tworek-b5b9aa56/"},{"n":"Jianfeng Gao","t":"Technical Fellow & Corporate Vice President","o":"Microsoft Research","s":"atlas","i":"jianfeng_gao.png","u":"https://www.microsoft.com/en-us/research/people/jfgao/"},{"n":"Jim Fan","t":"Director of Robotics & Distinguished Scientist","o":"Nvidia","s":"mainstage","i":"jim_fan.png","u":"https://jimfan.me/"},{"n":"John A McDermid","t":"Director, Centre for Assuring Autonomy","o":"Institute for Safe Autonomy, University of York","s":"nexus","i":"john_mcdermid.png","u":"https://www.cs.york.ac.uk/people/jam"},{"n":"John Liu","t":"Principal Product Manager","o":"AWS","s":"compass","i":"john_liu.png","u":"https://www.linkedin.com/in/johnliu13"},{"n":"Jon-Rav Shende","t":"Chief Technology Officer","o":"Thales Group","s":"nexus","i":"jonrav_shende.png","u":"https://www.linkedin.com/in/jonshende/"},{"n":"Jonathan Cohen","t":"VP of Applied Research","o":"Nvidia","s":"mainstage","i":"jonathan_cohen.png","u":"https://www.jcohen.name/"},{"n":"Jongryool Kim","t":"Senior Director / Head of AI System Infra.","o":"SK hynix","s":"compass","i":"jongryool_kim.png","u":"https://www.linkedin.com/in/jongryool-kim-72bb3982/"},{"n":"Jordan Jindong Gu","t":"Senior Research Scientist, Google · University of Oxford","o":"google; university of oxford","s":"compass","i":"jordan_gu.png","u":"https://jindonggu.github.io/"},{"n":"Josh Albrecht","t":"Co-founder and CTO","o":"Imbue","s":"atlas","i":"josh_albrecht.png","u":"https://joshalbrecht.com/"},{"n":"Jun Yang","t":"Senior Director of Compute Architecture","o":"NVIDIA","s":"compass","i":"jun_yang.png","u":"https://www.linkedin.com/in/yangjunpro/"},{"n":"Kira Radinsky","t":"CTO and Founder","o":"Diagnostic Robotics","s":"nexus","i":"kira_radinsky.png","u":"http://www.kiraradinsky.com/"},{"n":"Krishnakumar Sharma","t":"CEO","o":"Omokai","s":"nexus","i":"krishnakumar_sharma.png","u":"https://www.linkedin.com/in/krisberlin/"},{"n":"Krishnaram Kenthapadi","t":"Chief Scientist","o":"Oracle Health","s":"nexus","i":"krishnaram_kenthapadi.jpg","u":"http://www-cs-students.stanford.edu/~kngk/"},{"n":"Krithik Puthalath","t":"CEO","o":"Zyphra","s":"mainstage","i":"krithik_puthalath.png","u":"https://www.linkedin.com/in/krithikputhalath/"},{"n":"Li Deng","t":"Chief AI Officer, Global Head of ML","o":"Vatic Investments","s":"mainstage","i":"li_deng.png","u":"https://www.ece.uw.edu/people/li-deng/"},{"n":"Lijie Chen","t":"Researcher","o":"OpenAI","s":"atlas","i":"lijie_chen.jpg","u":"https://www2.eecs.berkeley.edu/Faculty/Homepages/lijiechen.html"},{"n":"Lovedeep Gondara","t":"Head of AI R&D, Vanguard · Adjunct Professor, University of British Columbia","o":"vanguard; university of british columbia","s":"compass","i":"lovedeep_gondara.png","u":"https://lovedeepgondara.com/"},{"n":"Lovre Pesut","t":"AI Engineer","o":"Daytona","s":"atlas","i":"lovre_pesut.png","u":"https://lov.re/"},{"n":"Manmohan Chandraker","t":"Professor","o":"University of California, San Diego","s":"atlas","i":"manmohan_chandraker.png","u":"https://cseweb.ucsd.edu/~mkchandraker/"},{"n":"Markus J. Buehler","t":"Professor, MIT · Founder & CTO, Unreasonable Labs","o":"mit; unreasonable labs","s":"nexus","i":"markus_buehler.png","u":"https://cee.mit.edu/people_individual/markus-j-buehler/"},{"n":"Martin Casado","t":"General Partner","o":"a16z","s":"mainstage","i":"martin_casado.png","u":"https://a16z.com/author/martin-casado/"},{"n":"Matt White","t":"Global CTO of AI, Linux Foundation; CTO, PyTorch Foundation","o":"","s":"mainstage","i":"matt_white.png","u":"https://www.matt-white.com/"},{"n":"Megan Morrone","t":"Editor of Technology","o":"Axios","s":"mainstage","i":"megan_morrone.png","u":"https://www.axios.com/authors/mmorrone"},{"n":"Mengdi Wang","t":"Professor","o":"Princeton","s":"nexus","i":"mengdi_wang.png","u":"https://mwang.princeton.edu/"},{"n":"Michael Spranger","t":"President","o":"Sony AI","s":"mainstage","i":"michael_spranger.png","u":"https://sites.google.com/view/michaelspranger/"},{"n":"Michal Shmueli-Scheuer","t":"Distinguished Engineer, AI Benchmarking and Evaluation","o":"IBM Research","s":"atlas","i":"michal_shmuelischeuer.png","u":"https://research.ibm.com/people/michal-shmueli-scheuer"},{"n":"Michele Catasta","t":"President","o":"Replit","s":"mainstage","i":"michele_catasta.png","u":"https://www.linkedin.com/in/pirroh"},{"n":"Milind Naphade","t":"SVP, AI Foundations","o":"Capital One","s":"mainstage","i":"milind_naphade.png","u":"https://www.capitalone.com/tech/ai/milind-naphade-svp-ai-foundations/"},{"n":"Mohamed Nabeel","t":"Senior Principal Researcher","o":"Palo Alto Networks","s":"nexus","i":"mohamed_nabeel.png","u":"https://scholar.google.com/citations?user=Lka4RwsAAAAJ&hl=en"},{"n":"Muhammad Hashmi","t":"DevRel","o":"Daytona","s":"atlas","i":"muhammad_hashmi.png","u":"https://www.linkedin.com/in/mu-hash/"},{"n":"Navrina Singh","t":"CEO, Founder","o":"Credo AI","s":"compass","i":"navrina_singh.png","u":"https://www.linkedin.com/in/navrina"},{"n":"Nayaki Nayyar","t":"CEO","o":"Siteimprove","s":"compass","i":"nayaki_nayyar.png","u":"https://www.linkedin.com/in/nayakinayyar"},{"n":"Neil Lawrence","t":"Chief Scientist and Co-founder","o":"Trent AI","s":"compass","i":"neil_lawrence.png","u":"https://inverseprobability.com/"},{"n":"Nick Harris","t":"Founder/CEO","o":"Lightmatter","s":"compass","i":"nick_harris.png","u":"https://nicholascharris.com/"},{"n":"Nick Talken","t":"CEO & Cofounder","o":"Albert Invent","s":"nexus","i":"nick_talken.png","u":"https://www.linkedin.com/in/nick-talken-b720ba42/"},{"n":"Nikhil Chandhok","t":"Chief Product & Technology Officer","o":"Circle","s":"mainstage","i":"nikhil_chandhok.png","u":"https://www.circle.com/leadership/nikhil-chandhok"},{"n":"Nilou Salehi","t":"Associate professor","o":"UC, Berkeley","s":"compass","i":"nilou_salehi.png","u":"https://niloufar.org/"},{"n":"Ori Goshen","t":"Co-Founder/CEO","o":"AI21 Labs","s":"atlas","i":"ori_goshen.png","u":"https://www.linkedin.com/in/ori-goshen-809a263/"},{"n":"Peter DeSantis","t":"SVP, Foundational AI Models, Custom Silicon, Quantum Computing","o":"Amazon","s":"mainstage","i":"peter_desantis.png","u":"https://www.aboutamazon.com/news/innovation-at-amazon/peter-desantis-amazon-artificial-general-intelligence"},{"n":"Peter Steinberger","t":"Creator of OpenClaw","o":"OpenAI","s":"mainstage","i":"peter_steinberger.png","u":"https://steipete.me/"},{"n":"Peter Stone","t":"Chief Scientist, Sony AI · Professor, UT Austin","o":"sony ai; ut austin","s":"atlas","i":"peter_stone.png","u":"https://www.cs.utexas.edu/~pstone/"},{"n":"Philip Rathle","t":"CTO","o":"Neo4j","s":"atlas","i":"philip_rathle.png","u":"https://www.linkedin.com/in/prathle/"},{"n":"Priya Ponnapalli","t":"SVP of Engineering, Enterprise AI","o":"Scale AI","s":"atlas","i":"priya_ponnapalli.png","u":"https://www.linkedin.com/in/priya-ponnapalli/"},{"n":"Pushmeet Kohli","t":"VP of Science","o":"Google DeepMind","s":"mainstage","i":"pushmeet_kohli.png","u":"https://research.google/people/105667/"},{"n":"Rahul Bakshi","t":"Director, Applied Science (Edge AI)","o":"Amazon","s":"compass","i":"rahul_bakshi.png","u":"https://www.linkedin.com/in/thetechnologist"},{"n":"Rahul Krishna","t":"Senior Research Scientist","o":"IBM Software Innovation Labs","s":"compass","i":"rahul_krishna.png","u":"http://rkrsn.us"},{"n":"Raja Giryes","t":"Professor","o":"Tel Aviv University","s":"compass","i":"raja_giryes.png","u":"https://www.giryes.sites.tau.ac.il/"},{"n":"Ramesh Raskar","t":"Professor","o":"MIT","s":"compass","i":"ramesh_raskar.png","u":"https://www.media.mit.edu/people/raskar/overview/"},{"n":"Ranjan Sinha","t":"IBM Fellow, CTO & VP for watsonx, Enterprise AI","o":"IBM","s":"atlas","i":"ranjan_sinha.png","u":"https://www.linkedin.com/in/sinharanjan/"},{"n":"Rao Surapaneni","t":"VP/GM AI Search & Specialized AI","o":"Google Cloud","s":"mainstage","i":"rao_surapaneni.png","u":"https://www.linkedin.com/in/raosurapaneni/"},{"n":"Rene Pajta","t":"Chief Architect Cloud & AI","o":"Microsoft","s":"atlas","i":"rene_pajta.png","u":"https://www.linkedin.com/in/renepajta/"},{"n":"Rich Lyons","t":"Chancellor","o":"UC Berkeley","s":"mainstage","i":"rich_lyons.png","u":"https://chancellor.berkeley.edu/people/richard-k-lyons"},{"n":"Richard Socher","t":"Co-Founder/CEO","o":"Recursive & You.com","s":"mainstage","i":"richard_socher.png","u":"https://socher.org"},{"n":"Rishi Bommasani","t":"Senior Research Scholar","o":"Stanford Institute for Human-Centered Artificial Intelligence","s":"compass","i":"rishi_bommasani.png","u":"https://rishibommasani.github.io/"},{"n":"Rose Yu","t":"Professor; CEO/Co-Founder","o":"UC San Diego; GistFlow","s":"nexus","i":"rose_yu.png","u":"https://roseyu.com/"},{"n":"Ryan Lopopolo","t":"Principal Engineer","o":"Agentic Google Cloud Platform","s":"mainstage","i":"ryan_lopopolo.png","u":"https://hyperbo.la/contact/"},{"n":"S. Joy Mountford","t":"Vice President, Innovation Lab","o":"S.A.P.","s":"compass","i":"s_mountford.png","u":"https://www.joymountford.com/"},{"n":"Sanja Fidler","t":"VP of AI Research","o":"Nvidia","s":"atlas","i":"sanja_fidler.png","u":"https://www.cs.utoronto.ca/~fidler/"},{"n":"Saurabh Gupta","t":"Sr. Director, AI/ML","o":"Cisco","s":"compass","i":"saurabh_gupta.png","u":"https://www.linkedin.com/in/saurabhguptaprofile/"},{"n":"Saurabh Tiwary","t":"VP & GM, Google Cloud AI","o":"","s":"mainstage","i":"saurabh_tiwary.png","u":"https://www.linkedin.com/in/saurabh-tiwary/"},{"n":"Scott Clark","t":"Co-Founder & CEO","o":"Distributional","s":"compass","i":"scott_clark.png","u":"https://scottclark.io/"},{"n":"Sergei Gukov","t":"Executive Director, American Institute of Mathematics · John D. MacArthur Professor of Theoretical Physics and Mathematics, California Institute of Technology","o":"american institute of mathematics; california institute of technology","s":"atlas","i":"sergei_gukov.png","u":"https://www.pma.caltech.edu/people/gukov"},{"n":"Sergey Levine","t":"Co-Founder; Professor","o":"Physical Intelligence; UC Berkeley","s":"mainstage","i":"sergey_levine.png","u":"https://people.eecs.berkeley.edu/~svlevine/"},{"n":"Shaghayegh Gharghabi","t":"Deep Learning Scientists","o":"NVIDIA","s":"nexus","i":"shaghayegh_gharghabi.png","u":"https://www.linkedin.com/in/sh-gharghabi/"},{"n":"Shamir Abdul Aziz","t":"Prinicipal Product Manager","o":"Microsoft","s":"nexus","i":"shamir_aziz.png","u":"https://www.linkedin.com/in/meetshamir/"},{"n":"Shiva Kasiviswanthan","t":"Principal Applied Scientist","o":"Amazon Web Services","s":"compass","i":"shiva_kasiviswanathan.png","u":"https://www.linkedin.com/in/kasivisw/"},{"n":"Silas Alberti","t":"SVP of Research","o":"Cognition","s":"nexus","i":"silas_alberti.png","u":"https://sil.as/"},{"n":"Sri Pangulur","t":"Partner","o":"Mayfield Fund","s":"mainstage","i":"sri_pangulur.png","u":"https://www.mayfield.com/team/sri-pangulur/"},{"n":"Srijith Rajamohan","t":"Head of AI Research","o":"Redis","s":"atlas","i":"srijith_rajamohan.png","u":"https://srijithr.gitlab.io/"},{"n":"Sunita Verma","t":"Chief Technology Officer (CTO)","o":"Ironclad","s":"atlas","i":"sunita_verma.png","u":"https://www.linkedin.com/in/sunita-verma-1a4491/"},{"n":"Surbhi Rathore","t":"VP, AI Products & Strategy","o":"Invoca","s":"compass","i":"surbhi_rathore.png","u":"https://www.linkedin.com/in/surbhi-rathore/"},{"n":"Surojit Chatterjee","t":"Founder/CEO","o":"Ema","s":"mainstage","i":"surojit_chatterjee.png","u":"https://www.linkedin.com/in/surojitchatterjee/"},{"n":"Tanya Roosta","t":"Director of AI","o":"AMD, Berkeley","s":"compass","i":"tanya_roosta.png","u":"https://tanyaroosta.github.io/"},{"n":"Tim Hockin","t":"Distinguished Engineer","o":"Google","s":"compass","i":"tim_hockin.png","u":"https://hockin.org/~thockin/"},{"n":"Todd Graham","t":"Managing Partner","o":"M12","s":"mainstage","i":"todd_graham.webp","u":"https://m12.vc/team/todd-graham/"},{"n":"Trevor Darrell","t":"Professor","o":"UC Berkeley","s":"atlas","i":"trevor_darrell.png","u":"https://people.eecs.berkeley.edu/~trevor/"},{"n":"Tushar Krishna","t":"Associate Professor","o":"Georgia Institute of Technology","s":"compass","i":"tushar_krishna.png","u":"https://tusharkrishna.ece.gatech.edu/"},{"n":"Vaishnavi Gudur","t":"Senior AI Security Engineer","o":"Microsoft","s":"nexus","i":"vaishnavi_gudur.png","u":"https://www.linkedin.com/in/vaishnavi-gudur"},{"n":"Venkat Bhat","t":"Associate Professor; Director, AI for Mental Health (AI-M) Program","o":"University of Toronto","s":"nexus","i":"venkat_bhat.png","u":"https://psychiatry.utoronto.ca/faculty/venkat-bhat"},{"n":"Vijay Ganesh","t":"Professor","o":"Georgia Institute of Technology","s":"atlas","i":"vijay_ganesh.png","u":"https://www.cc.gatech.edu/people/vijay-ganesh"},{"n":"Vincent Sunn Chen","t":"VP & Founding Member","o":"Snorkel AI","s":"atlas","i":"vincent_sunn_chen.png","u":"https://snorkel.ai/author/vincent-chen/"},{"n":"Vincent Vanhoucke","t":"Distinguished Engineer","o":"Waymo","s":"atlas","i":"vincent_vanhoucke.png","u":"https://vincent.vanhoucke.com/"},{"n":"Wei Zhan","t":"Chief Scientist","o":"Applied Intuition","s":"mainstage","i":"wei_zhan.png","u":"https://zhanwei.site/"},{"n":"Weizhu Chen","t":"Technical Fellow & CVP","o":"Microsoft AI","s":"mainstage","i":"weizhu_chen.png","u":"https://www.microsoft.com/en-us/research/people/wzchen/"},{"n":"Wenbo Guo","t":"Assistant Professor","o":"UCSB","s":"compass","i":"wenbo_guo.png","u":"https://henrygwb.github.io/"},{"n":"Will Knight","t":"Senior Writer","o":"Wired","s":"mainstage","i":"will_knight.png","u":"https://www.wired.com/author/will-knight/"},{"n":"Wojciech Zaremba","t":"Co-Founder","o":"OpenAI","s":"mainstage","i":"wojciech_zaremba.png","u":"https://www.linkedin.com/in/wojciech-zaremba-356568164/"},{"n":"Woosuk Kwon","t":"Co-Founder & CTO","o":"Inferact","s":"atlas","i":"woosuk_kwon.png","u":"https://woosuk.me/"},{"n":"Yu Su","t":"CEO, NeoCognition · Associate Professor, OSU","o":"neocognition; osu","s":"compass","i":"yu_su.png","u":"https://ysu1989.github.io/"},{"n":"Yuan (Emily) Xue","t":"Head of Enterprise AI","o":"Scale AI","s":"compass","i":"yuan_xue.png","u":"https://yuanxue.github.io/"},{"n":"Zach Mueller","t":"Head of Developer Relations","o":"Lambda","s":"atlas","i":"zach_mueller.png","u":"https://www.linkedin.com/in/zachary-mueller-135257118/"},{"n":"Zelin Wan, Ph.D.","t":"Senior AI Engineer","o":"Postman","s":"compass","i":"zelin_wan.png","u":"https://www.linkedin.com/in/zelinwan/"}];
 
-  const MEETUP_WINDOWS = [
-    { t: "8:30", d: "Both mornings", s: "Badge lines, coffee, stage-finding — thinnest crowds of the day" },
-    { t: "Breaks", d: "Between Plenary blocks", s: "Hallways outside the main stage · leave 1–2 min early" },
-    { t: "Workshops", d: "Atlas / Compass / Nexus", s: "Table neighbors > stage exits after hands-on blocks" },
-    { t: "5:30", d: "Saturday reception", s: "Best density for peer intros — host a small circle if you can" },
-    { t: "Posters", d: "Poster / demo areas", s: "Authors want feedback; bring one specific question" },
-    { t: "Sun PM", d: "Spotlight + wrap", s: "Founders and ICs still open before people bolt for flights" }
-  ];
+  const STAGE_LABEL = { mainstage: "Plenary", atlas: "Atlas", nexus: "Nexus", compass: "Compass" };
+  let speakerFilter = "all";
+  let speakerQuery = "";
 
-  // day + sort key (HHMM) for catalog / conflicts
-  const META = {
-    earlySat: { day: "sat", sort: 830, end: 915 },
-    openingsSat: { day: "sat", sort: 915, end: 1105 },
-    circle: { day: "sat", sort: 1045, end: 1145 },
-    software: { day: "sat", sort: 1110, end: 1220 },
-    daytona: { day: "sat", sort: 1110, end: 1210 },
-    fetcherr: { day: "sat", sort: 1350, end: 1450 },
-    temporal: { day: "sat", sort: 1400, end: 1500 },
-    lambda: { day: "sat", sort: 1400, end: 1500 },
-    replit: { day: "sat", sort: 1410, end: 1510 },
-    secure: { day: "sat", sort: 1525, end: 1625 },
-    markets: { day: "sat", sort: 1630, end: 1700 },
-    ng: { day: "sat", sort: 1700, end: 1730 },
-    receptionSat: { day: "sat", sort: 1730, end: 1900 },
-    earlySun: { day: "sun", sort: 830, end: 940 },
-    enterprise: { day: "sun", sort: 940, end: 1100 },
-    ghodsi: { day: "sun", sort: 1105, end: 1145 },
-    ema: { day: "sun", sort: 1120, end: 1220 },
-    evals: { day: "sun", sort: 1300, end: 1400 },
-    platforms: { day: "sun", sort: 1405, end: 1505 },
-    finance: { day: "sun", sort: 1440, end: 1540 },
-    spotlight: { day: "sun", sort: 1545, end: 1645 },
-    karpathy: { day: "sun", sort: 2000, end: 2100 },
-    receptionSun: { day: "sun", sort: 1700, end: 1900 }
-  };
-
-  const ALL_SAT = Object.keys(META).filter((id) => META[id].day === "sat").sort((a, b) => META[a].sort - META[b].sort);
-  const ALL_SUN = Object.keys(META).filter((id) => META[id].day === "sun").sort((a, b) => META[a].sort - META[b].sort);
-
-  let currentTrackId = "builder";
-  let schedView = localStorage.getItem(STORAGE_VIEW) || "track";
-
-  function loadAgenda() {
-    try {
-      const raw = JSON.parse(localStorage.getItem(STORAGE_AGENDA) || "[]");
-      return Array.isArray(raw) ? raw.filter((id) => S[id]) : [];
-    } catch (e) {
-      return [];
-    }
-  }
-  function saveAgenda(ids) {
-    localStorage.setItem(STORAGE_AGENDA, JSON.stringify(ids));
-  }
-  function isSaved(id) {
-    return loadAgenda().includes(id);
-  }
-  function toggleAgenda(id) {
-    const ids = loadAgenda();
-    const i = ids.indexOf(id);
-    if (i >= 0) ids.splice(i, 1);
-    else ids.push(id);
-    saveAgenda(ids);
-    return ids.includes(id);
-  }
-  function toast(msg) {
-    const el = document.getElementById("toast");
-    if (!el) return;
-    el.textContent = msg;
-    el.classList.add("show");
-    clearTimeout(toast._t);
-    toast._t = setTimeout(() => el.classList.remove("show"), 1600);
-  }
-
-  function findConflicts(ids) {
-    const byDay = { sat: [], sun: [] };
-    ids.forEach((id) => {
-      const m = META[id];
-      if (m) byDay[m.day].push({ id, ...m, title: S[id].title });
-    });
-    const conflicts = [];
-    ["sat", "sun"].forEach((day) => {
-      const list = byDay[day].sort((a, b) => a.sort - b.sort);
-      for (let i = 0; i < list.length; i++) {
-        for (let j = i + 1; j < list.length; j++) {
-          if (list[j].sort < list[i].end && list[i].sort < list[j].end) {
-            conflicts.push([list[i], list[j]]);
-          }
-        }
-      }
-    });
-    return conflicts;
-  }
-
-  const BUILDINGS = [
-    { name: "Haas Pavilion", kind: "primary", desc: "Large arena — common for high-capacity keynotes", lat: 37.86935, lng: -122.26225, q: "Haas+Pavilion+UC+Berkeley" },
-    { name: "Zellerbach Hall", kind: "primary", desc: "Major auditorium next to Haas Pavilion", lat: 37.86895, lng: -122.26065, q: "Zellerbach+Hall+UC+Berkeley" },
-    { name: "Wheeler Auditorium", kind: "primary", desc: "Central campus lecture hall (Wheeler Hall)", lat: 37.87125, lng: -122.25915, q: "Wheeler+Auditorium+UC+Berkeley" },
-    { name: "Pauley Ballroom", kind: "primary", desc: "MLK Student Union — large flexible hall", lat: 37.86915, lng: -122.25945, q: "Pauley+Ballroom+UC+Berkeley" },
-    { name: "Sproul Plaza", kind: "hub", desc: "Main pedestrian hub / wayfinding landmark", lat: 37.86965, lng: -122.25955, q: "Sproul+Plaza+UC+Berkeley" },
-    { name: "Sibley Auditorium", kind: "hall", desc: "Bechtel Engineering Center auditorium", lat: 37.87385, lng: -122.25845, q: "Sibley+Auditorium+UC+Berkeley" },
-    { name: "Banatao Auditorium", kind: "hall", desc: "Sutardja Dai Hall — tech/engineering events", lat: 37.87495, lng: -122.25835, q: "Banatao+Auditorium+Sutardja+Dai+Hall" },
-    { name: "Cheit Hall (Haas)", kind: "hall", desc: "Haas School of Business classrooms / overflow", lat: 37.87155, lng: -122.25355, q: "Cheit+Hall+Haas+School+UC+Berkeley" }
-  ];
-
-
-
-  function esc(s) {
-    return String(s)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  }
-
-  function renderSession(sess, opts) {
-    opts = opts || {};
-    const saved = isSaved(sess.id);
-    const cls = ["session"];
-    if (sess.lock) cls.push("lock");
-    if (sess.optional) cls.push("optional-session");
-    if (saved) cls.push("in-plan");
-    let html = `<details class="${cls.join(" ")}" data-sid="${esc(sess.id)}"><summary>`;
-    html += `<div class="session-summary-main"><div class="session-badges">`;
-    sess.badges.forEach((b, i) => {
-      html += `<span class="badge ${b}">${esc(sess.badgeLabels[i] || b)}</span>`;
-    });
-    if (saved) html += `<span class="badge saved">In My Plan</span>`;
-    if (opts.conflict) html += `<span class="badge conflict">Time conflict</span>`;
-    html += `</div><div class="time">${esc(sess.time)} · ${esc(sess.duration)}</div>`;
-    html += `<h4 class="session-title">${esc(sess.title)}</h4></div>`;
-    html += `<button type="button" class="add-btn${saved ? " on" : ""}" data-add="${esc(sess.id)}" aria-label="${saved ? "Remove from My Plan" : "Add to My Plan"}" title="${saved ? "Remove from My Plan" : "Add to My Plan"}">${saved ? "✓" : "+"}</button>`;
-    html += `<span class="chev" aria-hidden="true">▾</span></summary><div class="session-body">`;
-    html += `<p class="session-topic">${esc(sess.topic)}</p>`;
-    (sess.groups || []).forEach((g, idx) => {
-      html += `<p class="field-label"${idx === 0 ? ' style="margin-top:0"' : ""}>${esc(g.label)}</p><ul class="speakers">`;
-      g.speakers.forEach((sp) => {
-        html += `<li><span class="name">${esc(sp.name)}</span><span class="role">${esc(sp.role)}</span>`;
-        if (sp.talk) html += `<span class="talk">${esc(sp.talk)}</span>`;
-        html += `</li>`;
-      });
-      html += `</ul>`;
-    });
-    if (sess.action) html += `<div class="action"><strong>Do:</strong> ${esc(sess.action)}</div>`;
-    if (sess.note) html += `<p class="note-inline">${esc(sess.note)}</p>`;
-    html += `</div></details>`;
-    return html;
-  }
-
-  function renderGlance(rows) {
-    return rows.map(([t, g, small]) =>
-      `<div class="glance-item"><div class="t">${esc(t)}</div><div class="g">${esc(g)}<small>${esc(small)}</small></div></div>`
-    ).join("");
-  }
-
-  function renderScheduleDays() {
-    const track = TRACKS[currentTrackId];
-    if (!track) return;
-    const satIds = schedView === "all" ? ALL_SAT : track.sat;
-    const sunIds = schedView === "all" ? ALL_SUN : track.sun;
-    document.getElementById("sat-sub").textContent = schedView === "all"
-      ? "Full catalog — tap + to add any session to My Plan"
-      : track.satSub;
-    document.getElementById("sun-sub").textContent = schedView === "all"
-      ? "Full catalog — tap + to add any session to My Plan"
-      : track.sunSub;
-    document.getElementById("sat-glance").innerHTML = schedView === "all"
-      ? renderGlance([["—", "Browse all Saturday sessions", "Add what you want · watch for conflicts in My Plan"]])
-      : renderGlance(track.satGlance);
-    document.getElementById("sun-glance").innerHTML = schedView === "all"
-      ? renderGlance([["—", "Browse all Sunday sessions", "Add what you want · watch for conflicts in My Plan"]])
-      : renderGlance(track.sunGlance);
-    document.getElementById("sat-sessions").innerHTML = satIds.map((sid) => renderSession(S[sid])).join("");
-    document.getElementById("sun-sessions").innerHTML = sunIds.map((sid) => renderSession(S[sid])).join("");
-  }
-
-  function renderMine() {
-    const ids = loadAgenda();
-    const conflicts = findConflicts(ids);
-    const conflictIds = new Set();
-    conflicts.forEach(([a, b]) => { conflictIds.add(a.id); conflictIds.add(b.id); });
-    const box = document.getElementById("mine-conflicts");
-    if (conflicts.length) {
-      box.hidden = false;
-      box.className = "conflict-box";
-      box.innerHTML = "<strong>Time overlaps</strong> — " + conflicts.map(([a, b]) =>
-        `${esc(a.title)} ↔ ${esc(b.title)}`
-      ).join("; ") + ". Keep one, or accept the overlap.";
-    } else {
-      box.hidden = true;
-      box.innerHTML = "";
-    }
-    document.getElementById("mine-count").textContent =
-      ids.length === 0 ? "0 sessions saved — add from Schedule or seed a track"
-        : `${ids.length} session${ids.length === 1 ? "" : "s"} saved`;
-
-    const sat = ids.filter((id) => META[id] && META[id].day === "sat").sort((a, b) => META[a].sort - META[b].sort);
-    const sun = ids.filter((id) => META[id] && META[id].day === "sun").sort((a, b) => META[a].sort - META[b].sort);
-    const empty = `<div class="empty-mine">Nothing here yet.<br/>Open <strong>Schedule</strong>, tap <strong>+</strong>, or use <strong>Add current track</strong>.</div>`;
-    document.getElementById("mine-sat").innerHTML = sat.length
-      ? sat.map((id) => renderSession(S[id], { conflict: conflictIds.has(id) })).join("")
-      : empty;
-    document.getElementById("mine-sun").innerHTML = sun.length
-      ? sun.map((id) => renderSession(S[id], { conflict: conflictIds.has(id) })).join("")
-      : empty;
-  }
-
-  function refreshAgendaUI() {
-    renderScheduleDays();
-    renderMine();
-  }
-
-  function setTrack(id) {
-    const track = TRACKS[id];
-    if (!track) return;
-    currentTrackId = id;
-    localStorage.setItem(STORAGE_TRACK, id);
-    document.querySelectorAll(".track-chip").forEach((btn) => {
-      btn.classList.toggle("active", btn.dataset.track === id);
-    });
-    const n = loadAgenda().length;
-    document.getElementById("active-banner").innerHTML =
-      `<strong>${esc(track.name)} track</strong><p>${esc(track.blurb)}. Tap <strong>+</strong> to save sessions to My Plan${n ? ` · ${n} saved` : ""}. Optional sessions are dashed.</p>`;
-    document.getElementById("path-stops").innerHTML = track.path.map((p) =>
-      `<div class="stop ${p.cls}"><strong>${esc(p.t)}</strong><span>${esc(p.d)}</span></div>`
-    ).join("");
-    renderScheduleDays();
-    renderMine();
-    renderNetwork();
-  }
-
-  function setSchedView(view) {
-    schedView = view === "all" ? "all" : "track";
-    localStorage.setItem(STORAGE_VIEW, schedView);
-    document.querySelectorAll("[data-sched-view]").forEach((btn) => {
-      btn.classList.toggle("active", btn.dataset.schedView === schedView);
-    });
-    renderScheduleDays();
-  }
-
-  function showPanel(name) {
-    document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("active", p.id === "panel-" + name));
-    document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.dataset.panel === name));
-    document.querySelectorAll(".bottom-nav button").forEach((b) => b.classList.toggle("active", b.dataset.panel === name));
-    if (name === "mine") renderMine();
-    if (name === "network") renderNetwork();
-    if (name === "sponsors") ensureSponsorImages();
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  function showDay(day) {
-    document.getElementById("day-sat").hidden = day !== "sat";
-    document.getElementById("day-sun").hidden = day !== "sun";
-    document.querySelectorAll(".day-btn[data-day]").forEach((b) => b.classList.toggle("active", b.dataset.day === day));
-  }
-
-  function showMineDay(day) {
-    document.getElementById("mine-sat").hidden = day !== "sat";
-    document.getElementById("mine-sun").hidden = day !== "sun";
-    document.querySelectorAll(".day-btn[data-mine-day]").forEach((b) => b.classList.toggle("active", b.dataset.mineDay === day));
-  }
-
-  function setOpenAll(day, open) {
-    document.querySelectorAll("#" + day + "-sessions details.session").forEach((d) => { d.open = open; });
-  }
-
-  function loadContacts() {
-    try {
-      const raw = JSON.parse(localStorage.getItem(STORAGE_CONTACTS) || "[]");
-      return Array.isArray(raw) ? raw : [];
-    } catch (e) {
-      return [];
-    }
-  }
-  function saveContacts(list) {
-    localStorage.setItem(STORAGE_CONTACTS, JSON.stringify(list));
-  }
-  function followLabel(v) {
-    return ({ "this-week": "Follow up this week", intro: "Needs intro", coffee: "Coffee / call", later: "Later / weak tie" })[v] || v;
-  }
-
-  function renderContacts() {
-    const list = document.getElementById("contact-list");
-    if (!list) return;
-    const contacts = loadContacts();
-    if (!contacts.length) {
-      list.innerHTML = `<div class="empty-mine" style="margin-top:0.5rem">No people logged yet — add someone after your next hallway chat.</div>`;
-      return;
-    }
-    list.innerHTML = contacts.map((c, idx) => `
-      <div class="contact-card">
-        <button type="button" class="del" data-del-contact="${idx}" aria-label="Remove">×</button>
-        <div class="cn">${esc(c.name)}</div>
-        ${c.org ? `<div class="co">${esc(c.org)}</div>` : ""}
-        ${c.note ? `<div class="cnote">${esc(c.note)}</div>` : ""}
-        <div class="cfollow">${esc(followLabel(c.follow))}</div>
-      </div>
-    `).join("");
+  function speakerMatches(sp) {
+    if (speakerFilter !== "all" && sp.s !== speakerFilter) return false;
+    if (!speakerQuery) return true;
+    const hay = (sp.n + " " + sp.t + " " + sp.o + " " + (STAGE_LABEL[sp.s] || sp.s)).toLowerCase();
+    return hay.includes(speakerQuery);
   }
 
   function renderNetwork() {
-    const track = TRACKS[currentTrackId];
-    if (!track) return;
-    const title = document.getElementById("peer-title");
-    const blurb = document.getElementById("peer-blurb");
-    const peers = document.getElementById("peer-list");
-    const windows = document.getElementById("meetup-windows");
-    if (title) title.textContent = `Who to find · ${track.name}`;
-    if (blurb) blurb.textContent = track.peersBlurb || "Peer targets for your track — not stage celebrities.";
-    if (peers) {
-      peers.innerHTML = (track.peers || []).map((p) =>
-        `<div class="peer-item"><strong>${esc(p.who)}</strong><span>${esc(p.where)} · ${esc(p.why)}</span></div>`
-      ).join("");
+    const filters = document.getElementById("speaker-filters");
+    const grid = document.getElementById("speaker-grid");
+    const count = document.getElementById("speaker-count");
+    if (!filters || !grid) return;
+
+    const stages = ["all", "mainstage", "atlas", "nexus", "compass"];
+    filters.innerHTML = stages.map((id) => {
+      const label = id === "all" ? "All" : (STAGE_LABEL[id] || id);
+      return `<button type="button" data-stage-filter="${id}" class="${speakerFilter === id ? "active" : ""}">${label}</button>`;
+    }).join("");
+
+    const list = SPEAKERS.filter(speakerMatches);
+    count.textContent = `${list.length} speaker${list.length === 1 ? "" : "s"}`;
+    if (!list.length) {
+      grid.innerHTML = `<div class="empty-mine">No speakers match that search.</div>`;
+      return;
     }
-    if (windows) {
-      windows.innerHTML = MEETUP_WINDOWS.map((w) =>
-        `<div class="window-item"><div class="wt">${esc(w.t)}</div><div class="wd">${esc(w.d)}<small>${esc(w.s)}</small></div></div>`
-      ).join("");
-    }
-    const pitch = document.getElementById("pitch-input");
-    if (pitch && !pitch.dataset.hydrated) {
-      pitch.value = localStorage.getItem(STORAGE_PITCH) || "";
-      pitch.dataset.hydrated = "1";
-    }
-    renderContacts();
+    grid.innerHTML = list.map((sp) => {
+      const stage = STAGE_LABEL[sp.s] || sp.s;
+      const href = sp.u || "https://rdi.berkeley.edu/events/agentic-ai-summit-2026";
+      const title = esc(sp.t || "");
+      const org = esc(sp.o || "");
+      const img = SPEAKER_IMG + encodeURIComponent(sp.i).replace(/%2F/g, "/");
+      return `<a class="spk-card" href="${esc(href)}" target="_blank" rel="noopener" title="${esc(sp.n)}">
+        <img class="spk-avatar" src="${img}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"
+          onerror="this.style.visibility='hidden'" />
+        <div class="spk-name">${esc(sp.n)}</div>
+        ${title ? `<p class="spk-title">${title}</p>` : ""}
+        ${org ? `<p class="spk-org">${org}</p>` : ""}
+        <div class="spk-stage">${esc(stage)}</div>
+      </a>`;
+    }).join("");
   }
 
   function initNetwork() {
-    const pitchBtn = document.getElementById("save-pitch");
-    const pitch = document.getElementById("pitch-input");
-    if (pitchBtn && pitch) {
-      pitchBtn.addEventListener("click", () => {
-        localStorage.setItem(STORAGE_PITCH, pitch.value.trim());
-        toast("Pitch saved");
+    const search = document.getElementById("speaker-search");
+    if (search) {
+      search.addEventListener("input", () => {
+        speakerQuery = search.value.trim().toLowerCase();
+        renderNetwork();
       });
     }
-    const form = document.getElementById("contact-form");
-    if (form) {
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const name = document.getElementById("c-name").value.trim();
-        if (!name) return;
-        const contacts = loadContacts();
-        contacts.unshift({
-          name,
-          org: document.getElementById("c-org").value.trim(),
-          note: document.getElementById("c-note").value.trim(),
-          follow: document.getElementById("c-follow").value,
-          at: Date.now()
-        });
-        saveContacts(contacts);
-        form.reset();
-        toast("Person added");
-        renderContacts();
-      });
-    }
-    document.getElementById("clear-contacts")?.addEventListener("click", () => {
-      if (!loadContacts().length) return;
-      if (!confirm("Clear your entire people log?")) return;
-      saveContacts([]);
-      toast("People log cleared");
-      renderContacts();
-    });
-    document.addEventListener("click", (e) => {
-      const btn = e.target.closest("[data-del-contact]");
+    document.getElementById("speaker-filters")?.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-stage-filter]");
       if (!btn) return;
-      const idx = Number(btn.dataset.delContact);
-      const contacts = loadContacts();
-      contacts.splice(idx, 1);
-      saveContacts(contacts);
-      renderContacts();
-      toast("Removed");
+      speakerFilter = btn.dataset.stageFilter;
+      renderNetwork();
     });
+    renderNetwork();
   }
 
   function initBuildingsList() {
