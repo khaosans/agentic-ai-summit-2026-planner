@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <meta name="color-scheme" content="dark" />
+  <meta name="color-scheme" content="light" />
   <title>Agentic AI Summit 2026</title>
   <style>
     :root {
@@ -1005,7 +1005,7 @@
       <div class="tabs" role="tablist" aria-label="Sections">
         <button type="button" class="tab active" data-panel="schedule">Schedule</button>
         <button type="button" class="tab" data-panel="mine">My Plan</button>
-        <button type="button" class="tab" data-panel="network">Network</button>
+        <button type="button" class="tab" data-panel="speakers">Speakers</button>
         <button type="button" class="tab" data-panel="map">Map</button>
         <button type="button" class="tab" data-panel="sponsors">Sponsors</button>
         <button type="button" class="tab" data-panel="guide">Guide</button>
@@ -1072,7 +1072,7 @@
         <div id="mine-sun" hidden></div>
       </section>
 
-      <section class="panel" id="panel-network" role="tabpanel">
+      <section class="panel" id="panel-speakers" role="tabpanel">
         <div class="card">
           <h3>Speakers</h3>
           <p>Official roster — name, title, org, stage.</p>
@@ -1147,7 +1147,7 @@
           <ul>
             <li>Pick a <strong>track</strong> for a suggested plan, or tap <strong>Browse all</strong> to see every session.</li>
             <li>Tap <strong>+</strong> on any session to add it to <strong>My Plan</strong> (saved on this device).</li>
-            <li>Use <strong>Network</strong> for the speaker list (name, title, org, stage).</li>
+            <li>Use <strong>Speakers</strong> to browse the official roster (name, title, org, stage).</li>
             <li><strong>Optional</strong> sessions are dashed; <strong>locks</strong> are gold-highlighted headliners.</li>
             <li><strong>Map</strong> shows primary campus buildings — match Plenary/Atlas/Nexus/Compass on-site.</li>
           </ul>
@@ -1194,7 +1194,7 @@
     <div class="inner">
       <button type="button" class="active" data-panel="schedule"><span>▤</span>Schedule</button>
       <button type="button" data-panel="mine"><span>★</span>My Plan</button>
-      <button type="button" data-panel="network"><span>●</span>Network</button>
+      <button type="button" data-panel="speakers"><span>●</span>Speakers</button>
       <button type="button" data-panel="map"><span>⌖</span>Map</button>
       <button type="button" data-panel="sponsors"><span>◇</span>Sponsors</button>
       <button type="button" data-panel="guide"><span>ⓘ</span>Guide</button>
@@ -1657,13 +1657,6 @@
         { cls: "atlas", t: "Sun Atlas", d: "Evals 1:00" },
         { cls: "plenary", t: "Sun Plenary", d: "Platforms (opt) · Spotlight 3:45" }
       ],
-      peersBlurb: "People shipping agents — workshop neighbors beat keynote queues.",
-      peers: [
-        { who: "Workshop table neighbors", where: "Atlas / Compass workshops", why: "Same failure modes; easy stack swaps" },
-        { who: "Poster authors & demo folks", where: "Reception / poster areas", why: "Builders who want feedback, not fans" },
-        { who: "Spotlight / early startup ICs", where: "Sun Spotlight + hallways", why: "Peer founders and founding eng" },
-        { who: "Sponsor booth engineers", where: "Sponsor areas between blocks", why: "Practitioners > BD theater" }
-      ]
     },
     fintech: {
       id: "fintech",
@@ -1697,13 +1690,6 @@
         { cls: "atlas", t: "Sun Atlas", d: "Evals 1:00" },
         { cls: "plenary", t: "Sun Plenary", d: "Enterprise soft · Finance 2:40 · Spotlight" }
       ],
-      peersBlurb: "Operators in markets, risk, and trust — mix quant with compliance peers.",
-      peers: [
-        { who: "Fintech / trading eng & PMs", where: "Nexus blocks + Capital Markets exit", why: "Shared production constraints" },
-        { who: "Risk, compliance, secure-AI ICs", where: "Secure AI / Finance & Legal exits", why: "Governance buyers and builders" },
-        { who: "Payments / infra startups", where: "Reception + Spotlight", why: "Design partners beyond pure trading" },
-        { who: "Sponsor solutions eng (Circle, etc.)", where: "Sponsor floor between sessions", why: "Real integration paths" }
-      ]
     },
     founder: {
       id: "founder",
@@ -1735,13 +1721,6 @@
         { cls: "compass", t: "Sat workshop", d: "Temporal (or Lambda on Atlas)" },
         { cls: "plenary", t: "Sun 3:45", d: "Startup Spotlight is the anchor" }
       ],
-      peersBlurb: "Founders, operators, and scouts — optimize for intros and design partners.",
-      peers: [
-        { who: "Spotlight / seed-stage founders", where: "Sun Spotlight + Saturday reception", why: "Peer dealflow and war stories" },
-        { who: "Operator-founders in workshops", where: "Temporal / Secure / Evals rooms", why: " cred + potential customers" },
-        { who: "Angels / scouts hanging in hallways", where: "Early mornings + reception edges", why: "Quieter than celebrity scrums" },
-        { who: "Hiring managers at sponsor booths", where: "Sponsor areas", why: "Talent and distribution intros" }
-      ]
     },
     enterprise: {
       id: "enterprise",
@@ -1774,13 +1753,6 @@
         { cls: "nexus", t: "Sat Secure", d: "Trust plane" },
         { cls: "atlas", t: "Sun Evals (+ Ema opt)", d: "Production readiness" }
       ],
-      peersBlurb: "People who ship agents inside real orgs — evals, security, rollout.",
-      peers: [
-        { who: "Platform / IT owners at enterprises", where: "Enterprise Plenary exit + reception", why: "Budget + rollout peers" },
-        { who: "Evals / QA for LLM apps", where: "Atlas evals block", why: "Shared exam-before-prod language" },
-        { who: "Security & governance leads", where: "Secure AI session edges", why: "Trust plane counterparts" },
-        { who: "Vendor ICs (not only AEs)", where: "Workshops + booths", why: "Implementation truth" }
-      ]
     },
     research: {
       id: "research",
@@ -1811,13 +1783,6 @@
         { cls: "atlas", t: "Workshops / Sun evals", d: "Daytona/Lambda opt · Evals core" },
         { cls: "nexus", t: "Sat Secure", d: "Safety & security talks" }
       ],
-      peersBlurb: "Lab peers, eval authors, and research startups — trade methods, not autographs.",
-      peers: [
-        { who: "Poster presenters & workshop researchers", where: "Posters + Atlas workshops", why: "Highest-access technical chats" },
-        { who: "Evals / benchmarks practitioners", where: "Sun Atlas evals", why: "Method swaps > compliments" },
-        { who: "Safety / secure-AI researchers", where: "Secure AI edges", why: "Shared failure assumptions" },
-        { who: "Research-minded startup founders", where: "Spotlight + reception", why: "Applied research transfer" }
-      ]
     }
   };
 
@@ -1825,17 +1790,7 @@
   const STORAGE_TRACK = "aas2026-track";
   const STORAGE_AGENDA = "aas2026-agenda-v1";
   const STORAGE_VIEW = "aas2026-sched-view";
-  const STORAGE_PITCH = "aas2026-pitch";
-  const STORAGE_CONTACTS = "aas2026-contacts-v1";
 
-  const MEETUP_WINDOWS = [
-    { t: "8:30", d: "Both mornings", s: "Badge lines, coffee, stage-finding — thinnest crowds of the day" },
-    { t: "Breaks", d: "Between Plenary blocks", s: "Hallways outside the main stage · leave 1–2 min early" },
-    { t: "Workshops", d: "Atlas / Compass / Nexus", s: "Table neighbors > stage exits after hands-on blocks" },
-    { t: "5:30", d: "Saturday reception", s: "Best density for peer intros — host a small circle if you can" },
-    { t: "Posters", d: "Poster / demo areas", s: "Authors want feedback; bring one specific question" },
-    { t: "Sun PM", d: "Spotlight + wrap", s: "Founders and ICs still open before people bolt for flights" }
-  ];
 
   // day + sort key (HHMM) for catalog / conflicts
   const META = {
@@ -2055,7 +2010,7 @@
     ).join("");
     renderScheduleDays();
     renderMine();
-    renderNetwork();
+    renderSpeakers();
   }
 
   function setSchedView(view) {
@@ -2072,7 +2027,7 @@
     document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.dataset.panel === name));
     document.querySelectorAll(".bottom-nav button").forEach((b) => b.classList.toggle("active", b.dataset.panel === name));
     if (name === "mine") renderMine();
-    if (name === "network") renderNetwork();
+    if (name === "speakers") renderSpeakers();
     if (name === "sponsors") ensureSponsorImages();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -2105,7 +2060,7 @@
     return hay.indexOf(speakerQuery) !== -1;
   }
 
-  function renderNetwork() {
+  function renderSpeakers() {
     var filters = document.getElementById("speaker-filters");
     var listEl = document.getElementById("speaker-list");
     var count = document.getElementById("speaker-count");
@@ -2132,13 +2087,13 @@
     }).join("");
   }
 
-  function initNetwork() {
+  function initSpeakers() {
     try {
       var search = document.getElementById("speaker-search");
       if (search) {
         search.addEventListener("input", function () {
           speakerQuery = search.value.trim().toLowerCase();
-          renderNetwork();
+          renderSpeakers();
         });
       }
       var filters = document.getElementById("speaker-filters");
@@ -2147,12 +2102,12 @@
           var btn = e.target.closest("[data-stage-filter]");
           if (!btn) return;
           speakerFilter = btn.dataset.stageFilter;
-          renderNetwork();
+          renderSpeakers();
         });
       }
-      renderNetwork();
+      renderSpeakers();
     } catch (err) {
-      console.warn("Network init skipped", err);
+      console.warn("Speakers init skipped", err);
     }
   }
 
@@ -2381,7 +2336,7 @@ function initBuildingsList() {
   initBuildingsList();
   renderSponsorTier();
   initChrome();
-  initNetwork();
+  initSpeakers();
   showMineDay("sat");
 })();
   </script>
